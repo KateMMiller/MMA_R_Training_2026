@@ -1,0 +1,178 @@
+#### Day 1 Questions
+<details open><summary class = 'drop'>Load Data </summary>
+If you're starting a new R session to answer these questions, you'll need to read in the wetland and tree data frames again.
+
+```{r day1_ch, echo = F, include = F}
+#------------------------------------
+#     Day 1: Challenges Code 
+#------------------------------------
+```
+
+<p class = 'code'>Read in example ACAD wetland data from url</p>
+```{r c1rdatc1, eval = F}
+ACAD_wetland <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+  )
+```
+
+<p class = 'code'>Read in example NETN tree data from url</p>
+```{r c1readtree, eval = F}
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+</details><br>
+
+<details open><summary class = 'drop'>Data Structures</summary>
+<div class="alert alert-info">
+<strong>How would you look at the the first 4 even rows (2, 4, 6, 8), and first 2 columns?</strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r d1chal1, fold.output = F}
+ACAD_wetland[c(2, 4, 6, 8), c(1, 2)]
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How many unique species are there in the ACAD_wetland data frame?</strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r d1rows2a, results = "hide"}
+# Option 1
+length(unique(ACAD_wetland[, "Latin_Name"]))
+```
+
+```{r d1rows2b, fold.output = FALSE}
+# Option 2
+length(unique(ACAD_wetland$Latin_Name)) # equivalent
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Which sites have species that are considered protected on them (Protected = TRUE)?</strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r, d1rows2a2, results = 'hide'}
+# Option 1 - used unique to just return unique site name
+unique(ACAD_wetland$Site_Name[ACAD_wetland$Protected == TRUE])
+
+```
+
+```{r, d1rows2b2, fold.output=FALSE}
+# Option 2
+unique(ACAD_wetland[ACAD_wetland$Protected == TRUE, "Site_Name"])
+```
+</details>
+</div>
+</details><br>
+
+<details open><summary class = 'drop'>Data Exploration</summary>
+<div class="alert alert-info">
+<strong>How many trees are on Plot 12?</strong>
+<details><summary class='code2'>Answer</summary>
+
+```{r d1chal4}
+mima12 <- subset(trees, PlotCode == 12)
+nrow(mima12) # 12
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot 12?</strong>
+<details><summary class='code2'>Answer</summary>
+
+Option 1. Subset data then calculate number of rows
+```{r d1chal5, fold.output = F}
+mima12_as <- subset(trees, PlotCode == 12 & TreeStatusCode == "AS")
+nrow(mima12_as) # 6
+```
+
+Option 2. Subset the data with brackets and use the `table()` function to tally status codes.
+```{r d1chal5b, fold.output = F}
+mima12 <- trees[trees$Plot_Name == "MIMA-012",]
+table(mima12$TreeStatusCode) # 6
+
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Find the DBH record that's > 400cm DBH.</strong>
+
+<details><summary class='code2'>Answer</summary>
+There are multiple ways to do this. Two examples are below.
+
+Option 1. View the data and sort by DBH.
+```{r d1vtrees, eval = F}
+View(trees)
+```
+
+Option 2. Find the max DBH value and subset the data frame
+```{r d1maxdbh, fold.output = F}
+max_dbh <- max(trees$DBHcm, na.rm = TRUE)
+trees[trees$DBHcm == max_dbh,]
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>What is the exact value of the largest DBH, and which record does it belong to?</strong>
+
+<details><summary class='code2'>Answer</summary>
+There are multiple ways to do this. Two examples are below.
+
+Option 1. View the data and sort by DBH.
+```{r d1vtrees2, eval = F}
+View(trees)
+```
+
+Option 2. Find the max DBH value and subset the data frame
+```{r d1maxdbh2b}
+max_dbh <- max(trees$DBHcm, na.rm = TRUE)
+max_dbh #443
+trees[trees$DBHcm == max_dbh,]
+# Plot MIMA-016, TagCode = 1.
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+
+<details><summary class = 'drop2'>Answer</summary>
+Let's say that you looked at the datasheet, and the actual DBH for that tree was 44.3 instead of 443.0. You can change that value in the original CSV by hand. But even better is to document that change in code. There are multiple ways to do this. Two examples are below.
+
+But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
+
+<p class = 'code'>Replace 443 with 44.3</p>
+```{r trfx2, fold.output = F}
+# create copy of trees data
+trees_fix <- trees
+
+# find the problematic DBH value, and change it to 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+```
+
+Check that it worked by showing the range of the original and fixed data frames.
+```{r check1b, fold.output = F}
+range(trees$DBHcm)
+range(trees_fix$DBHcm)
+```
+
+</details>
+</div>
+</details><br>
+
+<details open><summary class = 'drop'>Basic Plotting</summary>
+<div class="alert alert-info">
+<strong>Plot a histogram of percent cover (`Ave_Cov`) in the `ACAD_wetland` </strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r wethist2}
+hist(ACAD_wetland$Ave_Cov)
+```
+</details>
+</div>
+</details>
+<br>

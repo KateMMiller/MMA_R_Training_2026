@@ -1,0 +1,67 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+#### Intro to R {.tabset}
+
+<details open><summary class ='drop'>Why I love R: </summary>
+<img src = "./images/welcome_to_R.png" alt = 'R welcoming illustration' style = "float:right; width:400px;">
+<span class = "capright"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></span>
+
+There are many reasons to use R. Some of my top reasons are below:
+<ul>
+<li>It's free!</li>
+<li>Thorough, helpful, and welcoming user community, including a ton of freely available online help and learning resources (see Resources tab).</li>
+<li>Large user community among researchers to collaborate and share code.</li>
+<li>Language was designed by statisticians to facilitate data analysis and visualization.</li>
+<ul>
+<li>Relatively shallow learning curve compared to other coding languages (e.g. python).</li> 
+<li>Developers' philosophy was to not have to know how to program to learn R. Then as you become more advanced and do more complicated tasks, learning how to program will benefit your work.</li>
+</ul>
+<li>Code documents your workflow.</li>
+<li>Code builds on code.</li>
+<li>Automating tasks, like QA/QC, compiling/querying data, calculating summary statistics, and building dashboards has improved our data quality and made our data accessible and easy to work with for other users.</li>
+</ul>
+</details>
+</break>
+
+<details open><summary class ='drop'>Other benefits of R:</summary>
+<ul>
+<li>Base R maintains backwards compatibility, so that code written in base R, regardless of R version should run. </li>
+  <ul>
+  <li>Caveats are that packages are not guaranteed to be backwards compatible. </li>
+  <li>Python is not backwards compatible</li>
+  </ul>
+<li>The tidyverse, which is a collection of really useful R packages, makes code more readable and consistently formatted. Tidyverse packages aren't always backwards compatible, but they tend to be pretty stable and are super helpful for data wrangling and plotting.</li>
+<li>RStudio can integrate with other coding languages, such as SQL, HTML/CSS, python and javascript.</li>  
+</ul>
+</details>
+</break>
+
+<details open><summary class ='drop'> Recipe for learning R </summary>
+Everyone learns differently, but the ingredients I see that most ensure success are: 
+<ul>
+<li><b>Community: </b>Finding a group of other R users you can reach out to when you're stuck or need feedback is invaluable. I was lucky to be part of a group that was learning R together. I still collaborate with many of these folks. I'm hoping you all see this group as your R community.</li>
+<li><b>Persistence: </b>Keep trying new things in R, even if you ultimately have to abandon attempts and go back to what you know, like Access or Excel. Persistence pays off. </li>
+<li><b>Fearlessness: </b>You have to be okay with failing the first, second, or tenth time to solve a problem, at least at first. As you get more comfortable, your success rate will improve. Throughout that entire process, you're learning R.  </li>
+<li><b>Googling: </b>Half of being a good coder is learning how to google what you're trying to do, or the issue you're having. At first, you may not find the answers you're looking for, but by reading help pages, like <a href = 'https://stackoverflow.com'>StackOverflow</a>, you're learning to read code and seeing solutions that may help you in the future.</li>
+</ul>
+
+<img src = "./images/Debugging_horst.png" alt = 'Debugging rollercoaster' style = "display:block;margin-left:auto;margin-right:auto;width:450px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></center>
+</details>
+<break>
+
+<details open><summary class ='drop'>AI soapbox</summary>
+Why I don't use AI to write code:
+<ul>
+<li>Behind the scenes, AI is taking answers from websites and other sources without crediting them. </li>
+<li>There's a huge environmental footprint to run the generative AI servers.</li> 
+<li>Research has shown that people who use AI to write for them lose their ability to write and think critically over time. Writing code isn't that different. If you're not actively writing the code you are using, your ability to debug and verify code is doing what you expect may be weakened. A <a href="https://doi.org/10.1002/fee.70036">recent article</a> in Frontiers in Ecology and the Environment cautioning early career scientists against using AI for scientific writing captures this concern well.</li>
+<li>To prevent AI responses returned by google searches, include -ai in google search box.</li>
+</ul>
+</details>
+
+

@@ -1,0 +1,140 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+#### Data Viz Best Practices
+
+```{r day2_dv, echo = F, include = F}
+#----------------------------------------------
+#     Day 2: Data Viz. Best Practices Code 
+#----------------------------------------------
+```
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(knitr)
+library(kableExtra)
+```
+
+<details open><summary class='drop'>The Power of (Good) Data Visualizations</summary>
+<br>
+<h3 style="color:red;">Data are useful only when used. Data are used only when understood.</h3>
+Consider three example data visualizations that demonstrate how some approaches are more effective than others in conveying patterns. 
+
+<details open><summary class = "drop2">Example 1. Plots convey messages faster than tables</summary>
+Most people can understand this figure of daily Covid cases faster than they can understand the table of daily Covid cases.
+
+<center>![](images/covid_by_region.png){width=800px}</center>
+<h6><b>Figure 1.</b> Average daily Covid cases per 100k people, by region (Sources: State and local health agencies [cases]; Census Bureau [population data]</h6>
+<br>
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fold.output = F}
+covid_numbers <- read.csv("./data/covid_numbers.csv")
+head(covid_numbers, 7) |> 
+  knitr::kable(align = "c", caption = "<h6><b>Table 1.</b> Daily Covid cases and population numbers by state (only showing first 7 records)</h6>") |> 
+  kableExtra::kable_styling(full_width = F,  html_font = 'Arial', font_size = 12) |> 
+  kableExtra::column_spec(1:4, background = 'white', include_thead = T)
+```
+</details>
+<br>
+
+<details open><summary class = 'drop2'>Example 2. Plots reveal patterns and highlight extremes</summary>
+
+This table shows average monthly revenue for Acme products. 
+
+```{r acme_table, echo = FALSE, message = FALSE, warning = FALSE, fold.output = F, fold.plot = F}
+acme_in <- read.csv("./data/acme_sales.csv") |> 
+  dplyr::arrange(category, product) 
+acme_in |> 
+  knitr::kable(align = "c", caption = "<h6><b>Table 2. </b>Average monthly revenue (in $1000's) from Acme product sales, 1950 - 2020</h6>") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 12) |> 
+  kableExtra::column_spec(1:14, background = 'white', include_thead = T)
+```
+
+Use the table above to answer these questions:
+
+1. What product and month had the highest average monthly revenue?
+2. What product and month had the lowest average monthly revenue?
+<br>
+
+Now let's display the same table as a <b>heat map</b>, with larger numbers represented by darker color cells. How quickly can we answer those same two questions? What patterns can we see in the heat map that were not obvious in the table above?
+
+```{r acme_heatmap, echo = FALSE, fig.width = 8, fig.align="center", message = FALSE, warning = FALSE, fold.plot = F, fold.output = F}
+
+acme <- acme_in |> 
+  pivot_longer(-c(category, product), names_to = "month", values_to = "revenue")
+acme$month <- factor(acme$month, levels = month.abb)
+
+ggplot(acme, aes(x=month, y=product, fill=revenue)) + 
+  geom_raster() +
+  geom_text(aes(label=revenue, color = revenue > 1250)) + # color of text conditional on revenue relative to 1250
+  scale_color_manual(guide = "none", values = c("black", "white")) + # set color of text
+  scale_fill_viridis_c(direction = -1, name = "Monthly revenue,\nin $1000's") +
+  scale_y_discrete(limits=rev) + # reverses order of y-axis bc ggplot reverses it from the data
+  labs(#title = "Average monthly revenue (in $1000's) from Acme product sales, 1950 - 2020", 
+       x = "Month", y = "Product") + 
+  theme_bw(base_size = 11) +
+  facet_grid(rows = vars(category), scales = "free") # set scales to free so each facet only shows its own levels
+```
+<h6><b>Figure 2.</b> Heat map of average monthly revenue (in $1000's) from Acme product sales, 1950 - 2020</h6>
+
+</details>
+<br>
+
+<details open><summary class = 'drop2'>Example 3. Plots provide insights that statistics obscure</summary>
+
+In 1973, Francis Anscombe published ["Graphs in statistical analysis"](https://garstats.files.wordpress.com/2016/08/anscombe-as-1973.pdf), a paper describing four bivariate datasets with identical means, variances, and correlations.
+
+```{r anscombe, echo = FALSE, message = FALSE, warning = FALSE, fold.output = F, fold.plot=F}
+ansc <- anscombe |> 
+  dplyr::select(x1, y1, x2, y2, x3, y3, x4, y4) 
+
+ansc |> 
+  knitr::kable(align = "c", caption = "<h6><b>Table 3.</b> Anscombe's Quartet - Four bivariate datasets with identical summary statistics</h6>") |> 
+  kableExtra::column_spec (c(2,4,6),border_left = F, border_right = T) |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 12) |> 
+  kableExtra::column_spec(1:8, background = 'white', include_thead = T)
+
+sapply(ansc, function(x) c(mean=round(mean(x), 2), var=round(var(x), 2))) |> 
+  knitr::kable(align = "c", caption = "<h6><b>Table 4. </b>Means and variances are identical in the four datasets. The correlation between x and y (r = 0.82) is also identical across the datasets.</h6>") |> 
+  kableExtra::column_spec (c(1,3,5,7), border_left = F, border_right = T) |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 12) |> 
+  kableExtra::column_spec(1:9, background = 'white', include_thead = T)
+```
+<br>
+
+<b>Anscombe data as plots: </b> Despite their identical statistics, when we plot the data we see the four datasets are actually very different. Anscombe's point was to understand the data, we must plot the data. 
+
+<center>![](images/anscombe_plots.png))</center>
+ <br>
+</details>
+</details>
+<br>
+<details open><summary class='drop'>Guidelines for Effective Data Visualizations</summary>
+
+Anscombe used clever thinking and simple plots to demonstrate the importance of data visualizations. But it's not enough to just plot the data. To have impact, a plot must convey a clear message. How can we do this?
+<ul>
+<li><b>Have a purpose.</b> Every data visualization should tell a story.</li>
+<li><b>Consider your audience.</b> Avoid scientific names, acronyms, or jargon unless your audience is well-versed in that language. Use color-blind friendly colors.</li>
+<li><b>Use an appropriate visualization.</b> For example: </li>
+  <ul>
+  <li>Line graphs work well for showing changes in continuous data over time </li>
+  <li>Bar charts compare counts or proportions in categorical data (pie charts get a bad rap in the data viz world, but can be useful in [certain situations](https://www.atlassian.com/data/charts/how-to-choose-pie-chart-vs-bar-chart))</li>
+  <li>For statistics (e.g., means) with confidence intervals, point plots with error bars are preferred over bar charts (nice explanation [here](https://scc.ms.unimelb.edu.au/resources-list/graphs-for-statistical-analysis/graphs))</li>
+  <li>Scatterplots are useful for showing the relationship (correlation) between two continuous variables.</li>
+  <li>Matrix heat maps can efficiently compare the magnitude of numbers when we have lots of data structured in table format, especially when colors have a clear connection to the numbers (e.g., scorecard data)</li>
+  <li>Box plots, violin plots, and histograms show distributions and outliers for continuous data. Dot plots are a useful alternative when sample sizes are small.</li>
+</ul>
+<li><b>Keep it simple: </b>
+  <ul>
+  <li>Every plot element and aesthetic should have a purpose.</li>
+  <li>Avoid 3D charts unless you have good reason otherwise.</li>
+  <li>Don't try to cram everything into one plot (e.g., juxtapose two plots instead of adding a secondary y-axis. Nice explanation [here](https://blog.datawrapper.de/dualaxis/)).</li>
+  </ul>
+<li><b>Use appropriate font size for axis labels.</b> The audience should not need a magnifying glass to read the axis labels on your figure. This is particularly true for powerpoint slides. Either make the font bigger in R, or manually fix that in powerpoint.</li>
+<li><b>Figures should not require 5 minutes of explaining before people can understand them.</b> If that's the case for your figure, think about how you can simplify or more clearly convey information.</li>
+<li><b>Use informative text and arrows wisely.</b> Clear, meaningful titles, subtitles, axes titles/labels, and annotations help convey the message of a plot. Use lines and arrows (sparingly but effectively) to emphasize important thresholds, data points or other plot features. Fonts should be large enough with good contrast (against the background) and sufficient white space to be easily readable.</li>
+</details>
+<br>
+

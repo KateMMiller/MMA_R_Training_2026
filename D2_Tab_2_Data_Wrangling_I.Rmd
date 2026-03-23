@@ -1,0 +1,211 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+#### Wrangling with dplyr 
+<details open><summary class = 'drop'>Introduction to `dplyr` </summary>
+The `dplyr` package is perhaps the single most useful package in R for working with your data. 
+<img src = "./images/dplyr_filter.png" alt = 'dplyr filter' style = "float:right; width:375px;">
+<span class = "capright"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></span>
+
+Commonly used `dplyr` functions and their use:
+<ul>
+<li><b>filter():</b> filters data for observations that meet specific criteria.</li>
+<li><b>select():</b> subsets columns by either selecting or removing them.</li>
+<li><b>arrange():</b> sorts data by specified column. </li>
+<li><b>mutate():</b> adds new column(s) to a data frame. </li>
+<li><b>slice():</b> slices the data based on specified number of rows</li>
+<li><b>group_by() |> summarize():</b> summarizes by groups/factor levels and returns data for each group (e.g. mean cover grouped by plot).
+<li><b>group_by() |> mutate():</b> summarizes by groups/factor levels and returns data for each observation.</li>
+<li><b>rename():</b> renames columns</li>
+</ul>
+
+Now, using the `dplyr` package in the `tidyverse`, we're going to do the same operations we did yesterday with brackets. 
+
+The steps we took with the NETN tree data were: 
+<ol>
+<li>Replace decay class code "PM" with NA (blank).</li>
+<li>Convert SampleDate (character) to Date (date-time). </li>
+<li>Rename the ScientificName column to Species.</li>
+<li>Create a Plot_Name column that's a combination of ParkUnit and PlotCode.</li>
+<li>Change tree DBH that's 443.0 to 44.3.</li>
+<li>Drop records that are QAQC visits. </li>
+</ol>
+</details>
+<br>
+
+```{r day2_wra, echo = F, include = F}
+#------------------------------------
+#     Day 2: Data Wrangling Code 
+#------------------------------------
+```
+
+<details open><summary class = 'drop'>Wrangle in dplyr</summary>
+<p class = 'code'>Read in example NETN tree data</p>
+```{r readtree3b}
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+
+<ol>
+<li><p class = 'code'>Replace decay class code "PM" with NA (blank).</p></li>
+```{r pmfixd2, eval = F}
+# Base R
+trees2 <- trees
+trees2$DecayClassCode[trees2$DecayClassCode == "PM"] <- NA
+trees2$DecayClassCode_num <- as.numeric(trees2$DecayClassCode)
+```
+```{r pmfixbased2, fold.output = T}
+# dplyr approach with mutate
+trees2 <- mutate(trees, DecayClassCode_num = as.numeric(replace(DecayClassCode, DecayClassCode == "PM", NA)))
+str(trees2)
+```
+
+<li><p class = 'code'>Convert SampleDate (character) to Date (date-time).</p></li>
+```{r tr3dtd2, eval = F}
+# Base R
+trees3$Date <- as.Date(trees3$SampleDate, format = "%m/%d/%Y")
+```
+```{r trdtd2dp, fold.output = T}
+# dplyr approach with mutate
+trees3 <- mutate(trees2, Date = as.Date(SampleDate, format = "%m/%d/%Y"))
+```
+
+<li><p class = 'code'>Rename the ScientificName column to Species.</p></li>
+```{r renamed2, eval = F}
+# Base R code
+names(trees2)[names(trees2) == "ScientificName"] <- "Species"
+```
+```{r renamedd2, fold.output = T}
+# dplyr approach with rename
+trees2 <- rename(trees2, "Species" = "ScientificName")
+names(trees2)
+```
+
+<li><p class ='code'>Create a Plot_Name column that's a combination of ParkUnit and PlotCode.</p></li>
+```{r pasta2d2, eval = F}
+# Base R
+trees2$Plot_Name <- paste(trees2$ParkUnit, trees2$PlotCode, sep = "-")
+```
+```{r pasta2bd2}
+# dplyr approach with mutate
+trees2 <- mutate(trees2, Plot_Name = paste(ParkUnit, PlotCode, sep = "-"))
+```
+
+<li><p class = 'code'>Drop records that are QAQC visits.</p></li>
+```{r tr3d2, eval = F}
+# Base R
+trees3 <- subset(trees2, IsQAQC == FALSE, select = -DecayClassCode) # Note the importance of FALSE all caps
+```
+```{r tr3bd2, fold.output = T}
+# dplyr
+trees3a <- filter(trees2, IsQAQC == FALSE)
+trees3 <- select(trees3a, -DecayClassCode)
+
+head(trees3)
+```
+</ol>
+Note that subsetting data frames in R, which refers to reducing rows, columns, or both, is split between 2 functions in `dplyr`. The `filter()` function reduces rows. The `select()` function reduces columns. 
+</details>
+<br>
+
+<details open><summary class = 'drop'>The magic pipe `|>`</summary>
+The pipe (`|>` or `%>%`) makes `dplyr` and other tidyverse packages even more powerful. The pipe `|>` allows you to string together commands. So, taking all of the code above, we can do it all in the same function call. 
+
+<p class='code'>Wrangle tree data with pipes</p>
+```{r pipe, fold.output = T}
+trees_final <- trees |> 
+  mutate(DecayClassCode_num = as.numeric(DecayClassCode),
+         Plot_Name = paste(ParkUnit, PlotCode, sep = "-"),
+         Date = as.Date(SampleDate, format = "%m/%d/%Y")) |> 
+  rename("Species" = "ScientificName") |> 
+  filter(IsQAQC == FALSE) |> 
+  select(-DecayClassCode) |> 
+  arrange(Plot_Name, TagCode)
+
+head(trees_final)  
+```
+
+The warning in the console tells us that in converting DecayClassCode to numeric, some NAs were introduced. This means that any row in DecayClassCode that had text in it was converted to a NA. In this case it's the 'PM' records, and we're expecting this warning. 
+
+The `arrange()` line just shows how to order the data by plot name and tree tag number. 
+
+Hopefully you agree that pipes are amazing! They allow for more efficient coding and is relatively easy to follow the steps, and make the dplyr functions, like `mutate()` so much more useful. Outside of pipes for example, `mutate()` doesn't feel more useful than base R for creating a new column. From now on, I will use pipes regularly in the code. 
+
+If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%` pipe was originally introduced by the tidverse in the `magrittr` package. The `magrittr` pipe was so popular, that starting in R 4.0, a base R pipe was introduced (`|>`). It's supposed to be better optimized for order of operations and reduces a package you need to install. So, in general, use the base R pipe `|>`. It's also why I had you set the default pipe in Global Options to the `|>`. A useful keyboard shortcut for the pipe is Ctrl + Shift + M. You should see the `|>` pipe in your script when you type that shortcut. If you get the `%>%` pipe instead, you need to change that default setting in Global Options (see Day 1 > R and RStudio > RStudio Global Options > Step 3. Change default pipe.)
+<br>
+<br>
+<p class = 'note'><b>Coding Tip:</b> While the number of steps you can pipe together is virtually endless, piping many tasks, especially complex ones, can make code hard to read and troubleshoot. It's best to limit number of pipes to 3-4, and/or to do complex tasks that might fail or require checking on their own.</p>
+</details>
+<br>
+
+<details open><summary class = 'drop'>Test your skills with dplyr!</summary>
+
+<!-- Test skills section -->
+<div class="alert alert-info">
+<strong>CHALLENGE: How many trees are on Plot MIMA-12 (using trees_final)?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chal4_d2}
+trees_final |> filter(Plot_Name == "MIMA-12") |> nrow()
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot MIMA-12 (using trees_final)?</strong>
+<details><summary class='drop2'>Answer</summary>
+
+```{r chal5d2, fold.output = F}
+trees_final |> filter(Plot_Name == "MIMA-12" & TreeStatusCode == "AS") |> nrow()
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: What is the exact value of the largest DBH, and which record does it belong to?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r maxdbhd2, fold.output = T}
+# Base R and dplyr combo
+max_dbh <- max(trees_final$DBHcm, na.rm = TRUE)
+trees_final |> 
+  filter(DBHcm == max_dbh) |> 
+  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
+
+# dplyr with slice
+trees_final |> 
+  arrange(desc(DBHcm)) |> # arrange DBHcm high to low via desc()
+  slice(1) |> # slice the top record
+  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
+
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+
+<details><summary class = 'drop2'>Answer</summary>
+```{r trfxd2, fold.output = F}
+# Base R
+# create copy of trees data
+trees_fix <- trees3
+# find the problematic DBH value, and change it to 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+
+# dplyr via replace
+trees_fix <- trees |> mutate(DBHcm = replace(DBHcm, DBHcm == 443.0, 44.3))
+```
+
+Check that it worked by showing the range of the original and fixed data frames.
+```{r check1d2, fold.output = F}
+range(trees$DBHcm)
+range(trees_fix$DBHcm)
+```
+
+</details>
+</div>
+</details>
+<br>
+

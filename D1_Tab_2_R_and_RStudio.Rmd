@@ -1,0 +1,80 @@
+
+#### R and RStudio 
+
+<details open><summary class = 'drop'>About R</summary>
+
+R is a programming language that was originally developed by statisticians for statistical computing and graphics. R is free and open source. That means you will never need a paid license to use it, and you can view the underlying source code of any function and suggest fixes and improvements. Since its first official release in 1995, R remains one of the leading programming languages for statistics and data visualization, and its capabilities continue to grow.  
+
+When you install R, it comes with a simple user interface that lets you write and execute code. However, writing code in this interface is similar to writing a report in Notepad: it's simple and straightforward, but you likely need more features than Notepad has to format your document. This is where RStudio comes in.
+
+For more information on the history of R, visit the [R Project website](https://www.r-project.org/about.html).
+</details>
+<br>
+
+<details open><summary class = 'drop'>About RStudio</summary>
+RStudio is what's called an _integrated development environment_ (IDE), which is essentially a shell around the R program. RStudio makes programming in R easier by color coding different types of code, auto-completing code, flagging mistakes, and providing many useful tools with the push of a button or key stroke (e.g. viewing help info).  
+</details>
+<br>
+
+<details open><summary class = 'drop'>RStudio Anatomy</summary>
+When you open RStudio, you typically see 4 panes:  
+<center>
+<img src = "./images/RStudio_Panes_labeled.png" alt = 'RStudio panes' style = "width:90%;">
+</center>
+<br>
+<details open><summary class='drop2'>Source</summary>  
+This is primarily where you write code. When you create a new script or open an existing one, it displays here. In the screenshot above, there's a script called bat_data_wrangling.R open in the source pane. Note that if you haven't yet opened or created a new script, you won't see this pane until you do.  
+  
+The source pane color-codes your code to make it easier to read, and detects syntax errors (the coding equivalent of a spell checker) by flagging the line number with a red "x" and showing a squiggly line under the offending code.
+
+When you're ready to run all or part of your script:
+<ul>
+<li>Highlight the line(s) of code you want to run</li>
+<li>Either click the "Run" button (top right of the source pane) or press <b>Ctrl+Enter</b>.</li>
+</ul>
+
+At this point, the code is sent to the console (the bottom left pane). You'll first see your code appear in the console, and then you'll see the output if there is any.  
+</details>
+<br>
+<details open><summary class='drop2'>Console</summary>  
+This is where the code actually runs. When you first open RStudio, the console will tell you the version of R that you're running (should be R 4.4.1 or greater).
+  
+While most often you'll run code from a script in the source pane, you can also run code directly in the console. Code in the console won't get saved to a file, but it's a great way to experiment and test out lines of code before adding them to your script in the source pane. The console is also where errors appear if your code breaks. Deciphering errors can be a challenge that gets easier over time. Googling errors is a good place to start.  
+</details>
+<br>
+<details open><summary class='drop2'>Environment/History/Connections</summary>
+<ul>
+<li><b>Environment:</b> This is where you can see what is currently in your _environment_. Think of the environment as temporary storage for objects - things like datasets and stored values - that you are using in your script(s). You can also click on objects and view them. Anything you see in your environment is temporary and it will disappear when you restart R. If there is something in your environment that you want to access in the future, make sure your script is able to reproduce it (or save it to a file).</li>
+<li><b>History:</b> This shows the code you've run in the current session. It's not good to rely on it, but it can be a way to recover code you ran in the console and later realized you needed in your script.</li>
+<li><b>Connections:</b> This is one way to connect R to a database. </li>
+<li><b>Git:</b> If you have installed Git on your computer, you may see a _Git_ tab. We won't talk much about it this week, but this is where you'll keep track of changes to your code. </li>
+<li><b>Tutorial:</b> This has some interactive tutorials that you can check out if you are interested.</li>  
+</ul></details>
+<br>
+<details open><summary class='drop2'>Workspace</summary>
+<ul>
+<li><b>Files:</b> This tab shows the files within your working directory (typically the folder where your current code project lives). More on this later. </li>
+<li><b>Plots:</b> This tab will show plots that you create.</li>
+<li><b>Packages:</b> This tab allows you to install, load, and update packages, and also view the help files within each package. You can also access these files in code.</li>
+<li><b>Help:</b> Allows you to search for and view documentation for packages that are installed on your computer.</li>
+<li><b>Viewer:</b> Shows HTML outputs produced by R Markdown, R Shiny, and some plotting and mapping packages.</li>
+</ul>  
+</details>
+</details>
+<br>
+
+<details open><summary class='drop'>RStudio Global Options</summary>
+
+There are several settings in the Global Options that everyone should check to make sure we all have consistent settings.
+Go to <b>Tools -> Global Options</b> and follow the steps below.
+<ol>
+<li>Under the <b>General</b> tab, you should see that your R Version is [64-bit] and the version is R-4.4.3 or greater. If it's not, you probably need to update R. Let me know if you need help with this.</li>
+<li>Also in the <b>General</b> tab, make sure you are not saving your environment. To do this, <b>uncheck</b> the <b>Restore .RData into your workspace at startup</b> option. When this option is checked, R Studio saves your current working environment (the stuff in the Environment tab) when you exit. The next time you open R Studio, it restores that same environment.
+<ul>
+<li>This may seem uesful, but part of the point of using R is that your code should return the same results every time you run it. Clearing the environment when you close RStudio forces you to run your code with a clean slate.</li>  
+<li>Set <b>Save workspace to .RData on exit:</b> to <b>Never</b>. The only reason not to set to "Never" is if you are working with a huge dataset that takes a long time to load and process. In that case, you may want to set <b>Save workspace to .RData on exit</b> to "Ask". When you close RStudio, it will ask you if you want to save your workspace image.</li>  
+</ul>
+<li>Change default pipe to base R pipe by going to the <b>Code</b> tab, and <b>check</b> the box <b>Use native pipe operator, |> (requires R 4.1+)</b>. We will discuss what this pipe means tomorrow.</li>
+<li>Most other settings are whatever you prefer. For example, to change the color of your background and text, go to the <b>Appearance</b> tab. I prefer Cobalt.</li>
+</ol>
+</details>

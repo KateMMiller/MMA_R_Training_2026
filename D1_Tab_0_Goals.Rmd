@@ -1,0 +1,20 @@
+
+#### Day 1 Goals {.tabset}
+<b>Goals for Day 1: </b>
+
+<ol>
+<li>Get comfortable navigating RStudio, such as opening a new project or script, running code and viewing the output, etc.</li>
+<li>Ability to import and save .csv and .xlsx files.</li>
+<li>Basic understanding of variables, functions, and data frames.</li>
+<li>Ability to explore data frames, such as dimensions (rows and columns), min/max of different columns, data type of column, basic plotting, etc.</li> 
+<li>Basic understanding of square brackets to view and filter data.frame[rows, columns]. </li>
+<li>Exposure to NAs (blanks).</li>
+<li>Able to access help within and outside of R.</li>
+</ol>
+<br>
+<b>Feedback: </b>Please leave feedback in the training feedback form. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.
+
+<img src = "./images/R_journey.png" alt = 'R journey' style = "display:block;margin-left:auto;margin-right:auto;width:450px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></center>
+</details>
+<br>

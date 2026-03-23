@@ -1,0 +1,314 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+#### Pivoting Tables
+<details open><summary class='drop'>Reshaping 101</summary>
+Reshaping data from long to wide and wide to long is a common task with our data.  Datasets are usually described as long, or wide. The long form, which is the structure database tables often take, consists of each row being an observation, and each column being a variable (i.e. tidy format). However, in summary tables, we often want to reshape the data to be wide for better digestion.  
+
+We’ll work with a fake bat capture dataset to see how this works. To get started, load the dataset and packages, as shown below.
+
+```{r day3_pv, echo = F, include = F}
+#------------------------------------
+#         Day 3: Pivot Code 
+#------------------------------------
+```
+
+```{r impbat, eval = F}
+library(dplyr)
+library(stringr) # for word 
+bat_cap <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/example_bat_capture_data.csv")
+head(bat_cap)
+str(bat_cap)
+```
+
+```{r impbat2, echo = F, results = 'hide'}
+bat_cap <- read.csv("./data/example_bat_capture_data.csv")
+```
+</details>
+<br>
+
+<details open><summary class = 'drop'>Prep the data </summary>
+
+The example dataset contains simplified capture data in long form. Every row represents an individual bat that was captured at a given site and date. We want to turn this into a wide data frame that has a column for every species, and the number of individuals of that species that were caught for each year and site combination. 
+
+Before we start, we’ll make a species code that will be easier to work with (R doesn’t like spaces). We’ll also summarize the data, so we have a count of the number of individuals of each species found per year.
+
+<p class='code'>Create sppcode</p>
+```{r batwran}
+bat_cap <- bat_cap |> 
+  mutate(genus = toupper(word(Latin, 1)), # capitalize and extract first word in Latin
+         species = toupper(word(Latin, 2)), # capitalize and extract second word in Latin
+         sppcode = paste0(substr(genus, 1, 3), # combine first 3 characters of genus and species
+                            substr(species, 1, 3))) |> 
+  select(-genus, -species) # drop temporary columns         
+
+head(bat_cap)
+```
+
+<p class='code'>Summarize # individuals per species, site and year</p>
+```{r batrang2}
+bat_sum <- bat_cap |> 
+  summarize(num_indiv = sum(!is.na(sppcode)), # I prefer this over n()
+            .by = c("Site", "Year", "sppcode")) |> 
+  arrange(Site, Year, sppcode) # helpful for ordering the future wide columns
+```
+Note that I'm using a trick in R with logicals to calculate `num_indiv`. Logical expressions (TRUE/FALSE) are treated as 1/0 values under the hood in R. Remember that `!` is interpreted in R as "not", so `!is.na()` reads as "not blank". Every row in `sppcode` is checked to see if it's blank or not. If it's not blank, that returns a TRUE statement, which is then treated as 1. The `sum()` function is then summing all of the 1s in the data. This is a way to perform a count of rows that meet a certain condition, and is safer than using `n()` in my opinion.
+
+</details><br>
+
+<details open><summary class='drop'>Pivot from long to wide</summary>
+Now that we have `bat_sum`, we're going to pivot the data wide to make each species be a separate column and the values in each cell be the number of individuals captured. The code below is pretty straightforward with `names_from` being the column you want to turn into column names, and the `values_from` being the value you want in the cells. 
+
+<p class = 'code'>Pivot bat summary data to wide</p>
+```{r batwide}
+bat_wide <- bat_sum |> pivot_wider(names_from = sppcode, values_from = num_indiv)
+head(bat_wide)
+```
+
+That was pretty simple. But there are a lot of blanks where a species wasn't caught in a give year and site. We can use the `values_fill` argument to save us time filling blanks as 0s.
+
+<p class = 'code'>Pivot bat summary data to wide filling blanks as 0</p>
+```{r batwide2}
+bat_wide <- bat_sum |> pivot_wider(names_from = sppcode, 
+                                   values_from = num_indiv, 
+                                   values_fill = 0)
+head(bat_wide)
+table(complete.cases(bat_wide)) # all true; no blanks
+```
+
+Now we see that every cell has a value. Another useful argument in `pivot_wider()` is `names_prefix`. That allows you to add a string before the column names that are generated in the pivot. This is helpful if you're pivoting on a number column, like year or plot number. R doesn't like column names that start with a number. The names_prefix is a quick way to fix that. I'll just show it with the bat capture data as an example, even though it wasn't needed.
+
+```{r batwide3}
+bat_wide2 <- bat_sum |> pivot_wider(names_from = sppcode, 
+                                    values_from = num_indiv, 
+                                    values_fill = 0, 
+                                    names_prefix = "spp_")
+head(bat_wide2)
+```
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Pivot the `bat_sum` data frame on year instead of species, so that you have a column for every year of captures. Remember to avoid column names starting with a number. </strong>
+
+<details><summary class='code2'>Answer</summary>
+
+```{r pivwide2b, fold.output = F}
+bat_wide_yr <- pivot_wider(bat_sum, 
+                           names_from = Year, 
+                           values_from = num_indiv, 
+                           values_fill = 0, 
+                           names_prefix = "yr")
+head(bat_wide_yr)
+```
+</details>
+</div>
+
+</details><br>
+
+<details open><summary class = 'drop'>Pivot wide to long</summary>
+We can reshape the capture data back to wide, which will give us a similar data as before with 0s are added into the data. For the `pivot_long()` function, you have to tell it which columns to pivot on. If you don't specify, it will make the entire dataset into 2 long columns, which you typically don't want. Here I tell R not to pivot on Site and Year columns, because I know they're in the data frame and unlikely to change. If I instead specified the sppcodes to pivot on, if a new species were found in the next year of sampling, I'd have to update this code to include that new species.
+
+```{r batlong}
+bat_long <- bat_wide |> pivot_longer(cols = -c(Site, Year), 
+                                     names_to = "sppcode", 
+                                     values_to = "num_indiv")
+head(bat_long)
+```
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Pivot the resulting data frame from the previous question to long on the years columns, and remove the "yr" from the year names using `names_prefix = 'yr'`. </strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r pivwide2a, fold.output = F}
+bat_long_yr <- pivot_longer(bat_wide_yr, 
+                            cols = -c(Site, sppcode),
+                            names_to = "Year", 
+                            values_to = "num_indiv", 
+                            names_prefix = "yr") # drops this string from values
+```
+</details>
+</div>
+</details>
+<br>
+
+#### Joining Tables
+<details open><summary class='drop'>Joining tables 101</summary>
+We often need to combine data from separate tables in our work (e.g., relational database tables). In R we do this using either the `merge()` function in base R or `join_()` functions in dplyr. Because I find dplyr join functions to be more intuitive and to perform faster than base R's merge, I'm going to show how to use dplyr. If you understand the basic concepts if the join functions, you can figure out how to merge in base R.
+
+Joining tables requires that the two datasets to join have at least one column in common, which is referred to as the key. The key is used to match records. The join type will determine whether all rows from both datasets are returned, or if only a portion are returned based on values in either or both of the two datasets. We think of joining as consisting of a left and right dataset. The left is specified first in the function argument, and the right is specified second. It generally doesn't matter which you make left or right, just that you know which is left or right. In general, I put site-level datasets on the left, and sample event datasets on the right.  
+</details><br>
+
+<details open><summary class='drop'>Types of joins</summary>
+<ul>
+<li><b>Full Join</b>: keeps all observations that appear in both the left and right dataset. Any key value in the left dataset that is not found in the right dataset will return NAs for columns coming from the right data frame, and vice versa. The full join treats both the left and right datasets equally.</li>
+
+<img src = "./images/full_join_R4DS.png" alt = 'full join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+<br>
+<li><b>Inner Join</b>: keeps only observations that are matched in both the left and right dataset. Any key value in the left dataset that is not found in the right dataset will be dropped, and vice versa. The inner join treats the left and right datasets equally. </li>
+
+<img src = "./images/inner_join_R4DS.png" alt = 'inner join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+<br>
+<li><b>Left Join</b>: keeps all observations that appear in the left dataset (first specified) and only those matched in the right dataset. Any key value in the left dataset that is not found in the right dataset will return NAs for columns coming from the right dataset. Any key value in the right dataset not found in the left data frame will be dropped. </li>
+
+<img src = "./images/left_join_R4DS.png" alt = 'left join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+<br>
+<li><b>Right Join</b>: keeps all observations that appear in the right dataset (second specified) and only those matched in the left dataset. Any key value in the right dataset that is not found in the left dataset will return NAs for columns coming from the left dataset. Any key value in the left dataset not found in the right dataset will be dropped. </li>
+
+<img src = "./images/right_join_R4DS.png" alt = 'right join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+
+<li><b>Anti Join</b>: Returns records in the left dataset that are not found in the right dataset. This is one direction, so to find all records not in common, you have to do an anti join with both combinations of data being on left or right side. I use anti joins when I'm trying to check that two datasets have the same sites or years represented.</li> 
+
+<img src = "./images/anti_join_R4DS.png" alt = 'anti join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+</ul>
+</details><br>
+
+<details open><summary class = 'drop'>Joins in practice</summary>
+To demonstrate the different joins, we'll join the `bat_wide` capture data frame we just created with a dataset that includes more information about the bat capture sites. 
+
+```{r day3_jn, echo = F, include = F}
+#------------------------------------
+#        Day 3: Join Code 
+#------------------------------------
+```
+
+<p class='code'>Read in bat site data </p>
+```{r batsite, fold.output = F}
+bat_sites <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/bat_site_info.csv")
+sort(unique(bat_sites$Site)) # Sites 1, 2, 3, 4, 5
+sort(unique(bat_wide$Site)) # Sites 1, 2, 3, 5, 6
+```
+
+The key in the two bat datasets is the "Site" column. In the `bat_sites` data frame, there are 5 unique sites, numbered 1:5. In the `bat_wide` data there are 5 unique sites, numbered 1, 2, 3, 5, 6. Therefore site_004 is only found in `bat_sites` and site_006 is only found in `bat_wide`.  
+
+<p class='code'>Full join</p>
+```{r fullj, fold.output = F}
+bat_full <- full_join(bat_sites, bat_wide, by = "Site")
+table(bat_full$Site)
+```
+
+```{r fulljk, echo = F}
+knitr::kable(bat_full, align = 'c') |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 10) |> 
+  kableExtra::column_spec(1:10, background = 'white', include_thead = T)
+```
+
+Note how site_004, which was not in the `bat_wide` capture data, but was in the `bat_site` data is included with NAs for the columns that came from the `bat_wide` data. Additionally, site_006, which was only in the `bat_wide` capture data but not in the `bat_site` data has NAs for the columns that came from the `bat_site` data. 
+
+<p class='code'>Inner join</p>
+```{r innerj, fold.output = F}
+bat_inner <- inner_join(bat_sites, bat_wide, by = "Site")
+table(bat_inner$Site)
+```
+
+```{r innerjk, echo = F}
+knitr::kable(bat_inner) |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 10) |> 
+  kableExtra::column_spec(1:10, background = 'white', include_thead = T)
+```
+
+The inner join only returns records from both datasets that have site in common. Therefore, site_004 in the `bat_site` data and site_006 in the `bat_wide` capture data were dropped.
+
+<p class='code'>Left join</p>
+```{r leftj, fold.output = F}
+bat_left <- left_join(bat_sites, bat_wide, by = "Site")
+table(bat_left$Site)
+```
+
+```{r leftjk, echo = F}
+knitr::kable(bat_left) |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 10) |> 
+  kableExtra::column_spec(1:10, background = 'white', include_thead = T)
+```
+
+The left join is taking every row in the left data, `bat_sites`, and only the rows in the right data, `bat_wide`, that have a matching site. Note how site_004, which is only in the `bat_sites`, is included with NAs for the columns that came from the `bat_wide` data that didn't have a match. Site_006, which was only in the `bat_wide` data was dropped. 
+
+<p class='note'><b>Coding tip:</b> I use left joins more than any other join because I'm usually joining tables that have a 1-to-many relationship, where the left dataset has 1 row for 1 or more rows in the right dataset. For example, say I have a dataset that only includes data for plots where an invasive species was detected and I want to do summary statistics that require the full number of plots. Using a left join, where the left dataset is a table of all of the plots and the right dataset is the invasive detections, will return the full set of plots to calculate summary statistics from. You may also have to fill 0s where NAs are introduced in the data before generating summary statistics, which should be done wisely.</p>
+
+<p class='code'>Right join</p>
+```{r rightj, fold.output = F}
+bat_right <- right_join(bat_sites, bat_wide, by = "Site")
+table(bat_right$Site)
+```
+
+```{r rightjk, echo = F}
+knitr::kable(bat_right) |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 10) |> 
+  kableExtra::column_spec(1:10, background = 'white', include_thead = T)
+```
+
+The right join is taking every row in the right data, `bat_wide`, and only the rows in the left data, `bat_sites`, that have a matching site. Note how Site_006, which is only in the `bat_wide`, is included with NAs for the columns that came from the `bat_sites` data that didn't have a match. Site_004, which was only in the `bat_sites` data was dropped. 
+
+<p class = 'code'>Anti join to find sites not in bat_wide</p>
+```{r aj, fold.output = F}
+anti_join(bat_sites, bat_wide, by = "Site")
+```
+
+<p class = 'code'>Anti join to find sites not in bat_sites</p>
+```{r aj2, fold.output = F}
+anti_join(bat_wide, bat_sites, by = "Site")
+```
+</details>
+<br>
+
+<details open><summary class = 'drop'>Test your skills!</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: Join the NETN_tree_data.csv and NETN_tree_species_table.csv to connect the common name to the tree data.</strong>
+<p class = 'code'>Import tree and species tables</p>
+```{r challtr1}
+spp_tbl <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_species_table.csv")
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2a}
+# find the columns in common
+intersect(names(spp_tbl), names(trees)) # TSN and ScientificName
+# left join species to trees, because don't want to include species not found in tree data
+trees_spp <- left_join(trees, 
+                       spp_tbl |> select(TSN, ScientificName, CommonName), 
+                       by = c("TSN", "ScientificName"))
+
+head(trees_spp)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Find a species in the NETN tree data that doesn't have a match in the species table.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2b}
+# find the columns in common
+intersect(names(spp_tbl), names(trees)) # TSN and ScientificName
+# anti join of trees against species table, selecting only columns of interest
+anti_join(trees, spp_tbl, by = c("TSN", "ScientificName")) |> 
+  select(ParkUnit, PlotCode, SampleYear, ScientificName)
+```
+</details>
+</div>
+
+</details>
+<br>
+<details open><summary class='drop'>Rolling joins</summary>
+There are a number of other more advanced joins out there, the rolling join being one of them. For more information on all possible joins, refer to <a href="https://r4ds.hadley.nz/joins.html">Chapter 19 in R for Data Science</a>.
+
+Rolling joins can come in handy if the key values in your two datasets don't perfectly match, and you want to join on the closest match. An example of where I've used rolling joins is to relate timing of high tide to the nearest water temperature measurement from a HOBO logger. You can allow for the nearest match in both directions or specify the direction (e.g., => or <=). </li> 
+
+<img src = "./images/rolling_join_R4DS.png" alt = 'rolling join' style = "display:block;margin-left:auto;margin-right:auto;width:300px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://r4ds.hadley.nz/joins.html">Figure from R for Data Science</a></center>
+<br>
+
+Unfortunately, dplyr's rolling join doesn't perform the way I've needed it. It only matches in one direction, like the closest temperature measurement after high tide, or the closest temperature measurement before high tide. If you need to do a rolling join, the `data.table` package is your best bet. It requires learning a new syntax and coding approach, so I'm not covering it here. But it's helpful to know that if you're working with huge datasets, `data.table` tends to perform much faster than dplyr and may have more features for joining and summarizing your data than dplyr.
+
+</details>
+<br>

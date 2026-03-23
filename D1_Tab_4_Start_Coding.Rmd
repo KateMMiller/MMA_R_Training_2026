@@ -1,0 +1,117 @@
+
+#### Start Coding 
+<details open><summary class='drop'>Start a new script</summary>
+First let's create a new R script file called `day_1_script.R`. Make sure you are working in the `imd_r_intro` project that you just created. Click on the <b>New File</b> icon <img src = "./images/NewFile.PNG" alt = "new script"> in the top left corner. In the dropdown, select <b>R Script</b>. The source pane will appear with an untitled empty script. Go ahead and save it by clicking the <b>Save</b> icon (and make sure the <b>Source on Save</b> checkbox is deselected). Call your new script `day_1_script.R`.
+</details>
+<br>
+<details open><summary class='drop'>Coding basics</summary>
+We'll start with something simple. Basic math in R is pretty straightforward and the syntax is similar to simply using a graphing calculator. You can use the examples below or come up with your own. Even if you're using the examples, try to actually type the code instead of copy-pasting - you’ll learn to code faster that way. 
+
+To run a single line of code in your script, place your cursor anywhere in that line and press <b>CTRL+ENTER</b> (or click the <b>Run</b> button in the top right of the script pane). To run multiple lines of code, highlight the lines you want to run and hit <b>CTRL+ENTER</b> or click <b>Run</b>. 
+
+To leave notes in your script, use the hashtag/pound sign (#). This will change the color of text that R reads as a comment and doesn't run. Commenting your code is one of the best habits you can form. Comments are a gift to your future self and anyone else who tries to use your code.
+
+```{r day1_sc, echo = F, include = F}
+#------------------------------------
+#     Day 1: Start Coding Code 
+#------------------------------------
+```
+
+<p class = 'code'>Type code below in your script and run each line. </p>
+```{r, ExecutingCode, fold.output = FALSE}
+# Commented text: try this line to generate some basic text and become familiar with where results will appear:
+print("Welcome to R!")
+
+# simple math
+1+1
+
+(2*3)/4
+
+sqrt(9)
+
+# calculate basal area of tree with 14.6cm diameter; note pi is built in constant in R
+(14.6^2)*pi
+
+# get the cosine of 180 degrees - note that trig functions in R expect angles in radians
+cos(pi)
+
+```
+<br>
+<p class = 'note'> <b>Coding Tip:</b> Notice that when you run a line of code, the code and the result appear in the console. You can also type code directly into the console, but it won't be saved anywhere. As you get more comfortable with R, it can be helpful to use the console as a "scratchpad" for experimenting and troubleshooting. For now, it's best to err on the side of saving your code as a script so that you don't accidentally lose useful work. </p>
+</details>
+<br>
+
+<details open><summary class='drop'>Variables</summary>
+Occasionally, it's enough to just run a line of code and display the result in the console. But typically our code is more complex than adding one plus one, and we want to store the result and use it later in the script. This is where variables come in. Variables allow you to assign a value (whether that's a number, a data table, a chunk of text, or any other type of data that R can handle) to a short, human-readable name. Anywhere you put a variable in your code, R will replace it with its value when your code runs. Variables are also called objects in R. 
+
+R uses the `<-` symbol for variable assignment. If you've used other programming languages, you may be tempted to use `=` instead. It will work, but there are subtle differences between `<-` and `=`, so you should get in the habit of using `<-`.
+
+R is case-sensitive. So if you name one object `fishdata` and another `Fishdata` or `FISHDATA`, R will interpret these all as unique objects. While you can do things like this, it's best practice not to use the same name for different objects, as it makes code difficult to follow.
+
+<p class = 'code'>Type code below to assign values to variables named a and b</p>
+```{r, VariableAssignment, fold.output = FALSE}
+# the value of 12.098 is assigned to variable 'a'
+a <- 12.098
+
+# and the value 65.3475 is assigned to variable 'b'
+b <- 65.3475
+
+# we can now perform whatever mathematical operations we want using these two 
+# variables without having to repeatedly type out the actual numbers:
+
+a*b
+
+(a^b)/((b+a))
+
+sqrt((a^7)/(b*2))
+```
+
+In the code above, we assign the variables `a` and `b` once. We can then reuse them as often as we want. This is helpful because we save ourselves some typing, reduce the chances of making a typo somewhere, and if we need to change the value of `a` or `b`, we only have to do it in one place.
+
+Also notice that when you assign variables, you can see them listed in your Environment tab (top right pane). Remember, everything you see in the environment is just in R's temporary memory and won't be saved when you close out of RStudio.
+
+All of the examples you've seen so far are fairly contrived for the sake of simplicity. Let's take a look at some code that everyone here will make use of at some point: reading data from a CSV.
+</details>
+<br>
+
+<details open><summary class = 'drop'>Functions</summary>
+It's hard to get very far in R without making use of <b>functions</b>. Think of a function as a programmed task that takes some kind of input (the argument(s)) from the user and outputs a result (the return value). 
+
+<img src="./images/FunctionDiagram.PNG" alt = "anatomy of a function">
+
+<br>
+
+<p class = "note">
+<b>Coding Tip:</b> Note the difference in how RStudio color codes what it thinks are functions. There are a lot of pre-programmed functions in base R, which is what comes along with R when you install R. Installing R packages will add additional functions. You can also build your own. Names that R recognizes as a function are color coded differently than what R recognizes as text, numbers, etc. It's good practice to not use existing functions as new object names.  </p>
+
+Commonly used base R functions include:
+<ul>
+<li>`mean()`: calculate the mean of a set of numbers</li>
+<li>`min()`: calculate the minimum of a set of numbers</li>
+<li>`max()`: calculate the maximum of a set of numbers</li>
+<li>`range()`: calculate the min and max of a set of numbers</li>
+<li>`sd()`: calculate the standard deviation of set of numbers</li>
+<li>`sqrt()`: calculate the square root of a value</li>
+</ul>
+
+<p class = 'code'>Calculate mean and range to see how functions work</p>
+```{r, introfun, fold.output = FALSE}
+
+x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+# equivalent to x <- 1:10
+
+# bad coding
+#mean <- mean(x)
+
+# good coding 
+mean_x <- mean(x)
+mean_x
+
+range_x <- range(x)
+range_x
+```
+
+</details>
+<br>
+
+

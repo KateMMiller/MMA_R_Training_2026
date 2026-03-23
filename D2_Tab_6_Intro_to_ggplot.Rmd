@@ -1,0 +1,288 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+```{r day2_gg, echo = F, include = F}
+#------------------------------------
+#    Day 2: Intro to ggplot Code 
+#------------------------------------
+```
+
+```{r optchunk, echo = F}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.align = 'center', fig.height = 3, fig.width = 5)
+```
+
+#### Intro to `ggplot2`
+<details open><summary class='drop'>Intro to `ggplot2`</summary>
+The `ggplot2` package is the most popular `R` package for plotting. It takes a little effort to learn how the pieces of a ggplot object fit together. However, once you get the hang of it, you can create and customize a large variety of attractive plots with just a few lines of `R` code. The package is called `ggplot2` because originally there was `ggplot`. The developer, Hadley Wickham, didn't want to break the original package to improve the package, so created ggplot2.  
+
+[The ggplot2 online book]("https://ggplot2-book.org/") and [cheatsheets](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf") can be very helpful while you are learning to use the `ggplot2` package.
+
+The `ggplot2` package was developed using the grammar of graphics as the underlying philosophy, which basically breaks a plot up into individual building blocks related to aesthetics (e.g., color, size, shape), geometries (e.g. points, lines, boxes), and themes (e.g. axis label font size, legend placement, etc.).
+
+Important concepts with `ggplot2`:
+<ul>
+<li><b>ggplot(data, aes()):</b> Every ggplot object starts with this line, which tells R the data you're plotting, and which variables you're plotting where in `aes()` argument.</li>
+<li><b>data: </b> every plot requires data. The first argument for every `ggplot()`call is the data. This also means you can pipe data into a ggplot object. </li>
+<li><b>aes: </b> Short for aesthetics. This is where you tell ggplot what your x and y variables are. If you want aesthetics, like color, fill, or size to vary by the data (e.g., color code a figure by park, use a dashed vs. solid line to distinguish between significant/non-significant trend, etc.), those variables are specified within the `aes()` argument either at the `ggplot()` level, or within the specific geom. </li>
+<li><b>geom: </b> Short for geometries, geoms represent what you see in the plot, such as the points in a scatter plot, the lines in a trend plot, or the boxes in a boxplot.</li>
+<li><b>scale: </b>Scales go hand in hand with `aes()`. If you specify `aes(color = park)`, then scale is where you can specify a custom color for each park instead of ggplot's default color scheme. The scale is where you can set the labels of groups in a legend (if different than how the data are labeled). You can also customize axis ranges, breaks and labels with different scales. </li>
+<li><b>theme: </b>This is where you can change the format of the figure, such as removing the gridlines in the default ggplot format, making axis labels larger, changing the position of the legend, etc.</li>
+<li><b>facet: </b>Faceting the data allows you to graph multiple plots based on a grouping variable (e.g., site, species, year, etc.) in the same ggplot object.</li>
+</ul>
+
+</details>
+<br>
+
+<details open><summary class='drop'>Plot Park Visitation in Acadia NP</summary>
+We will build our first ggplot object step-by-step to demonstrate how each component contributes to the final plot. Our first ggplot object will create a line graph of trends in visits to Acadia National Park from 1994 to 2024.
+
+<p class = 'code'>Step 1. Import the visitation data and load ggplot2</p>
+```{r import_gvdata, echo = TRUE, eval = F, message = FALSE, warning = FALSE}
+library(ggplot2)
+library(dplyr) # for filter 
+visits <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_annual_visits.csv")
+```
+```{r import_gvdata2, echo = F, results = 'hide', eval = T, message = FALSE, warning = FALSE}
+library(ggplot2)
+visits <- read.csv("./data/ACAD_annual_visits.csv")
+```
+
+<p class = 'code'>Step 2. Look over the data for any potential problems.</p>
+
+```{r view_data, eval = F, message = FALSE, warning = FALSE}
+# Examine the data to understand data structure, data types, and potential problems
+head(visits) 
+summary(visits)
+table(visits$Year) 
+table(complete.cases(visits))
+```
+```{r view_data2, fold.output = F}
+str(visits)
+```
+
+<p class = 'code'>Step 3. Fix the annual visitation variable</p>
+Note that Annual_Visits is treated like a character because there are "," thousands separators. We have to fix that before we can plot the data. There are multiple ways to do this. I'm going to use the `gsub()` function that behaves like `gsub([find "pattern"], [replace with "pattern"], [column to search])`. The empty "" removes the ",". The `as.numeric()` converts a character to numeric. As long as you don't get the "NAs introduced through coersion" warning in the console, all rows in the column of interest were successfully converted to a number.
+
+```{r fixav2, message = F, warning = F}
+# Base R
+visits$Annual_Visits <- as.numeric(gsub(",", "", visits$Annual_Visits))
+
+# Tidyverse
+library(dplyr) # load package first
+visits <- visits |> mutate(Annual_Visits = as.numeric(gsub(",", "", Annual_Visits)))
+str(visits) #check that it worked
+```
+
+<p class = 'code'>Step 4. Create the ggplot template of annual visitation per 1000 visitors over time</p>
+```{r p1, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p <- ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000))
+p
+```
+
+<p class = 'code'>Step 5. Add line and point geometry, starting with default, and ending with customized symbols</p>
+The plot below has custom the shape, color (outline), fill, and size of the points, but all points are the same. Note the hexcode used for the fill color. This is a 6 digit code that gives maximum flexibility on selecting colors. I often use <a href="https://htmlcolorcodes/com">HTML color codes</a> to find colors and their associated hexcode.
+
+Note that I usually specify the `geom_line()` before the `geom_point()`, because the geoms are drawn in the order they're specified. Specifying the opposite order will make the lines cross over the points and doesn't look as nice. I also made the linewidth a bit thicker than default.
+```{r p2, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p1a <- p + geom_line() + geom_point() # default color and shape to points
+p1a
+
+p1 <- p + 
+  geom_line(linewidth = 0.6) + 
+  geom_point(color = "black", fill = "#82C2a3", size = 2.5, shape = 24)
+p1
+```
+
+<p class = 'code'>Step 6. Fine tune the Y and X axis breaks</p>
+```{r p4, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p2 <- p1 + scale_y_continuous(name = "Annual visitors in 1000's",
+                              limits = c(2000, 4500),
+                              breaks = seq(2000, 4500, by = 500)) + # label at 2000, 2500, ... up to 4500
+           scale_x_continuous(limits = c(1994, 2024),
+                              breaks = c(seq(1994, 2024, by = 5))) # label at 1994, 1999, ... up to 2024
+p2
+```
+
+<p class = 'code'>Step 7. Change the labels</p>
+```{r p5, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p3 <- p2 + labs(x = "Year", 
+                title = "Annual visitation/1000 people in Acadia NP 1994 - 2024")
+p3
+```
+<br>
+Note how the axis labels can be specified either in the scale (step 4) or in the `labs()` function.
+
+<p class = 'code'>Step 8. Modify the theme using built-in themes</p>
+There are built in themes that change the default formatting of the plot. Here I show `theme_bw()`, but there are many options. Play around with the other themes to get a feel for the options: `theme_linedraw()`, `theme_light()`, `theme_dark()`, `theme_minimal()`, `theme_classic()`, `theme_void()`. The two I use most often are `theme_bw()` and `theme_classic()`.  There's a package called `ggthemes` that you can install with even more themes. You can also create your own themes.
+
+```{r p6, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p4 <- p3 + theme_bw() 
+p4
+```
+
+<p class ='code'>Or change theme elements manually</p>
+Note that `?theme` takes you to the help that shows all the options. 
+
+```{r p5b, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+p4b <- p3 + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), # make x axis text bigger and angle
+                  panel.grid.major = element_blank(), # turns of major grids
+                  panel.grid.minor = element_blank(), # turns off minor grids
+                  panel.background = element_rect(fill = 'white', color = 'dimgrey'), # panel white w/ grey border
+                  plot.margin = margin(2, 3, 2, 3), # increase white margin around plot 
+                  title = element_text(size = 10) # reduce title size 
+                  )
+
+p4b
+```
+<br>
+Note the order of margins in ggplot is Top, Right, Bottom, Left, which sounds like trouble. 
+
+<p class = 'code'>Putting it all together</p>
+```{r combg, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+  geom_line() + 
+  geom_point(color = "black", fill = "#82C2a3", size = 2.5, shape = 24) +
+  labs(x = "Year", title = "Annual visitation/1000 people in Acadia NP 1994 - 2024") +
+  scale_y_continuous(name = "Annual visitors in 1000's",
+                     limits = c(2000, 4500),
+                     breaks = seq(2000, 4500, by = 500)) + 
+  scale_x_continuous(limits = c(1994, 2024),
+                     breaks = c(seq(1994, 2024, by = 5))) + 
+  theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), # make x axis text bigger and angle
+        panel.grid.major = element_blank(), # turns of major grids
+        panel.grid.minor = element_blank(), # turns off minor grids
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), # make panel white w/ grey border
+        plot.margin = margin(2, 3, 2, 3), # increase white margin around plot 
+        title = element_text(size = 10) # reduce title size 
+        )
+  
+```
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Recreate the plot below (or customize your own plot). </strong>
+Note that the fill color is "#0080FF", and the shape is 21, and the theme is classic. The linewidth = 0.75, and linetype = 'dashed'. 
+
+```{r pq1, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+pq <- 
+  ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+    geom_line(linewidth = 0.75, linetype = 'dashed') + 
+    geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
+    labs(x = "Year", y = "Annual visits in 1,000s") +
+    scale_y_continuous(limits = c(2000, 4500),
+                       breaks = seq(2000, 4500, by = 500)) + 
+    scale_x_continuous(limits = c(1994, 2024),
+                       breaks = c(seq(1994, 2024, by = 5))) + 
+    theme_classic()
+pq
+```
+
+<details><summary class='code2'>Answer</summary>
+```{r pq1a, eval = F, results = 'hide'}
+ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+  geom_line(linewidth = 0.75, linetype = 'dashed') + 
+  geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
+  labs(x = "Year", y = "Annual visits in 1,000s") +
+  scale_y_continuous(limits = c(2000, 4500),
+                     breaks = seq(2000, 4500, by = 500)) + 
+  scale_x_continuous(limits = c(1994, 2024),
+                     breaks = c(seq(1994, 2024, by = 5))) + 
+  theme_classic()
+
+```
+</details>
+</div>
+</details>
+</br>
+
+<details open><summary class='drop'>Other geometries</summary>
+So far, the data we've plotted doesn't include any kind of variance. In many cases, we do want to show the distribution of data among years, parks or other categories. That's where plots like bar plots with error bars and boxplots can be handy. 
+
+First we'll look at how to make barplots with error bars. The visitation data doesn't have error bars, so we'll use a water chemistry dataset, and filter it to only include Jordan Pond and Dissolved Oxygen. 
+
+<details open><summary class = 'drop2'>Prep the data</summary>
+<p class = 'code'>Load the data and packages</p>
+```{r chemd2, eval = F}
+library(dplyr)
+library(ggplot2)
+chem <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_water_chemistry_data.csv")
+```
+```{r chemd22, echo = F}
+library(dplyr)
+chem <- read.csv("./data/NETN_water_chemistry_data.csv")
+```
+
+<p class = 'code'>Filter on Jordan Pond and Dissolved Oxygen and extract the month from the date in a VERY hacky way.</p>
+We'll learn about working with dates in a more formal way on Day 3.
+```{r chemd2_jord}
+jordDO <- chem |> 
+  filter(SiteCode == "ACJORD") |> 
+  filter(Parameter == "DO_mgL") |> 
+  mutate(month = as.numeric(gsub("/", "", substr(EventDate, 1, 2))))
+```
+```{r chemd2_check, eval = F}
+head(jordDO)
+unique(jordDO$SiteCode) # check filter worked
+unique(jordDO$Parameter) # check filter worked
+```
+
+Let's assume that calculating mean and standard error assuming the data were normally distributed is appropriate. The code below calculates mean and standard error by month, so we can plot error bars later.
+
+<p class = 'code'>Calculate standard error of DO by month </p>
+```{r chemd2_se}
+jordDO_sum <- jordDO |> group_by(month) |> 
+  summarize(mean_DO = mean(Value),
+            num_meas = n(),
+            se_DO = sd(Value)/sqrt(num_meas))
+jordDO_sum
+```
+</details>
+
+<details open><summary class='drop2'>Bar Plots</summary>
+Bar charts with error bars are a common way to show mean and variance. Bar charts y-axes should always start at 0, which doesn't necessarily allow you to see the patterns in the data all that well. Boxplots are often a better approach in that case, which we'll show next.
+
+A couple of notes on the code below:
+<ul>
+<li>For bar charts, if you want the value (mean_DO) to be the bar height, use `geom_col()`. If instead, you want the bar chart to be proportional to the number of cases in each group, use `geom_bar(stat = 'count')`. </li>
+<li>The `width = 0.75` makes the bar width narrower allowing some white space between the bars.</li>
+<li>Setting x to NULL in the `labs()` means the x axis won't include a label.</li>
+<li>This isn't the best use of bar plots, but you get the idea on how to use them.</li>
+</ul>
+<p class = 'code'>Bar plot of Jordan Pond average DO with 95% CI error bars</p>
+```{r barp, fold.plot = F}
+ggplot(data = jordDO_sum, aes(x = month, y = mean_DO)) +
+  geom_col(fill = "#74AAE3", color = "dimgrey", width = 0.75) +
+  geom_errorbar(aes(ymin = mean_DO - 1.96*se_DO, ymax = mean_DO + 1.96*se_DO), 
+                width = 0.75) +
+  theme_bw() +
+  labs(x = NULL, y = "Dissolved Oxygen mg/L") +
+  scale_x_continuous(limits = c(4, 11),
+                     breaks = c(seq(5, 10, by = 1)),
+                     labels = c("May", "Jun", "Jul", 
+                                "Aug", "Sep", "Oct"))
+
+```
+</details>
+<details open><summary class='drop2'>Boxplots</summary>
+Boxplots are another way to show variance in responses. In most cases, the middle line of a boxplot is the median. The lower and upper limits of the box represent the 25th and 75th percentiles. The lower and upper whiskers are 1.5 times the interquartile range (the 25th to 75th percentiles), or the min/max of the data, whichever is smaller. Points beyond the whiskers are considered outlying points. In this case, I turned off the outlying points, because I plotted the actual data behind the boxplots as slightly transparent. This is good practice to see how points are distributed.  
+
+<p class = 'code'>Boxplots of Jordan Pond DO</p>
+```{r boxp, fold.plot = F}
+ggplot(data = jordDO, aes(x = month, y = Value, group = month)) +
+  geom_boxplot(outliers = F) + 
+  geom_point(alpha = 0.2) +
+  theme_bw() +
+  labs(x = NULL, y = "Dissolved Oxygen mg/L") +
+  scale_x_continuous(limits = c(4, 11),
+                     breaks = c(seq(5, 10, by = 1)),
+                     labels = c("May", "Jun", "Jul", 
+                                "Aug", "Sep", "Oct"))
+
+```
+</details>
+</details>
+<br>
+
+

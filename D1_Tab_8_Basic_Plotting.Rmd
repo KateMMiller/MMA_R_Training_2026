@@ -1,0 +1,60 @@
+
+#### Basic Plotting
+<details open><summary class = 'drop'>Basic plotting</summary>
+Visualizing the data is also important to get a sense for the data and look for potential errors and outliers. Base R has plotting functions that allow you to create quick plots without having to know a lot of code. I often use Base R plot functions when I'm exploring data but not making plots I plan to use for publication. When I need to create more complex plots, I use `ggplot2`, which we'll cover on Day 2 and 3.
+
+Histograms are a great start. The code below generates a basic histogram plot of a specific column in the dataframe using the `hist()` function.
+
+```{r day1_bp, echo = F, include = F}
+#------------------------------------
+#     Day 1: Basic Plotting Code 
+#------------------------------------
+```
+
+
+```{r readtree2, results = 'hide', echo = F}
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+
+
+<p class='code'>Plot histogram of DBH measurements</p>
+```{r hist, fold.plot = F, fig.height = 4, fig.width = 6}
+hist(x = trees$DBHcm)
+```
+<br>
+Looking at the histogram, it looks like all of the measurements are below 100cm except for one that's way out in 400 range. You can also make a scatterplot of the data. If you only specify one column, the x axis will be the row number for each record, and the y axis will be the specified column.
+
+<p class='code'>Make point plot of DBH measurements</p>
+```{r pdbh1, fold.plot = F, fig.height = 4, fig.width = 6}
+plot(trees$DBHcm)
+```
+<br>
+Again, you can see there's one value that's greater than all of the others. 
+
+We can also plot two variables in a scatterplot. 
+
+<p class='code'>Make scatterplot of crown class vs. DBH measurements (Option 1)</p>
+```{r pdbh2, fold.plot = F, fig.height = 4, fig.width = 6}
+plot(trees$DBHcm ~ trees$CrownClassCode)
+```
+
+<p class='code'>Make scatterplot of crown class vs. DBH measurements (Option 2- better axis labels)</p>
+```{r pdbh5, fold.plot = F, fig.height = 4, fig.width = 6}
+plot(DBHcm ~ CrownClassCode, data = trees) # equivalent but cleaner axis titles
+
+```
+<br>
+Again, you can see there's one value that's greater than all of the others, and it's crown class code 3 (codominant). 
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Plot a histogram of percent cover (`Ave_Cov`) in the `ACAD_wetland` </strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r wethist, fig.height = 4, fig.width = 6}
+hist(ACAD_wetland$Ave_Cov)
+```
+</details>
+</div>
+</details>
+<br>
+

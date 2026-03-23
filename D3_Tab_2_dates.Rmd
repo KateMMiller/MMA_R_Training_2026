@@ -1,0 +1,205 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+#### Dates and Times
+<details open><summary class='drop'>Dates and times 101</summary>
+Dates, times and date-times are all species types of data in R. When you read in a dataset that has any of these, they typically will read in as a character. You then have to convert it into a date/time to do anything meaningful with it. The first place to start is knowing the code R uses to define year, month, day, hours, minutes, and seconds. The most common codes you'll come across are below. For the full list, check out the help for strptime by running: `?strptime`. The codes below are the ones you're most likely to come across, either to define a date/time format, or to return a specific format (like day of the week, month written in full, Julian day, etc.)
+
+```{r day3_dt, echo = F, include = F}
+#------------------------------------
+#     Day 3: Dates and Time Code 
+#------------------------------------
+```
+
+```{r dtcodes, echo=F, fold.output = F}
+codes <- read.csv("./data/datetime_codes.csv", encoding = "Latin-1")
+knitr::kable(codes) |> 
+  #kableExtra::scroll_box(width = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 11,
+                            bootstrap_options = "condensed") |> 
+  kableExtra::column_spec(1:2, background = 'white', include_thead = T)
+```
+
+<p class='code'>Look at current time and date output. </p>
+```{r time2, fold.output = F}
+Sys.time()
+class(Sys.time()) # POSIXct POSIXt
+Sys.Date()
+class(Sys.Date()) # Date
+```
+
+</details>
+<br>
+
+<details open><summary class='drop'>Dates in R</summary>
+For date only columns, you convert to a `Date` type. A few different versions of defining dates are below, based on the different format of the input date. This requires matching the format exactly. So, if there are `-` between day, month, year, or `/`, you need to specify the right symbol. If the output returns NA instead of a Date, something was wrong either in how you specified the format, or the column you're trying to format may have more than 1 format represented.
+
+<p class='code'>Example formatting for dates</p>
+```{r date1, fold.output = F, results = 'hide'}
+# date with slashes and full year
+date_chr1 <- "3/12/2026"
+date1 <- as.Date(date_chr1, format = "%m/%d/%Y")
+str(date1)
+```
+```{r date2, fold.output = F, results = 'hide'}
+# date with dashes and 2-digit year
+date_chr2 <- "3-12-26"
+date2 <- as.Date(date_chr2, format = "%m-%d-%y")
+str(date2)
+```
+```{r date3, fold.output = F}
+# date written out
+date_chr3 <- "March 12, 2026"
+date3 <- as.Date(date_chr3, format = "%b %d, %Y")
+str(date3)
+```
+
+<p class = 'code'>Extract information about dates</p>
+```{r dateext, fold.output = F}
+#Julian date as numeric
+as.numeric(format(date1, format = "%j"))
+
+#Return day of week
+format(date1, format = "%A") 
+#Return abbreviated day of week
+format(date1, format = "%a") 
+
+#Return written out date with month name
+format(date1, format = "%B %d, %Y") 
+#Return abbreviated written out date with month name
+format(date1, format = "%b %d, %Y") 
+
+```
+
+<p class = 'code'>Do math with dates</p>
+```{r dateext4, fold.output = F}
+date1 + 1 # add a day
+date1 + 7 # add a week
+```
+
+<p class = 'code'>Create a vector of evenly spaced dates. </p>
+This can be helpful for setting up axis labels where one axis is dates.
+```{r dateext5, fold.output = F}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+# by 15 days
+seq.Date(date_list[1], date_list[2], by = "15 days")
+# by month
+seq.Date(date_list[1], date_list[2], by = "1 month")
+# by 6 months
+seq.Date(date_list[1], date_list[2], by = "6 months")
+```
+
+<div class="alert alert-info">
+<strong>Question: How would you return date1 as YYYYMMDD (20260312)?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald31d}
+format(date1, format = "%Y%m%d")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Question: How would you create a list of dates in 2026 that are evenly spaced by 3 months?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32b}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "3 months")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Question: How would you create a list of dates in 2026 that are evenly spaced by 1 week?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32cb}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "1 week")
+```
+</details>
+</div>
+</details>
+<br>
+
+<details open><summary class = 'drop'>Times in R</summary>
+Date-time variables (e.g. a HOBO logger timestamp) need to be converted into a POSIX type before you can work with them. POSIX (Portable Operating System Interface) is an international standard for handling things like dates and times and comes from Unix. The idea being that POSIX date/times are transferable across software. There are 2 POSIX types for date-times in R.
+<ol>
+<li><b>POSIXct:</b> is lighter weight and only stores the date-time as the number of seconds since January 1, 1970. Times prior to 1970 are stored as negative numbers.</li>
+<li><b>POSIXlt:</b> type stores more information that's easily accessible, including min, hour, sec, mday (day of the month), month (mon), year, yday (Julian day), etc. </li>
+</ol>
+If your dataset is huge, working with the lighter weight POSIXct may be best. Outside of that, whatever you choose may not matter too much in your workflow. We will use the lighter weight POSIXct version for our examples. 
+
+<p class = 'code'>Look under the hood of the info stored by the two POSIX types </p>
+```{r time101, fold.output = F}
+unclass(as.POSIXct("2026-03-12 01:30:00", "%Y-%m-%d %H:%M:%S", tz = "America/New_York"))
+unclass(as.POSIXlt("2026-03-12 01:30:00", "%Y-%m-%d %H:%M:%S", tz = "America/New_York"))
+```
+
+If you understand how to set up a Date type in R, setting up date-times aren't that different. It just takes a bit more attention to get the format right. To demonstrate, we'll read in HOBO temperature data and set the timestamp column as a POSIXct date-time. There's usually a bit of cleaning required of HOBO data beyond setting the timestamp as POSIXct date-time. I'll show the whole process below.
+
+<p class = 'code'>Read in temperature data and look at it</p>
+```{r temp1, fold.output = T}
+temp_data1 <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv")
+head(temp_data1)
+```
+
+Note the extra row on top showing the file name. HOBO data often has some metadata in the first row. The next code chunk imports a cleaner version of the data by skipping the first row, only pulling in the first 3 columns (we don't care about the columns that report Logged), and cleaning up the column names.
+
+<p class = 'code'>Clean up non-date HOBO data</p>
+```{r temp1b, fold.output = F}
+temp_data <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", skip = 1)[,1:3]
+colnames(temp_data) <- c("index", "date_time", "tempF")
+```
+```{r tempv, eval = F}
+View(temp_data)
+```
+
+```{r tempkbl, echo = F, fold.output = F}
+knitr::kable(temp_data[1:50,], caption = "First 50 rows of temp_data") |> 
+  kableExtra::scroll_box(height = "300px") |> 
+  kableExtra::kable_styling(full_width = F, html_font = 'Arial', font_size = 10) |> 
+  kableExtra::column_spec(1:3, background = 'white', include_thead = T)
+```
+<br>
+<p class='code'>Convert date_time to POSIXct</p>
+We can see that the date is formatted as M/D/YYY, then there's a space, then the time is formatted with HH:MM, with hours following the 0-23 pattern, minutes 00-59. There are no seconds.  
+
+```{r temp1c, fold.output = F}
+temp_data$timestamp <- as.POSIXct(temp_data$date_time, 
+                                  format = "%m/%d/%Y %H:%M", 
+                                  tz = "America/New_York")
+head(temp_data)
+```
+
+
+<p class='code'>Extract the YYYYMMDD date, month, Julian day, time, and hour of the timestamp.</p>
+```{r tempextr, fold.output = F}
+temp_data$date <- format(temp_data$timestamp, "%Y%m%d") 
+temp_data$month <- format(temp_data$timestamp, "%b")
+temp_data$time <- format(temp_data$timestamp, "%I:%M") 
+temp_data$hour <- as.numeric(format(temp_data$timestamp, "%I")) 
+head(temp_data)
+```
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you extract the month as a number ranging from 1-12 in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdate}
+temp_data$month_num <- as.numeric(format(temp_data$timestamp, "%m"))
+head(temp_data)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you extract the Julian date in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdatej}
+temp_data$julian <- as.numeric(format(temp_data$timestamp, "%j"))
+head(temp_data)
+```
+</details>
+</div>
+</details>
+</br>

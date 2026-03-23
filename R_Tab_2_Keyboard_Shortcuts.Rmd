@@ -1,0 +1,21 @@
+
+#### Keyboard Shortcuts
+Once you get in the swing of coding, you'll find that minimizing the number of times you have to use your mouse will help you code faster. RStudio has done a great job creating lots of really useful keyboard shortcuts designed to keep your hands on the keyboard instead of having to click through menus. One way to see all of the shortcuts RStudio has built in is to press <b>Alt+Shift+K</b>. A window should appear with a bunch of shortcuts listed. These are also listed on <a href="https://support.posit.co/hc/en-us/articles/200711853-Keyboard-Shortcuts-in-the-RStudio-IDE">List of RStudio IDE Keyboard Shortcuts</a>. The shortcuts I use the most often are listed below:
+<ul>
+<li>Undo: Ctrl Z</li>
+<li>Redo: Ctrl Shift Z</li>
+<li>Run highlighted code: Ctrl Enter</li>
+<li>Insert "<-" : Alt - </li> 
+<li>Zoom in to make text bigger: Ctrl roll mouse forward (set in Global Options) </li>
+<li>Zoom out: Ctrl - or Ctrl roll mouse backward (set in Global Options)</li>
+<li>Move line of code up or down: Alt arrow up or down</li>
+<li>Comment out whole line: Ctrl Shift C</li>
+<li>Duplicate line of code: Ctrl Shift D</li>
+<li>Move cursor to beginning of line: Home</li>
+<li>Move cursor to end of line: End</li>
+<li>View help for a given function: Put cursor on function name and press F1</li>
+<li>Esc escapes out of the command currently being executed in the console </li>
+<li>Restart R Session: Ctrl Shift F10</li>
+<li>Insert pipe (|>): Ctrl Shift M</li>
+<li>View RStudio's keyboard shortcuts: Alt Shift K</li>
+</ul>

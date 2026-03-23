@@ -1,0 +1,16 @@
+Code,Definition
+%a,Abbreviated weekday name in the current locale on this platform. 
+%A,Full weekday name in the current locale. 
+%b,Abbreviated month name in the current locale on this platform. Case-insensitive on input.
+%B,Full month name in the current locale. Case-insensitive on input.
+%d,Day of the month as decimal number (01-31).
+%H,Hours as decimal number (00-23). As a special exception strings such as ??24:00:00?? are accepted for input.
+%I,Hours as decimal number (01-12).
+%j,"Day of year (Julian) as decimal number (001-366): For input, 366 is only valid in a leap year."
+%m,Month as decimal number (01-12).
+%M,Minute as decimal number (00-59).
+%p,AM/PM indicator in the locale. Used in conjunction with %I and not with %H. For input the match is case-insensitive. 
+%S,Second as integer (00-61)
+%u,"Weekday as a decimal number (1-7, Monday is 1)."
+%y,Year without century (00-99). 
+%Y,Year with century.

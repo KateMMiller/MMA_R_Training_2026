@@ -1,0 +1,290 @@
+
+#### Data Structures
+
+<details open><summary class = 'drop'>Vectors</summary>
+The data frame we just examined is a type of data structure. A data structure is what it sounds like: a structure that holds data in an organized way. There are multiple data structures in R, including vectors, lists, arrays, matrices, data frames, and tibbles (more on this data structure later). Today we'll focus on vectors and data frames.
+
+Vectors are the simplest data structure in R. Vectors are like a single column of data in an Excel spreadsheet. Vectors only have one dimension, and can be accessed by their row number. Here are some examples of vectors:
+
+```{r day1_v, echo = F, include = F}
+#------------------------------------
+#       Day 1: Vectors Code 
+#------------------------------------
+```
+
+
+```{r, Vectors, fold.output=FALSE}
+digits <- c(1:10)  # Use x:y to create a sequence of integers starting at x and ending at y
+digits
+digits + 1 # note how 1 was added to every element of digits. 
+
+is_odd <- rep(c(FALSE, TRUE), 5)  # Use rep(x, n) to create a vector by repeating x n times 
+is_odd
+
+tree_dbh <- c(12.5, 20.4, 18.1, 38.5, 19.3)
+tree_dbh
+
+bird_ids <- c("black-capped chickadee", "dark-eyed junco", "golden-crowned kinglet", "dark-eyed junco")
+bird_ids
+```
+
+Note the use of `c()`. The `c()` function stands for *combine*, and it combines elements into a single vector, with each element separated by a comma in code. The c() function is a fairly universal way to combine multiple elements in R, and you’re going to see it over and over. Note how in digits, when we added a 1, every value in digits increased by 1. This highlights the concept of <b>vectorization</b> in R. The general idea being that you can apply a single operation to a vector (or row in a data frame), and it will apply to all elements of that vector. 
+
+If you need to access a single element of a vector, you can use the syntax `my_vector[x]` where `x` is the element's *index* (the number corresponding to its position in the vector). You can also use a vector of indices to extract multiple elements from the vector. Note that in R, indexing starts at 1 (i.e. `my_vector[1]` is the first element of `my_vector`). If you've coded in other languages, you may be used to indexing starting at 0.
+
+```{r, SubsettingVectors, fold.output=FALSE}
+second_bird <- bird_ids[2]
+second_bird
+top_two_birds <- bird_ids[c(1,2)]
+top_two_birds
+```
+
+You can also return only unique values from a vector. The `bird_ids` vector has dark-eyed juncos listed twice. To get only unique species, run the following code. I also added `sort()` to sort the list alphabetically.
+
+```{r birdunq, fold.output=FALSE}
+sort(unique(bird_ids))
+```
+
+</details>
+<br>
+
+<details open><summary class='drop'>Data Types</summary>
+In the examples above, each vector contains a different type of data: `digits` contains integers, `is_odd` contains logical (TRUE/FALSE) values, `bird_ids` contains text, and `tree_dbh` contains decimal numbers. That's because a given vector can only contain a single type of data. 
+
+In R, there are six main *data types*:
+
+  - **character:**  Regular text, denoted with double or single quotation marks (e.g. `"hello"`, `"3"`, `"R is my favorite programming language"`)
+  - **numeric:**  Decimal numbers (e.g. `23`, `3.1415`)
+  - **integer:**  Integers. If you want to explicitly denote a number as an integer in R, append `L` to it or use `as.integer()` (e.g. `5L`, `as.integer(30)`).
+  - **logical:**  True or false values (`TRUE`, `FALSE`). Note that `TRUE` and `FALSE` must be all-uppercase.
+  - **date-time:** specially formatted field for dates or time using POSIX format.
+  - **factor:** These are strings that have defined levels (e.g., Parks in your network) that are kept with the column even if no records exist for a given factor level. Factors used to be a lot more common in R. I typically only use them in plotting to force an order level that's not alphabetical.
+  
+You can use the `class()` function to get the data type of a vector:
+
+```{r, cls, fold.output=FALSE}
+class(bird_ids)
+class(tree_dbh)
+class(digits)
+class(is_odd)
+```
+
+</details>
+<br>
+
+#### Data Frames 
+
+<details open><summary class = "drop">Data Frame Properties</summary>
+Data frames are the main way will be interacting with data in R. They're essentially like spreadsheets in excel with specific properties. 
+
+Properties of data frames: 
+<ol>
+<li>As the name implies, data frames are rectangular. That means each column has the same number of rows. Each row has the same number of columns. But data frames can have different number of columns and rows (ie rectangular, not square).</li>
+<li>Data frames have 2 dimensions: First is always Rows, and second is always Columns.</li>
+<li>You can access the data within data frames by specifying the row, the column, or both at the same time.</li>
+<li>Each column in a data frame is assigned one of the five main data types we discussed above: numeric, integer, character, logical, or date-time </li>
+</ol>
+
+<p class = "note">
+<b>Coding Tip:</b> R is strict about assigning data types to columns, such that any text in an otherwise numeric field will turn the entire column into a character. Similarly, if there's anything besides TRUE, FALSE, or a blank in a field meant to be TRUE/FALSE, R will treat that as a character field instead of logical. So, if R treats as a character something that should be a numeric field, it's a good clue there may be a typo or issue in your data needing attention. You can check the assigned data types using the `str()` function.</p>
+
+```{r dfp}
+str(ACAD_wetland)
+```
+
+</details>
+<br>
+<details open><summary class = 'drop'>Accessing Rows and Columns</summary>
+<br>
+<h5>Show me the `$` </h5>
+One way to access the column dimension in data frames is to use the `$` syntax. The `$` is used to separate the data frame name from the column name. It's similar to the [<i>table_name</i>].[<i>column_name</i>] syntax in Access. 
+
+To view the names of the columns in a data frame, you can use the `names()` function, or use `head()` to see the first 6 rows with column names. Whatever you prefer. I'll use the former for now.
+
+<p class='code'>See column names in wetland data.</p>
+```{r, DataFrameColumnames, fold.output=FALSE}
+names(ACAD_wetland)
+```
+
+<p class='code'>See list of all sites and species in the wetland data. You can view the output by clicking on the R output drop down.</p>
+```{r, DataFrameColumn, fold.output=TRUE}
+ACAD_wetland$Site_Name
+ACAD_wetland$Latin_Name
+```
+
+<h5>Square brackets `[ , ]`</h5>
+Remember that every data frame has 2 dimensions. The first dimension is rows and the second is columns. Thinking of the data in two dimensions in the order of rows then columns helps understand how brackets work.
+
+Square brackets `[rows, columns]` are how you access specific rows and columns in a data frame using base R. Examples include:
+<ul>
+<li>Specifying row numbers or matching specific patterns, like return all TRUE values.</li>
+<li>Specifying column numbers or names to return specific columns.</li>
+<li>Returning specific columns and all rows (leave the left side of the "," blank).</li>
+<li>Returning specific rows and all columns (leave the right side of the "," blank).</li>
+</ul>
+
+Square brackets were one of the hardest concepts when I was starting out. Don't worry if this isn't immediately intuitive. There are easier ways to work with data frame rows and columns, which you'll learn on Day 2. It is still useful to have a basic understanding of how to interpret square brackets, as you will likely encounter them on StackOverflow or other R help sites. We'll work through some examples of using the square brackets to access rows, columns and/or both.
+
+The code below asks for the dimensions of the `ACAD_wetland` data frame, and returns 508 11. That means there are 508 rows, and 11 columns. 
+
+<p class = 'code'>Return data frame number of rows and columns by checking data frame dimensions. Click on R output to view results.</p>
+```{r, dimdf, fold.output=FALSE}
+dim(ACAD_wetland)
+nrow(ACAD_wetland) # first dim
+ncol(ACAD_wetland) # second dim
+```
+
+<p class = 'code'>Return first 5 rows of the wetland data frame. </p>
+Note the comma with nothing to the right. That means return all columns. 
+```{r, rows, eval=F}
+ACAD_wetland[1:5,]
+```
+```{r rows2, fold.output =T}
+ACAD_wetland[c(1, 2, 3, 4, 5),] #equivalent but more typing
+```
+
+<p class = 'code'>Return all rows and a subset of columns of the data frame</p>
+Note how the left side of the "," is empty above. That means return all rows.
+```{r, rowscols, fold.output=TRUE}
+ACAD_wetland[, c("Site_Name", "Latin_Name", "Common", "Year", "PctFreq")]
+```
+
+<p class = 'code'>Return first 5 rows and a subset of columns of the data frame</p>
+```{r, rowscols5, fold.output=TRUE}
+ACAD_wetland[1:5, c("Site_Name", "Latin_Name", "Common", "Year", "PctFreq")]
+```
+
+<p class = 'code'>Return all rows and first 4 columns of the data frame</p>
+```{r rowscols2, fold.output = TRUE}
+ACAD_sub <- ACAD_wetland[ , 1:4] # works, but risky
+ACAD_sub2 <- 
+  ACAD_wetland[,c("Site_Name", "Site_Type", "Latin_Name", "Common")] #same result, but better
+```
+```{r check2b, eval = F}
+# compare the two data frames to the original
+head(ACAD_wetland)
+head(ACAD_sub)
+head(ACAD_sub2)
+```
+
+<p class = "note"> <b>Coding Tip:</b> As shown above, you can specify columns by name or by column number. However, it's almost always best to refer to columns by name. It makes your code easier to read and prevents it from breaking if columns get reordered. </p>
+</details>
+</br>
+
+
+<details open><summary class = 'drop'>Test your skills!</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you look at the the first 4 even rows (2, 4, 6, 8), and first 2 columns of the `ACAD_wetland` data frame?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+<h5>Answer that works<h5>
+```{r chal1, fold.output = F}
+ACAD_wetland[c(2, 4, 6, 8), c(1, 2)]
+```
+
+<h5>Better answer that's more stable</h5>
+```{r chal1b, fold.output = F}
+names(ACAD_wetland) # get the names of the first 2 columns
+ACAD_wetland[c(2, 4, 6, 8), c("Site_Name", "Site_Type")]
+```
+
+</details>
+</div>
+</details>
+<br>
+<details open><summary class = 'drop'>Advanced Bracketry</summary>
+You can do more than just subset by row numbers and column names. Pattern matching to return certain rows or columns is a common and more advanced used of brackets.  
+<br>
+<h5>Using `=` vs `==` vs `%in%` </h5>
+A key point in R is knowing when to use a single `=` or a double `==`. 
+<ul>
+<li>When using the equals to assign a value to a new object or column (stay tuned for tomorrow), use the single `=`.</li> 
+<li>When you're using the equals symbol to match a value, you use the double `==`.</li>
+<li>Conversely, `!=` is interpreted as not equal to for similar use. </li>
+<li>Another operator is `%in%`. This operator works just like `==`, but for multiple conditions. The `==` operator is not designed to take more than 1 condition, even though it won't give you an error. Instead, it will stop after it makes the first match. </li>
+</ul>
+
+As you get more comfortable with R, this will become natural. If you forget, R will error and may even give you a hint when you used `=` instead of `==`.
+
+<p class = 'code'>Pattern match (filter) to return a data frame of species that are not invasive and return all columns</p>
+```{r rowscols2b, fold.output = TRUE}
+head(ACAD_wetland)
+
+ACAD_nat <- ACAD_wetland[ACAD_wetland$Invasive == FALSE, ]
+table(ACAD_wetland$Invasive) # 9 T
+table(ACAD_nat$Invasive) # No T
+```
+
+<p class = "code">Filter data to only return the Latin_Name column of rows where Invasive is TRUE. Click on R Output below to view results.</p>
+```{r inv, fold.output = FALSE}
+ACAD_wetland$Latin_Name[ACAD_wetland$Invasive == TRUE]
+ACAD_wetland[ACAD_wetland$Invasive == TRUE, "Latin_Name"] # equivalent
+
+```
+
+<p class = 'code'>Filter data to return any plot where Arethusa bulbosa, Calopogon tuberosus, or Pogonia ophioglossoides were detected. </p>
+```{r orchids}
+orchid_spp <- c("Arethusa bulbosa", "Calopogon tuberosus", "Pogonia ophioglossoides")
+ACAD_orchid_plots <- ACAD_wetland[ACAD_wetland$Latin_Name %in% orchid_spp, 
+                                  c("Site_Name", "Year", "Latin_Name")]
+ACAD_orchid_plots
+```
+
+<p class = 'note'><b>Coding Tip:</b> There are often multiple ways to perform a task. The best code is code that 1) works, 2) is easy to follow, and 3) is unlikely to break (e.g. use column names instead of numbers). That still means there are typically multiple equally valid approaches. There are other ways to judge good code as you advance, but for now, aspire to write code that meets these three qualities.</p>
+
+</details>
+</br>
+
+<details open><summary class = 'drop'>Functions `unique()`, `sort()`, `length()`</summary>
+Determining the number of records that match a certain condition can useful too. Say we want to know how many unique sites were sampled in the `ACAD_wetland` data frame. We can use a combination of brackets and other functions to summarize that, like below.
+
+<p class='code'>Sort alphabetically a list of unique site names.</p>
+```{r sortd1, fold.output = F}
+# Return a vector of unique site names, sorted alphabetically
+sites_unique <- sort(unique(ACAD_wetland[,"Site_Name"]))
+sites_unique
+```
+<p class='code'>Determine number of unique sites</p>
+```{r lengthsites}
+# Returns the number of elements in sites_unique vector
+length(sites_unique) # 8
+```
+
+
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How many unique species are there in the `ACAD_wetland` data frame?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r rows2a, results = "hide"}
+# Option 1
+length(unique(ACAD_wetland[, "Latin_Name"]))
+```
+
+```{r rows2b, fold.output = FALSE}
+# Option 2
+length(unique(ACAD_wetland$Latin_Name)) # equivalent
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Which sites have species that are considered protected on them (Protected = TRUE)?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r, rows2a2, results = 'hide'}
+# Option 1 - used unique to just return unique site name
+unique(ACAD_wetland$Site_Name[ACAD_wetland$Protected == TRUE])
+
+```
+
+```{r, rows2b2, fold.output=FALSE}
+# Option 2
+unique(ACAD_wetland[ACAD_wetland$Protected == TRUE, "Site_Name"])
+```
+</details>
+</div>
+<br>
+</details>
+<br>
+

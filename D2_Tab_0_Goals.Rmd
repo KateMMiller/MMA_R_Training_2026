@@ -1,0 +1,28 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+#### Day 2 Goals
+
+<b>Goals for Day 2: </b>
+<ol>
+<li>Understanding of tidy data format (rows are observations; columns are variables).</li>
+<li>Exposure to the main tidyverse packages and philosophy behind it.</li>
+<li>Comfortable filtering and selecting data, and renaming and creating new columns in `dplyr`. </li>
+<li>How to use `ifelse()` and `case_when()` conditional statements.</li>
+<li>Comfortable grouping and summarizing data in `dplyr`. </li>
+<li>Difference between `summarize()` and `mutate()`. </li>
+<li>Data visualization best practices.</li>
+<li>Understanding the building blocks of ggplot2 plotting package.</li>
+</ol>
+
+<br>
+<b>Feedback: </b>Please leave feedback in the training feedback form. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.
+<br>
+<br>
+<img src = "./images/make_friends_with_tidy_data.jpg" alt = 'friends with tidy' style = "display:block;margin-left:auto;margin-right:auto;width:550px;">
+<center style = "font-size:11px;font-family:'Arial',sans-serif;"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></center>
+</details>
+<br>
+

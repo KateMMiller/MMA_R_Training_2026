@@ -1,0 +1,44 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+#### Day 3 Goals
+<b>Goals for Day 3: </b><br>
+<img src = "./images/poor_management.png" alt = 'Poor file management illustration' style = "float:right; width:400px;">
+<span class = "capright"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></span>
+
+<ol>
+<li>More advanced data wrangling</li>
+<ul>
+<li>Learn how to pivot data from long to wide and wide to long</li>
+<li>Learn how to join tables and apply the different join types</li>
+<li>Working with dates and times</li>
+</ul>
+<li>More advanced ggplot2:</li> 
+<ul>
+<li>Custom colors and shapes by grouping variables</li>
+<li>Customizing axes</li>
+<li>Combining plots with facets and patchwork</li>
+<li>Working with legends</li>
+<li>Color palettes</li>
+</ul>
+<li>Coding best practices</li>
+<ul>
+<li>Commenting code</li>
+<li>Putting packages, datasets, and parameters on top of script</li>
+<li>Using consistent coding style</li>
+<li>Logical object naming</li>
+<li>Using projects instead of stand alone scripts where possible</li>
+<li>How to choose R packages</li>
+</ul>
+</ol>
+
+<br>
+<b>Feedback: </b>Please leave feedback in the training feedback form. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.
+<br>
+<br>
+
+</details>
+<br>
+

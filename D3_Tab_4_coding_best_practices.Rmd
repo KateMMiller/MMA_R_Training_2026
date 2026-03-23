@@ -1,0 +1,164 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+#### Coding Best Practices
+<details open><summary class = 'drop'>Background</summary>
+Knowing how to code is only part of being a good coder. Below are general best practices to make code easier to run, understand, and be more stable with a relatively low maintenance cost. Many of these suggestions come from lessons working with my and other peoples' code. The <a href="https://r4ds.hadley.nz/">R for Data Science</a> also has a lot of great information on coding best practices in 
+
+<ul>
+<li><a href="https://r4ds.hadley.nz/workflow-basics.html">Chapter 2 Workflow: basics</a></li>
+<li><a href="https://r4ds.hadley.nz/workflow-style.html">Chapter 4 Workflow: code style</a></li>
+<li><a href="https://r4ds.hadley.nz/workflow-scripts.html">Chapter 6 Workflow: scripts and projects</a></li>
+</ul>
+</details>
+<br>
+<details open><summary class = 'drop'>Tips for good code</summary>
+<details open><summary class = 'drop2'>Thorough commenting. Dependencies, like packages, datasets, and parameters are at the top.</summary>
+
+```{r day3_bp, echo = F, include = F}
+#------------------------------------
+#     Day 3: Best Practices Code 
+#------------------------------------
+```
+
+
+```{r commenting, warning = F, message = F}
+# libraries
+library(dplyr) # for mutate and filter
+
+# parameters
+analysis_year <- 2017
+
+# data sets
+df <- read.csv("./data/ACAD_wetland_data_clean.csv")
+
+# Filtering on RAM sites, create new site as a number column, and only include data from specified year
+df2 <- df |> filter(Site_Type == "RAM") |> 
+             filter(Year == analysis_year) |> 
+             mutate(site_num = as.numeric(substr(Site_Name, 5, 6)))
+```
+</details>
+<details open><summary class = 'drop2'>Descriptive names and consistent case</summary>
+Object names must start with a letter and can only contain letters, numbers, underscore, and period. Spaces aren't allowed in object names, and are best avoided in column names of data frames too. Descriptive object names will help you digest code, and often you'll want more than one word in the name. There are multiple cases that people tend to use, the most common of which tends to be snake_case. Other examples are below.
+
+```{r cases, eval = F}
+snake_case # most common in R
+camelCase # capitalize new words after the first
+period.separation # separate words by periods
+whyWOULDyouDOthisTOsomeone # excess capitalization is a pain
+```
+</details>
+<details open><summary class = 'drop2'>Thoughtful word ordering</summary>
+Ordering words in names, so that objects that are similar or derived from each other sort together. This also makes coding easier, as like objects will sort together in the popups that you see as you code.
+
+```{r pops}
+# good word order
+ACAD_wet <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_wet2 <- ACAD_wet |> filter(year > 2020)
+ACAD_wet3 <- ACAD_wet2 |> mutate(plot_type = "RAM")
+
+# bad word order
+wet_ACAD <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_after_2020 <- wet_ACAD |> filter(year > 2020)
+RAM_ACAD_2020 <- ACAD_after_2020 |> mutate(plot_type = "RAM")
+
+```
+</details>
+<details open><summary class = 'drop2'>Avoid long names</summary>
+It's helpful to balance descriptive names with length. The longer the object name, the more typing you have to do to refer to that object. Coding long names, such as long column names in data frames, is cumbersome and inefficient. Compare the two objects below. While I doubt many would make super long object names like this, I commonly see excessively long column names in data packages. Limiting column names to 12 characters or less is super helpful for coders using those data.
+
+```{r long_names, eval = F}
+# super long names
+ACAD_wetland_sampling_data <- data.frame(years_plots_were_sampled = c(2020:2025), wetland_plots_sampled = c(1:6))
+ACAD_wetland_sampling_data2 <- ACAD_wetland_sampling_data |> filter(years_plots_were_sampled > 2020)
+
+# shorter still meaningful
+ACAD_wet <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_wet2 <- ACAD_wet |> filter(year > 2020)
+```
+</details>
+
+<details open><summary class = 'drop2'>Use a consistent code style</summary>
+Code style refers to consistent use of case, indenting, spacing, line width, etc. There are several style conventions out there. I tend to use the <a href = "https://style.tidyverse.org/">tidyverse style guide</a>, which is based on <a href = "https://google.github.io/styleguide/Rguide.html">Google's R style guide</a>. 
+
+Style conventions I follow:
+<ul>
+<li>Space before and after operators, like `<-`, `=`, `==`, `|>`, `+`, etc.</li>
+<li>Space after commas</li>
+<li>Keep line width narrow enough to prevent scrolling to the right to view code</li>
+<li>Indent code in the same function or list together</li>
+<li>One pipe per line</li>
+</ul>
+
+<p class = 'code'>Example 1. Style for pipes</p>
+```{r styleex_dplyr, eval = F}
+# Good code
+trees_final <- trees |> 
+  mutate(DecayClassCode_num = as.numeric(DecayClassCode),
+         Plot_Name = paste(ParkUnit, PlotCode, sep = "-"),
+         Date = as.Date(SampleDate, format = "%m/%d/%Y")) |> 
+  rename("Species" = "ScientificName") |> 
+  filter(IsQAQC == FALSE) |> 
+  select(-DecayClassCode) |> 
+  arrange(Plot_Name, TagCode)
+
+# Same code, but much harder to follow
+trees_final <- trees|>mutate(DecayClassCode_num=as.numeric(DecayClassCode), Plot_Name=paste(ParkUnit,PlotCode,sep = "-"),  Date=as.Date(SampleDate,format="%m/%d/%Y"))|> rename("Species"="ScientificName")|>filter(IsQAQC==FALSE)|>select(-DecayClassCode)|>arrange(Plot_Name,TagCode)
+```
+
+<p class = 'code'>Example 2. Style for ggplot object</p>
+```{r styleex_ggplot, eval = F}
+# Good code
+ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+  geom_line() + 
+  geom_point(color = "black", fill = "#82C2a3", size = 2.5, shape = 24) +
+  labs(x = "Year", 
+       y = "Annual visitors in 1000's") +
+  scale_y_continuous(limits = c(2000, 4500),
+                     breaks = seq(2000, 4500, by = 500)) + 
+  scale_x_continuous(limits = c(1994, 2024),
+                     breaks = c(seq(1994, 2024, by = 5))) + 
+  theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'),
+        title = element_text(size = 10) 
+        )
+
+# Same code but hard to follow
+ggplot(data=visits,aes(x=Year,y=Annual_Visits/1000))+geom_line()+geom_point(color="black",fill="#82C2a3",size=2.5,shape=24) +
+labs(x = "Year", y = "Annual visitors in 1000's")+
+scale_y_continuous(limits=c(2000,4500),breaks=seq(2000,4500,by=500))+ 
+scale_x_continuous(limits=c(1994,2024),breaks=c(seq(1994,2024,by=5)))+ 
+theme(axis.text.x=element_text(size=10,angle=45,hjust=1), panel.grid.major=element_blank(), 
+panel.grid.minor=element_blank(),panel.background=element_rect(fill='white',color='dimgrey'),
+title = element_text(size = 10))
+```
+</details>
+</details>
+<br>
+<details open><summary class = 'drop'>Higher level practices</summary>
+
+<details open><summary class = 'drop2'>Logical file naming</summary>
+Using projects instead of stand alone scripts helps keep the various pieces of an analysis project in one place and more easily transferable across computers. Logical naming of scripts, so they sort easily, is also helpful. 
+
+<p class = 'code'>Order and purpose of file names easy to follow</p> 
+<img src = "./images/file_naming_good.png" alt = 'Logical file naming' style = "width:400px;">
+
+<p class = 'code'>Hard to know script order and purpose</p>
+<img src = "./images/file_naming_bad.png" alt = 'Logical file naming' style = "width:400px;">
+</details>
+<br>
+<details open><summary class = 'drop2'>Caution choosing packages for core work</summary>
+R packages add a ton of functionality that is not available in base R. They save us a lot of work having to build tasks from scratch and are the product of developers sharing their work for free to the benefit of the rest of us. In that way, R packages are amazing. However, there is a dark side to R packages. While base R code is backwards compatible, meaning anything built in R 1.0, should run without breaking in R 5.0, R packages do not generally come with that promise. The more packages your code uses, the more susceptible your code is to changes in package dependencies that break your code. For one-time tasks I don't expect to repeat, or if I don't have time to build the thing I need that a package does for me, I am pretty package promiscuous. For coding tasks I expect to perform repeatedly, and therefore will have a cost to maintaining code, I use packages sparingly. Here's how I choose whether or not to trust a package:
+<ul>
+<li>Package is hosted on CRAN repository (<a href="https://cran.r-project.org/">CRAN</a>). Hosting packages on CRAN is a high bar. Packages have to meet certain standards and go through rigorous testing before they're accepted. This means there's likely a long-term plan for this package to be maintained and updated as needed.</li>
+<li>If package is instead on <a href="https://github.com"/>GitHub.com</a> or another coding repository, counting on that project is a bit riskier. I still use GitHub packages, but I look for ones that had active development within the past year or so, and that have good help documentation. That again usually means there's good long-term plan for maintaining this package, and it's less likely to disappear or have sloppy code-breaking changes. </li>
+<li>The tidyverse collection of packages is incredible, but there are pros and cons. While some packages and functions have been really stable, like dplyr and ggplot2, there's a lot of active development in tidyverse packages. Developers do a good job documenting the lifecycle of functions in help documentation, which I encourage you to pay attention to when you're coding. I have had updates to tidyverse packages break my code, mostly because functions have become stricter in what they accept over time. The lubridate package, for example, has burned me a couple of times, so I primarily use base R code to work with date times.</li>
+<li>Packages that have a lot of other dependencies add to the risk of code breaking changes. You can view dependencies in the DESCRIPTION file in every package. Those listed under Imports or Depends are the primary dependencies.</li>
+</ul>
+</details>
+</details>
+<br>

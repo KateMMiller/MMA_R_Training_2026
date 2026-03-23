@@ -1,0 +1,196 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+    self_contained: true
+    highlight: tango
+    
+title: "2026 MMA Intro to R"
+---
+
+```{r globaloptions, include = FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+```{r folding, include=FALSE}
+hooks = knitr::knit_hooks$get()
+hook_foldable = function(type) {
+  force(type)
+  function(x, options) {
+    res = hooks[[type]](x, options)
+    
+    if (isFALSE(options[[paste0("fold.", type)]])) return(res)
+    
+    paste0(
+      "<details><summary class='code2'>View R ", type, "</summary>\n",
+      res, "\n\n",
+      "</details>",
+      "\n\n",
+      "<hr style='height:1px; margin-bottom:15px; padding-bottom:15px; padding-top:-15px;margin-top:-15px;visibility:hidden;'>",
+      "\n\n"
+    
+      )
+  }
+}
+knitr::knit_hooks$set(
+  output = hook_foldable("output"),
+  plot = hook_foldable("plot")
+)
+```
+
+```{css echo = F}
+body {
+  background-color: #EBEBEB;
+}
+
+.tab-content {
+  background-color: #FAFAF0;
+  padding: 0 5px;
+}
+
+```
+```{r libsindex, echo = F, results = "hide", warning = F, message = F}
+library(tidyverse)
+```
+
+<h2>Maine Maritime Academy Intro to R Training: April 2026</h2> {.tabset .tabset-pills}
+--------------------------------------------------
+
+### Prep for Training{.tabset}
+```{r d0, echo = F, include = F}
+#------------------------------------
+#        Day 0 - prep code 
+#------------------------------------
+```
+
+```{r Install_instructions, child = "D0_Install_R_and_RStudio.Rmd", eval = T}
+```
+
+### Day 1: Intro to R {.tabset}
+
+```{r D1_goals, child = "D1_Tab_0_Goals.Rmd", eval = T}
+```
+
+```{r Intro_to_R_tab, child = "D1_Tab_1_Intro.Rmd", eval = T}
+```
+
+```{r R_and_RStudio, child = "D1_Tab_2_R_and_RStudio.Rmd", eval = T}
+```
+
+```{r Project_setup, child = "D1_Tab_3_Project_and_File_Setup.Rmd", eval = T}
+```
+
+```{r start_coding, child = "D1_Tab_4_Start_Coding.Rmd", eval = T}
+```
+
+```{r read_write, child = "D1_Tab_5_Read_Write_Data.Rmd", eval = T}
+```
+
+```{r datastr, child = "D1_Tab_6_Data_structures.Rmd", eval = T}
+```
+
+```{r datex, child = "D1_Tab_7_Data_Exploration.Rmd", eval = T}
+```
+
+```{r basic, child = "D1_Tab_8_Basic_Plotting.Rmd", eval = T}
+```
+
+### Day 2: Wrangling and Viz I {.tabset}
+
+```{r D2_goals, child = "D2_Tab_0_Goals.Rmd", eval = T}
+```
+
+```{r tidv, child = "D2_Tab_1_Tidyverse.Rmd", eval = T}
+```
+
+```{r datw1, child = "D2_Tab_2_Data_Wrangling_I.Rmd", eval = T}
+```
+
+```{r cond1, child = "D2_Tab_3_Conditionals.Rmd", eval = T}
+```
+
+```{r sum1, child = "D2_Tab_4_Summarizing.Rmd", eval = T}
+```
+
+```{r datviz, child = "D2_Tab_5_Data_Viz_Best_Practices.Rmd", eval = T}
+```
+
+```{r ggplot, child = "D2_Tab_6_Intro_to_ggplot.Rmd", eval = T}
+
+```
+
+### Day 3: Wrangling and Viz II {.tabset}
+```{r D3_goals, child = "D3_Tab_0_Goals.Rmd", eval = T}
+```
+
+```{r D3_wrang, child = "D3_Tab_1_pivot_join.Rmd", eval = T}
+```
+
+```{r D3_wrang2, child = "D3_Tab_2_dates.Rmd", eval = T}
+```
+
+```{r D3_ggplot, child = "D3_Tab_3_adv_ggplot.Rmd", eval = T}
+```
+
+```{r D3_bestpr, child = "D3_Tab_4_coding_best_practices.Rmd", eval = T}
+```
+
+
+### Challenges {.tabset}
+
+```{r chall_d1, child = "D1_Tab_C1_Challenges.Rmd", eval = T}
+```
+
+```{r chall_d2, child = "D2_Tab_C1_Challenges.Rmd", eval = T}
+```
+
+```{r chall_d3, child = "D3_Tab_C1_Challenges.Rmd", eval = T}
+```
+
+
+### Getting Help {.tabset}
+```{r help, child = "R_Tab_1_Getting_Help.Rmd", eval = T}
+```
+
+### Resources {.tabset}
+
+#### Online Resources
+There's a lot of great online material for learning new applications of R. The ones we've used the most are listed below. 
+
+<h5>Online Books</h5>
+<ul>
+<li><a href="https://r4ds.had.co.nz/">R for Data Science</a> First author is Hadley Wickham, one of the main programmers behind the tidyverse. There's a lot of good stuff in here. This book is the first place to look for anything you want to follow up on from this training.</li>
+<li><a href="https://ggplot2-book.org//">ggplot2: Elegant Graphics for Data Analysis</a> A great reference on ggplot2 also by Hadley Wickham.</li> 
+<li><a href="https://bookdown.org/rdpeng/RProgDA/">Mastering Software Development in R</a> First author is Roger Peng, a Biostatistics professor at John Hopkins, who has taught a lot of undergrad/grad students how to use R. He's also one of the hosts of Not So Standard Deviations podcast. His intro to ggplot is great. He's also got a lot of more advanced topics in this book, like making functions and packages.</li>
+<li><a href="https://r-pkgs.org/">R Packages</a> Another book by Hadley Wickham that teaches you how to build, debug, and test R packages.</li>
+<li><a href="http://adv-r.had.co.nz/">Advanced R</a> Yet another book by Hadley Wickham that helps you understand more about how R works under the hood, how it relates to other programming languages, and how to build packages.</li>
+<li><a href="https://mastering-shiny.org/">Mastering Shiny</a> And another Hadley Wickham book on building shiny apps.</li>
+</ul>
+
+<h5>Other useful sites</h5>
+<ul>
+<li><a href="https://teams.microsoft.com/l/channel/19%3a278f30e624114373a65d9611498bd4fe%40thread.skype/Community%2520of%2520Practice?groupId=e4a2e021-b4cf-4cf6-acef-d0978b86c1a0&tenantId=0693b5ba-4b18-4d7b-9341-f32f400a5494">NPS_IMD_Data_Science_and_Visualization > Community of Practice</a> is an IMD work group that meets once a month talk about R and Data Science. There are also notes, materials and recordings from previous meetings, a Wiki with helpful tips, and the chat is a great place to post questions or cool tips you've come across. </li>
+<li><a href="https://stat545.com/index.html">STAT545</a> Jenny Bryan's site that accompanies the graduate level stats class of the same name. She includes topics on best practices for coding, and not just how to make scripts work. It's really well done.</li> 
+<li><a href="https://rstudio.com/">RStudio home page</a> There's a ton of info in the Resources tab on this site, including cheatsheets for each package developed by RStudio (ie tidyverse packages), webinars, presentations from past RStudio Conferences, etc.</li>
+<li><a href="https://support.rstudio.com/hc/en-us/articles/201057987-Quick-list-of-useful-R-packages">RStudio list of useful R packages by topic</a></li>
+<li><a href = "https://patchwork.data-imaginist.com/>patchwork"> patchwork </a> R package tutorial for arranging multiple ggplot figures.</li>
+<li><a href = "https://yihui.org/rmarkdown/">R Markdown: The Definitive Guide</a> provides nearly everything you need to know about building R Markdown documents, a really useful way to document your code, output, and notes all in one place. This website was developed in R Markdown, for example.</li>
+<li><a href="https://happygitwithr.com/">Happy Git with R</a> If you find yourself wanting to go down the path of hosting your code on github, this site will walk you through the process of linking github to RStudio.</li>
+</ul>
+
+<hr>
+
+```{r keyshorts, child = "R_Tab_2_Keyboard_Shortcuts.Rmd", eval = T}
+```
+
+#### Advanced topics
+- R Markdown (stand alone websites/docs) and R Shiny (interactive websites)
+- Writing your own functions and iteration
+
+### Code printout {.tabset}
+```{r show-code, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE, attr.source='.numberLines'}
+```
+
+```{r, include = F}
+rm(list = ls())
+```

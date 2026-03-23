@@ -1,0 +1,61 @@
+
+#### Project and File Setup
+<details open><summary class='drop'>File organization</summary>
+File organization is an important part of being a good coder. Keeping code, input data, and results together in one place will protect your sanity and the sanity of the person who inherits the project. R Studio <b>projects</b> help with this. Creating a new R Studio project for each new code project makes it easier to manage settings and file paths.  
+
+Before we create a project, take a look at the <b>Console</b> tab. Notice that at the top of the console there is a folder path. That path is your current working directory.  
+<img src="./images/WorkingDir_NoProject.png" alt = 'Default working directory' style = "width:60%;">
+
+If you refer to a file in R using a <b>relative path</b>, for example `./data/my_data_file.csv`, R will look in your current working directory for a folder called `data` containing a file called `my_data_file.csv`. 
+
+Note the use of forward slashes instead of back slashes for file paths. You can either use a forward slash (/) or a double back slash for file paths. The paths below are equivalent and the full file path the relative path above is specifying. 
+
+```{r day1_ps, echo = F, include = F}
+#------------------------------------
+#     Day 1: Project Setup Code 
+#------------------------------------
+```
+
+
+```{r slashes, echo = T, eval = F}
+# forward slash file path approach
+"C:/Users/KMMiller/OneDrive = DOI/data/"
+
+# backward slash file path approach
+"C:\\Users\\KMMiller\\OneDrive = DOI\\data\\"
+
+```
+
+Using relative paths is a helpful because the full path will be specific to your computer and likely won't work on a different computer. But there's no guarantee that everyone has the same default R working directory. This is where projects come in. Projects package all of your code, data, output, etc. into a file type that is easily transferrable to other machines regardless of file location. 
+</details>
+<br>
+<details open><summary class = 'drop'>Start a new Project</summary>
+To demonstrate the value of a project, we'll create and use one for this class. Click <b>File > New Project</b>. In the window that appears, select <b>New Directory</b>, then select <b>New Project</b>. You will be prompted for a directory name. This is the name of your project folder. For this class, call it `imd_r_intro`. Next, you'll select what folder to keep your project folder in. `Documents/R` is a good place to store all of your R projects but it's up to you. When you are done, click on <b>Create Project</b>.  
+<br>
+<details open><summary class = 'drop2'>Step 1. Select New Directory</summary>
+<img src = "./images/new_project1.png" alt = 'New project step 1' style = "width:450px;">
+</details>
+<br>
+<details open><summary class = 'drop2'>Step 2. Select New Project </summary>
+<img src = "./images/new_project2.png" alt = 'New project step 2' style = "width:450px;">
+</details>
+<br>
+<details open><summary class = 'drop2'>Step 3. Name project imd_r_intro </summary>
+Save project to a place you can find it. Don't worry about whether the git repository box is checked or not. <br>
+<img src = "./images/new_project3.png" alt = 'New project step 3' style = "width:450px;">
+</details>
+<br>
+If you successfully started a project named `imd_r_intro`, you should see it listed at the very top right of your screen. As you start new projects, you'll want to check that you're working in the right one before you start coding. Take a look at the <b>Console</b> tab again. Notice that your current working directory is now your project folder. When you look in the <b>Files</b> tab of the bottom right pane, you'll see that it also defaults to the project folder.
+
+We also want to create a folder called "data", where we will store datasets we're using for this class. To do that, you can either go to Windows Explorer and add a new folder, or you run the code below. As long as you're working within your project (project name should be at the top right of window), a folder named data will appear within your project. You can check that it worked by using the `list.files()` function, which lists everything in the working directory of your project.
+</details>
+<br>
+
+<details open><summary class = 'drop'>Add Data Folder</summary>
+<p class = "code">Create data folder</p>
+```{r addfold, eval = F}
+dir.create("data")
+list.files() # you should see a data folder listed 
+```
+
+</details>

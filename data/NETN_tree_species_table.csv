@@ -1,0 +1,187 @@
+TSN,AcceptedTSN,ScientificName,CommonName,Order,Family,Genus,Species,IsExotic
+-9999999948,-9999999948,Quercus (White group),oaks (white),Fagales,Fagaceae,Quercus (White group),NOT DETERMINED,FALSE
+-9999999947,-9999999947,Quercus (Red group),oaks (red),Fagales,Fagaceae,Quercus (Red group),NOT DETERMINED,FALSE
+-9999999944,-9999999944,Unknown Hardwood,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999943,-9999999943,Unknown Conifer,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999942,-9999999942,Unknown Tree - 06,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999941,-9999999941,Unknown Tree - 05,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999940,-9999999940,Unknown Tree - 04,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999939,-9999999939,Unknown Tree - 03,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999938,-9999999938,Unknown Tree - 02,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+-9999999937,-9999999937,Unknown Tree - 01,NA,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+18032,18032,Abies balsamea,balsam fir,Pinales,Pinaceae,Abies,balsamea,FALSE
+18033,18033,Picea,spruce,Pinales,Pinaceae,Picea,NOT DETERMINED,FALSE
+18034,18034,Picea rubens,red spruce,Pinales,Pinaceae,Picea,rubens,FALSE
+18035,18035,Pinus,pine,Pinales,Pinaceae,Pinus,NOT DETERMINED,FALSE
+18037,18037,Pinus taeda,loblolly pine,Pinales,Pinaceae,Pinus,taeda,FALSE
+18046,18046,Chamaecyparis thyoides,Atlantic white cedar,Cupressales,Cupressaceae,Chamaecyparis,thyoides,FALSE
+18048,18048,Juniperus virginiana,eastern redcedar,Cupressales,Cupressaceae,Juniperus,virginiana,FALSE
+18070,18070,Magnolia virginiana,sweetbay,Magnoliales,Magnoliaceae,Magnolia,virginiana,FALSE
+18071,18071,Magnolia acuminata,cucumber-tree,Magnoliales,Magnoliaceae,Magnolia,acuminata,FALSE
+18074,18074,Magnolia grandiflora,Southern magnolia,Magnoliales,Magnoliaceae,Magnolia,grandiflora,FALSE
+18077,18077,Magnolia tripetala,umbrella-tree,Magnoliales,Magnoliaceae,Magnolia,tripetala,FALSE
+18086,18086,Liriodendron tulipifera,tuliptree,Magnoliales,Magnoliaceae,Liriodendron,tulipifera,FALSE
+18117,18117,Asimina triloba,pawpaw,Magnoliales,Annonaceae,Asimina,triloba,FALSE
+18148,18148,Persea,bay,Laurales,Lauraceae,Persea,NOT DETERMINED,FALSE
+18149,18149,Persea borbonia,redbay,Laurales,Lauraceae,Persea,borbonia,FALSE
+18158,18158,Sassafras albidum,sassafras,Laurales,Lauraceae,Sassafras,albidum,FALSE
+19020,19020,Platanus occidentalis,American sycamore,Proteales,Platanaceae,Platanus,occidentalis,FALSE
+19027,19027,Liquidambar styraciflua,sweetgum,Saxifragales,Altingiaceae,Liquidambar,styraciflua,FALSE
+19040,19040,Celtis occidentalis,common hackberry,Rosales,Cannabaceae,Celtis,occidentalis,FALSE
+19042,19042,Celtis laevigata,sugarberry,Rosales,Cannabaceae,Celtis,laevigata,FALSE
+19048,19048,Ulmus,elm,Rosales,Ulmaceae,Ulmus,NOT DETERMINED,FALSE
+19049,19049,Ulmus americana,American elm,Rosales,Ulmaceae,Ulmus,americana,FALSE
+19050,19050,Ulmus rubra,slippery elm,Rosales,Ulmaceae,Ulmus,rubra,FALSE
+19051,19051,Ulmus alata,winged elm,Rosales,Ulmaceae,Ulmus,alata,FALSE
+19056,19056,Ulmus procera,English elm,Rosales,Ulmaceae,Ulmus,procera,TRUE
+19066,19066,Morus alba,white mulberry,Rosales,Moraceae,Morus,alba,TRUE
+19070,19070,Morus rubra,red mulberry,Rosales,Moraceae,Morus,rubra,FALSE
+19107,19107,Broussonetia papyrifera,paper mulberry,Rosales,Moraceae,Broussonetia,papyrifera,TRUE
+19223,19223,Carya,hickory,Fagales,Juglandaceae,Carya,NOT DETERMINED,FALSE
+19227,19227,Carya cordiformis,bitternut hickory,Fagales,Juglandaceae,Carya,cordiformis,FALSE
+19231,19231,Carya glabra,pignut hickory,Fagales,Juglandaceae,Carya,glabra,FALSE
+19235,19235,Carya laciniosa,shellback hickory,Fagales,Juglandaceae,Carya,laciniosa,FALSE
+19242,19242,Carya ovata,shagbark hickory,Fagales,Juglandaceae,Carya,ovata,FALSE
+19244,19244,Carya pallida,sand hickory,Fagales,Juglandaceae,Carya,pallida,FALSE
+19247,19247,Carya tomentosa,mockernut hickory,Fagales,Juglandaceae,Carya,tomentosa,FALSE
+19248,19248,Juglans,walnut,Fagales,Juglandaceae,Juglans,NOT DETERMINED,FALSE
+19250,19250,Juglans cinerea,butternut,Fagales,Juglandaceae,Juglans,cinerea,FALSE
+19254,19254,Juglans nigra,black walnut,Fagales,Juglandaceae,Juglans,nigra,FALSE
+19276,19276,Quercus,oaks,Fagales,Fagaceae,Quercus,NOT DETERMINED,FALSE
+19277,19277,Quercus falcata,southern red oak,Fagales,Fagaceae,Quercus,falcata,FALSE
+19279,19279,Quercus michauxii,swamp chestnut oak,Fagales,Fagaceae,Quercus,michauxii,FALSE
+19280,19280,Quercus nigra,water oak,Fagales,Fagaceae,Quercus,nigra,FALSE
+19281,19281,Quercus palustris,pin oak,Fagales,Fagaceae,Quercus,palustris,FALSE
+19282,19282,Quercus phellos,willow oak,Fagales,Fagaceae,Quercus,phellos,FALSE
+19287,19287,Quercus macrocarpa,bur oak,Fagales,Fagaceae,Quercus,macrocarpa,FALSE
+19288,19288,Quercus coccinea,scarlet oak,Fagales,Fagaceae,Quercus,coccinea,FALSE
+19290,19290,Quercus alba,white oak,Fagales,Fagaceae,Quercus,alba,FALSE
+19300,19300,Quercus bicolor,swamp white oak,Fagales,Fagaceae,Quercus,bicolor,FALSE
+19374,19374,Quercus marilandica,blackjack oak,Fagales,Fagaceae,Quercus,marilandica,FALSE
+19379,19379,Quercus montana,chestnut oak,Fagales,Fagaceae,Quercus,montana,FALSE
+19408,19408,Quercus rubra,northern red oak,Fagales,Fagaceae,Quercus,rubra,FALSE
+19422,19422,Quercus stellata,post oak,Fagales,Fagaceae,Quercus,stellata,FALSE
+19447,19447,Quercus velutina,black oak,Fagales,Fagaceae,Quercus,velutina,FALSE
+19454,19454,Castanea dentata,American chestnut,Fagales,Fagaceae,Castanea,dentata,FALSE
+19457,19457,Castanea pumila,allegheny chinkapin,Fagales,Fagaceae,Castanea,pumila,FALSE
+19462,19462,Fagus grandifolia,American beech,Fagales,Fagaceae,Fagus,grandifolia,FALSE
+19478,19478,Betula,birch,Fagales,Betulaceae,Betula,NOT DETERMINED,FALSE
+19480,19480,Betula nigra,river birch,Fagales,Betulaceae,Betula,nigra,FALSE
+19481,19481,Betula alleghaniensis,yellow birch,Fagales,Betulaceae,Betula,alleghaniensis,FALSE
+19483,19483,Betula X cearulea,blue birch,Fagales,Betulaceae,Betula,X cearulea,FALSE
+19487,19487,Betula lenta,sweet birch,Fagales,Betulaceae,Betula,lenta,FALSE
+19489,19489,Betula papyrifera,paper birch,Fagales,Betulaceae,Betula,papyrifera,FALSE
+19497,19497,Betula populifolia,gray birch,Fagales,Betulaceae,Betula,populifolia,FALSE
+19504,19504,Carpinus caroliniana,American hornbeam,Fagales,Betulaceae,Carpinus,caroliniana,FALSE
+19511,19511,Ostrya virginiana,eastern hophornbeam,Fagales,Betulaceae,Ostrya,virginiana,FALSE
+21536,21536,Tilia americana,American basswood,Malvales,Malvaceae,Tilia,americana,FALSE
+22444,22444,Populus,cottonwood,Malpighiales,Salicaceae,Populus,NOT DETERMINED,FALSE
+22445,22445,Populus deltoides,eastern cottonwood,Malpighiales,Salicaceae,Populus,deltoides,FALSE
+22451,22451,Populus alba,white poplar,Malpighiales,Salicaceae,Populus,alba,TRUE
+22463,22463,Populus grandidentata,bigtooth aspen,Malpighiales,Salicaceae,Populus,grandidentata,FALSE
+22465,22465,Populus heterophylla,swamp cottonwood,Malpighiales,Salicaceae,Populus,heterophylla,FALSE
+22476,22476,Salix,willow,Malpighiales,Salicaceae,Salix,NOT DETERMINED,FALSE
+22484,22484,Salix nigra,black willow,Malpighiales,Salicaceae,Salix,nigra,FALSE
+22524,22524,Salix discolor,pussy willow,Malpighiales,Salicaceae,Salix,discolor,FALSE
+23690,23690,Oxydendrum arboreum,sourwood,Ericales,Ericaceae,Oxydendrum,arboreum,FALSE
+23855,23855,Diospyros virginiana,common persimmon,Ericales,Ebenaceae,Diospyros,virginiana,FALSE
+24539,24539,Crataegus,hawthorns,Rosales,Rosaceae,Crataegus,NOT DETERMINED,FALSE
+24608,24608,Crataegus uniflora,one-flowered hawthorn,Rosales,Rosaceae,Crataegus,uniflora,FALSE
+24762,24762,Prunus,chokecherry,Rosales,Rosaceae,Prunus,NOT DETERMINED,FALSE
+24763,24763,Prunus americana,American plum,Rosales,Rosaceae,Prunus,americana,FALSE
+24764,24764,Prunus serotina,black cherry,Rosales,Rosaceae,Prunus,serotina,FALSE
+24770,24770,Prunus avium,sweet cherry,Rosales,Rosaceae,Prunus,avium,TRUE
+24773,24773,Prunus cerasus,sour cherry,Rosales,Rosaceae,Prunus,cerasus,TRUE
+24774,24774,Prunus domestica,European plum,Rosales,Rosaceae,Prunus,domestica,TRUE
+24799,24799,Prunus pensylvanica,pin cherry,Rosales,Rosaceae,Prunus,pensylvanica,FALSE
+24806,24806,Prunus virginiana,chokecherry (common),Rosales,Rosaceae,Prunus,virginiana,FALSE
+25108,25108,Amelanchier,serviceberry,Rosales,Rosaceae,Amelanchier,NOT DETERMINED,FALSE
+25110,25110,Amelanchier arborea,downy serviceberry,Rosales,Rosaceae,Amelanchier,arborea,FALSE
+25112,25112,Amelanchier canadensis,Canadian serviceberry,Rosales,Rosaceae,Amelanchier,canadensis,FALSE
+25254,25254,Malus,apple,Rosales,Rosaceae,Malus,NOT DETERMINED,TRUE
+25257,25257,Malus coronaria,sweet crabapple,Rosales,Rosaceae,Malus,coronaria,FALSE
+25262,25262,Malus pumila,paradise apple,Rosales,Rosaceae,Malus,pumila,TRUE
+25294,25294,Pyrus,pear,Rosales,Rosaceae,Pyrus,NOT DETERMINED,TRUE
+25319,25319,Sorbus americana,American mountain ash,Rosales,Rosaceae,Sorbus,americana,FALSE
+25782,25782,Cercis canadensis,eastern redbud,Fabales,Fabaceae,Cercis,canadensis,FALSE
+26449,26449,Albizia julibrissin,mimosa,Fabales,Fabaceae,Albizia,julibrissin,TRUE
+26539,26539,Cladrastis kentukea,Kentucky yellowwood,Fabales,Fabaceae,Cladrastis,kentukea,TRUE
+26714,26714,Gleditsia triacanthos,honey locust,Fabales,Fabaceae,Gleditsia,triacanthos,TRUE
+27806,27806,Cornus florida,flowering dogwood,Cornales,Cornaceae,Cornus,florida,FALSE
+27821,27821,Nyssa sylvatica,black gum,Cornales,Nyssaceae,Nyssa,sylvatica,FALSE
+27949,27949,Euonymus europaeus,European spindletree,Celastrales,Celastraceae,Euonymus,europaeus,TRUE
+27982,27982,Ilex opaca,American holly,Aquifoliales,Aquifoliaceae,Ilex,opaca,FALSE
+28721,28721,Aesculus hippocastanum,horse chestnut,Sapindales,Sapindaceae,Aesculus,hippocastanum,TRUE
+28727,28727,Acer,maple,Sapindales,Sapindaceae,Acer,NOT DETERMINED,FALSE
+28728,28728,Acer rubrum,red maple,Sapindales,Sapindaceae,Acer,rubrum,FALSE
+28731,28731,Acer saccharum,sugar maple,Sapindales,Sapindaceae,Acer,saccharum,FALSE
+28741,28741,Acer ginnala,Amur maple,Sapindales,Sapindaceae,Acer,ginnala,TRUE
+28749,28749,Acer negundo,box elder,Sapindales,Sapindaceae,Acer,negundo,FALSE
+28754,28754,Acer pensylvanicum,striped maple,Sapindales,Sapindaceae,Acer,pensylvanicum,FALSE
+28755,28755,Acer platanoides,Norway maple,Sapindales,Sapindaceae,Acer,platanoides,TRUE
+28756,28756,Acer pseudoplatanus,sycamore maple,Sapindales,Sapindaceae,Acer,pseudoplatanus,TRUE
+28757,28757,Acer saccharinum,silver maple,Sapindales,Sapindaceae,Acer,saccharinum,FALSE
+28758,28758,Acer spicatum,mountain maple,Sapindales,Sapindaceae,Acer,spicatum,FALSE
+28827,28827,Ailanthus altissima,tree-of-heaven,Sapindales,Simaroubaceae,Ailanthus,altissima,TRUE
+29024,29024,Melia azedarach,Chinaberry tree,Sapindales,Meliaceae,Melia,azedarach,TRUE
+32928,32928,Fraxinus,ash,Lamiales,Oleaceae,Fraxinus,NOT DETERMINED,FALSE
+32929,32929,Fraxinus pennsylvanica,green ash,Lamiales,Oleaceae,Fraxinus,pennsylvanica,FALSE
+32931,32931,Fraxinus americana,white ash,Lamiales,Oleaceae,Fraxinus,americana,FALSE
+32945,32945,Fraxinus nigra,black ash,Lamiales,Oleaceae,Fraxinus,nigra,FALSE
+32948,32948,Chionanthus,fringetree,Lamiales,Oleaceae,Chionanthus,NOT DETERMINED,FALSE
+32950,32950,Chionanthus virginicus,white fringetree,Lamiales,Oleaceae,Chionanthus,virginicus,FALSE
+33460,33460,Paulownia tomentosa,princess tree,Lamiales,Paulowniaceae,Paulownia,tomentosa,TRUE
+34313,34313,Catalpa bignonioides,southern catalpa,Lamiales,Bignoniaceae,Catalpa,bignonioides,TRUE
+34315,34315,Catalpa speciosa,northern catalpa,Lamiales,Bignoniaceae,Catalpa,speciosa,TRUE
+35253,35253,Viburnum prunifolium,blackhaw,Dipsacales,Adoxaceae,Viburnum,prunifolium,FALSE
+181826,181826,Abies concolor,white fir,Pinales,Pinaceae,Abies,concolor,TRUE
+182046,182046,Amelanchier laevis,Allegheny serviceberry,Rosales,Rosaceae,Amelanchier,laevis,FALSE
+182135,182135,Acer nigrum,black maple,Sapindales,Sapindaceae,Acer,nigrum,FALSE
+182136,182136,Acer palmatum,Japanese maple,Sapindales,Sapindaceae,Acer,palmatum,TRUE
+183289,183289,Picea abies,Norway spruce,Pinales,Pinaceae,Picea,abies,TRUE
+183295,183295,Picea glauca,white spruce,Pinales,Pinaceae,Picea,glauca,FALSE
+183302,183302,Picea mariana,black spruce,Pinales,Pinaceae,Picea,mariana,FALSE
+183319,183319,Pinus banksiana,jack pine,Pinales,Pinaceae,Pinus,banksiana,FALSE
+183335,183335,Pinus echinata,shortleaf pine,Pinales,Pinaceae,Pinus,echinata,FALSE
+183364,183364,Pinus nigra,australian pine,Pinales,Pinaceae,Pinus,nigra,TRUE
+183369,183369,Pinus pungens,table mountain pine,Pinales,Pinaceae,Pinus,pungens,FALSE
+183375,183375,Pinus resinosa,red pine,Pinales,Pinaceae,Pinus,resinosa,FALSE
+183376,183376,Pinus rigida,pitch pine,Pinales,Pinaceae,Pinus,rigida,FALSE
+183385,183385,Pinus strobus,eastern white pine,Pinales,Pinaceae,Pinus,strobus,FALSE
+183389,183389,Pinus sylvestris,Scots pine,Pinales,Pinaceae,Pinus,sylvestris,TRUE
+183394,183394,Pinus virginiana,Virginia pine,Pinales,Pinaceae,Pinus,virginiana,FALSE
+183397,183397,Tsuga canadensis,eastern hemlock,Pinales,Pinaceae,Tsuga,canadensis,FALSE
+183410,183410,Larix decidua,European larch,Pinales,Pinaceae,Larix,decidua,TRUE
+183412,183412,Larix laricina,tamarack,Pinales,Pinaceae,Larix,laricina,FALSE
+183691,183691,Acer floridanum,Florida maple,Sapindales,Sapindaceae,Acer,floridanum,FALSE
+195195,195195,Quercus pagoda,cherrybark oak,Fagales,Fagaceae,Quercus,pagoda,FALSE
+195222,195222,Betula cordifolia,mountain paper birch,Fagales,Betulaceae,Betula,cordifolia,FALSE
+195773,195773,Populus tremuloides,quaking aspen,Malpighiales,Salicaceae,Populus,tremuloides,FALSE
+195925,195925,Nyssa biflora,swamp tupelo,Cornales,Nyssaceae,Nyssa,biflora,FALSE
+500059,500059,Fabaceae,Legume family,Fabales,Fabaceae,NOT DETERMINED,NOT DETERMINED,FALSE
+502851,502851,Gymnocladus dioicus,Kentucky coffeetree,Fabales,Fabaceae,Gymnocladus,dioicus,FALSE
+504254,504254,Persea palustris,swamp bay,Laurales,Lauraceae,Persea,palustris,FALSE
+504347,504347,Photinia villosa,Asiatic photinia,Rosales,Rosaceae,Photinia,villosa,TRUE
+504714,504714,Quercus muehlenbergii,chinkapin oak,Fagales,Fagaceae,Quercus,muehlenbergii,FALSE
+504804,504804,Robinia pseudoacacia,black locust,Fabales,Fabaceae,Robinia,pseudoacacia,TRUE
+505490,505490,Thuja occidentalis,eastern white cedar,Cupressales,Cupressaceae,Thuja,occidentalis,FALSE
+505974,505974,Styrax japonicus,Japanese snowbell,Ericales,Styracaceae,Styrax,japonicus,TRUE
+565478,565478,Salix alba,white willow,Malpighiales,Salicaceae,Salix,alba,TRUE
+25318,25318,Sorbus,mountain-ash,Rosales,Rosaceae,Sorbus,NOT DETERMINED,FALSE
+25322,23522,Sorbus decora,northern mountain-ash,Rosales,Rosaceae,Sorbus,decora,FALSE
+19470,19470,Alnus glutinosa,European black alder,Fagales,Betulaceae,Alnus,glutinosa,TRUE
+507498,507498,Cornus kousa,Japanese dogwood,Cornales,Cornaceae,Cornus,kousa,TRUE
+502590,502590,Fagus sylvatica,European beech,Fagales,Fagaceae,Fagus,sylvatica,TRUE
+565436,565436,Prunus subhirtella,winter-flowering cherry,Rosales,Rosaceae,Prunus,subhirtella,TRUE
+504706,504706,Pyrus calleryana,Callery pear,Rosales,Rosaceae,Pyrus,calleryana,TRUE
+501733,501733,Crataegus macrosperma,bigfruit hawthorn,Rosales,Rosaceae,Crataegus,macrosperma,FALSE
+24549,24549,Crataegus coccinea,scarlet hawthorn,Rosales,Rosaceae,Crataegus,coccinea,FALSE
+-9999999950,-9999999950,Unknown species,Unknown species,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,NOT DETERMINED,FALSE
+19468,19468,Alnus serrulata,hazel alder,Fagales,Betulaceae,Alnus,serrulata,FALSE
+28561,28561,Rhamnus,buckthorn,Rosales,Rhamnaceae,Rhamnus,NOT DETERMINED,TRUE
+28573,28573,Rhamnus cathartica,common buckthorn,Rosales,Rhamnaceae,Rhamnus,cathartica,TRUE
+32973,32973,Ligustrum,privet,Lamiales,Oleaceae,Ligustrum,NOT DETERMINED,TRUE
+32976,32976,Ligustrum obtusifolium,border privet,Lamiales,Oleaceae,Ligustrum,obtusifolium,TRUE
+32980,32980,Ligustrum vulgare,European privet,Lamiales,Oleaceae,Ligustrum,vulgare,TRUE
+194882,194882,Taxus,exotic yew,Pinales,Taxaceae,Taxus,NOT DETERMINED,TRUE
+507899,507899,Morella cerifera,wax myrtle,Fagales,Myricaceae,Morella,cerifera,FALSE

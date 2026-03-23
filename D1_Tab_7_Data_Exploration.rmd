@@ -1,0 +1,252 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+
+#### Data Exploration
+<details open><summary class = 'drop'>Exploring the data</summary>
+We've already explored the wetland data a bit using `head()`, `str()`, `names()`, and `View()`. These are functions that you will use over and over as you work with data in R. Below, I'm going to show how I get to know a data set in R.
+
+```{r day1_de, echo = F, include = F}
+#-----------------------------------------
+#     Day 1: Data Exploration Code 
+#-----------------------------------------
+```
+
+<p class = 'code'>Read in example NETN tree data</p>
+```{r readtree}
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+
+<p class = 'code'>Look at first few records</p>
+```{r headt, fold.output = F}
+head(trees)
+```
+
+<p class = 'code'>Look at structure of each column</p>
+```{r strt, fold.output = F}
+str(trees)
+```
+
+<p class = 'code'>Look at summary of the columns</p>
+```{r sumtree, fold.output = F}
+summary(trees)
+```
+
+<p class = 'code'>Check for complete cases for the first 10 columns that should always have data.</p>
+```{r}
+table(complete.cases(trees[,1:10]))# all true
+```
+
+There's a lot to digest from the summary results. 
+<ul>
+<li>We can see that Park_Unit and ScientificName are treated as characters, which makes sense.</li>
+<li>PlotCode is numeric, the range of plot numbers is 1 to 20, and there are no blanks (NAs) </li>
+<li>SampleDate is being interpreted as a character, not date. We'll fix that later.</li>
+<li>IsQAQC is being treated as TRUE/FALSE. We'll use that to filter out QAQC visits.</li>
+<li>SampleYear is all 2022.</li>
+<li>DBH ranges from 10 to 443.0, with 14 blanks (NAs).</li>
+<li>DecayClassCode is reading in as a character, not a number. That's weird. We will look deeper into that next.</li>
+</ul>
+
+</details><br>
+
+<details open><summary class = 'drop'>Sidebar on NAs</summary>
+To keep data frames rectangular, R treats missing data (i.e. blanks) as NA (stands for not available). A foundational philosophy of R is that the user must tell R functions what do to if NAs are in the data. Ideally that forces the user to investigate the NAs to determine their reason for being there, whether there's a way to fix it, if those records should be dropped, etc. If you try to calculate the mean of a column that has a blank in it, and you don't tell R what to do with NAs, the returned value will be `NA`. Most summary functions in R have an argument `na.rm`, which is logical (TRUE/FALSE). To drop NAs, you include `na.rm = TRUE`. 
+
+It's important every time you have NAs in your data to think about what they mean and how best to treat them. Sometimes, it's best to drop them. Other times, converting the blanks to 0 is the best approach. It depends entirely on your data and what you intend to do with it.    
+
+<p class = 'code'>Test NA use with `mean()` function</p>
+```{r nad1, fold.output = F}
+x <- c(1, 3, 8, 3, 5, NA)
+mean(x) # returns NA
+mean(x, na.rm = TRUE) 
+```
+</details>
+<br>
+
+<details open><summary class ='drop'>Fix the data </summary>
+The steps we are going to take with the NETN tree data were: 
+<ol>
+<li>Replace decay class code "PM" with NA (blank).</li>
+<li>Convert SampleDate (character) to Date (date-time). </li>
+<li>Rename the ScientificName column to Species.</li>
+<li>Create a Plot_Name column that's a combination of ParkUnit and PlotCode.</li>
+<li>Change tree DBH that's 443.0 to 44.3.</li>
+<li>Drop records that are QAQC visits. </li>
+</ol>
+
+<details open><summary class ='drop2'>Fix DecayClassCode</summary>
+<p class = 'code'>Look at unique values for DecayClassCode.</p>
+```{r trdecay, fold.output = F}
+sort(unique(trees$DecayClassCode)) # sorts the unique values in the column
+table(trees$DecayClassCode) # shows the number of records per value - very handy
+```
+
+There are 2 records called "PM", which stands for Permanently Missing in our forest data. We will convert PM to a blank, which R calls NA, and create a new decay class column that is converted to numeric.
+
+<p class = 'code'>Convert "PM" to blank. I will first make a copy of the data frame.</p>
+```{r tr2, fold.output = TRUE}
+trees2 <- trees
+trees2$DecayClassCode[trees2$DecayClassCode == "PM"] <- NA
+trees2$DecayClassCode_num <- as.numeric(trees2$DecayClassCode)
+
+# check that it worked
+str(trees2) # DecayClassCode_num is numeric
+sort(unique(trees2$DecayClassCode_num)) # Only numbers show in table
+```
+</details>
+
+<details open><summary class ='drop2'>Remove QAQC visits</summary>
+Using the `trees2` data frame, which fixed the decay class column by making the `DecayClassCode_num` field numeric, we're now going to drop visits that were for QAQC using a new base R function called `subset()`. The `subset()` function allows you to reduce the dimensions of a data frame. You can reduce rows, columns, or both in the same function call. I will also show the bracket approach. 
+
+<p class = 'code'>Remove QAQC visits (IsQAQC == TRUE) and drop the DecayClassCode column </p>
+```{r tr3}
+trees3 <- subset(trees2, IsQAQC == FALSE, select = -DecayClassCode) # Note the importance of FALSE all caps
+trees3 <- subset(trees2, IsQAQC != TRUE, select = -DecayClassCode) # equivalent
+trees3 <- trees2[trees2$IsQAQC == FALSE, -12] #equivalent but not as easy to follow
+```
+</details>
+
+<details open><summary class = "drop2">Convert SampleDate to Date</summary>
+<p class = 'code'>Convert SampleDate into a date-time instead of character. </p>
+```{r tr3dt}
+# Look at the sample date format
+head(trees3$SampleDate) # month/day/year
+
+# Create new column called Date
+trees3$Date <- as.Date(trees3$SampleDate, format = "%m/%d/%Y")
+str(trees3)
+
+```
+</details>
+
+<details open><summary class = 'drop2'>Rename ScientificName to Species for shorter typing</summary>
+Renaming columns in base R is kind of a pain, to the point that I have to look it up every time I need to do it. I'll show you an easier way to do that tomorrow.
+
+<p class = 'code'>Rename ScientificName column</p>
+```{r rename, fold.output = T}
+names(trees3) # original names
+names(trees3)[names(trees3) == "ScientificName"] <- "Species"
+names(trees3) # check that it worked
+```
+</details>
+
+<details open><summary class = 'drop2'>Create a `Plot_Name` column via `paste()`</summary>
+The `paste()` and `paste0()` functions are very handy for creating new columns that are combinations of existing functions. The code below will create a new column named `Plot_Name` that's a combination of `ParkUnit` and `PlotCode`. 
+
+<p class ='code'>Create new `Plot_Name` column</p>
+```{r paste1}
+trees3$Plot_Name <- paste(trees3$ParkUnit, trees3$PlotCode, sep = "-")
+trees3$Plot_Name <- paste0(trees3$ParkUnit, "-", trees3$PlotCode) #equivalent- by default no separation between elements of paste.
+
+```
+
+<p class = 'note'><b>Coding Tip:</b> In most cases, it does not matter whether you use single ' or double ", as long as you open and close with the same. The cases where it matters are where you have quotes within quotes. There you have to alternate your usage, like `print("Text in outer quote 'text printed as being within quotes' end with closing quote")`. </p>
+</details>
+</details>
+<br>
+
+<details open><summary class = 'drop'>Test your skills!</summary>
+<!-- Test skills section -->
+<div class="alert alert-info">
+<strong>CHALLENGE: How many trees are on Plot MIMA-12?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chal4}
+mima12 <- subset(trees3, Plot_Name == "MIMA-12")
+nrow(mima12) # 12
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot MIMA-12?</strong>
+<details><summary class='drop2'>Answer</summary>
+
+Option 1. Subset data then calculate number of rows
+```{r chal5, fold.output = F}
+mima12_as <- subset(trees3, Plot_Name == "MIMA-12" & TreeStatusCode == "AS")
+nrow(mima12_as) # 6
+```
+
+Option 2. Subset the data with brackets and use the `table()` function to tally status codes.
+```{r chal5b, fold.output = F}
+# OPTION 2
+mima12 <- trees3[trees3$Plot_Name == "MIMA-12",]
+table(mima12$TreeStatusCode) # 6
+
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Find the DBH record that's > 400cm DBH.</strong>
+
+<details><summary class='drop2'>Answer</summary>
+There are multiple ways to do this. Two examples are below.
+
+Option 1. View the data and sort by DBH.
+```{r vtrees, eval = F}
+View(trees3)
+```
+
+Option 2. Find the max DBH value and subset the data frame
+```{r maxdbh, fold.output = F}
+max_dbh <- max(trees3$DBHcm, na.rm = TRUE)
+trees3[trees3$DBHcm == max_dbh,]
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: What is the exact value of the largest DBH, and which record does it belong to?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+There are multiple ways to do this. Two examples are below.
+
+Option 1. View the data and sort by DBH.
+```{r vtrees2, eval = F}
+View(trees)
+```
+
+Option 2. Find the max DBH value and subset the data frame
+```{r maxdbh2}
+max_dbh <- max(trees3$DBHcm, na.rm = TRUE)
+max_dbh #443
+trees[trees3$DBHcm == max_dbh,]
+# Plot MIMA-016, TagCode = 1.
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+
+<details><summary class = 'drop2'>Answer</summary>
+Let's say that you looked at the datasheet, and the actual DBH for that tree was 44.3 instead of 443.0. You can change that value in the original CSV by hand. But even better is to document that change in code. There are multiple ways to do this. Two examples are below.
+
+But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
+
+<p class = 'code'>Replace 443 with 44.3</p>
+```{r trfx, fold.output = F}
+# create copy of trees data
+trees_fix <- trees3
+
+# find the problematic DBH value, and change it to 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+```
+
+Check that it worked by showing the range of the original and fixed data frames.
+```{r check1, fold.output = F}
+range(trees$DBHcm)
+range(trees_fix$DBHcm)
+```
+
+</details>
+</div>
+</details>
+<br>
+
+
+

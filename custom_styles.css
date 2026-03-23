@@ -1,0 +1,196 @@
+body {
+  font-family: "TimesNewRoman", serif;
+  font-size: 12px;
+}
+
+h1 {
+   font-family: "Arial",Arial,sans-serif;
+   font-size: 22px;
+   padding-top:5px;
+   margin-top:5px;
+}
+
+h2 {
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+h3 {
+  font-family: "Arial",Arial,sans-serif;
+  font-size:18px;
+  /*font-style: italic;*/
+  font-weight: bold;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+h5.title{
+  padding-bottom:10px
+}
+
+h4 {
+  font-family: "Times New Roman",Times, serif;
+  font-size:16px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+h5 {
+  font-family: "Arial",Arial,sans-serif;
+  font-size:14px;
+  font-weight: bold;
+  font-style: normal;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+h6 {
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 14px;
+  font-style: underline;
+}
+
+hr {
+  width:100%;
+  height:4px;
+  border-color:DimGrey;
+}
+
+br {
+  display:block;
+  content: "";
+  margin-top: 0;
+  margin-bottom:0;
+  line-height: 50%;
+}
+
+.code{
+  color:#1C1CB0;
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.code2{
+  color:#707070;
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.note{
+  background-color: #D3E8CF /* #C7E8BE; /*#FFFBA3;*/
+}
+
+.ques{
+  color:Red;
+}
+
+.drop{
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.drop2{
+  font-family: "Arial",Arial,sans-serif;
+  font-size:16px;
+  font-style: italic;
+  font-weight: bold;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.drop3{
+  font-family: "Arial",Arial,sans-serif;
+  font-size:14px;
+  color:#1C1CB0;
+  /*font-style: italic;*/
+  font-weight: bold;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.ques2{
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 14px;
+  padding:0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+}
+
+.tabset{
+color:black;
+font-size: 16px;
+}
+
+.litcited{
+  padding-left:36px;
+  text-indent:-36px;
+}
+
+.title{
+  display:none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 30%;
+  padding: 0 4px;
+}
+
+.column3 {
+  flex: 25%;
+  padding: 0 10px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+/* for box around text */
+.boxBorder {
+ border: 1.5px solid #696969;
+ padding: 10px;
+ /*outline: #696969 solid 5px;*/
+ }
+ 
+ .capright {
+   float:right;
+   display:block;
+   clear:both;
+   padding-right: 20px;
+   padding-left: 5px;
+   padding-bottom: 10px;
+   margin-bottom: 10px;
+   font-size:11px;
+   font-family: "Arial",Arial,sans-serif;
+ }
+ 
+ .cap {
+  font-family: "Arial",Arial,sans-serif;
+  font-size: 11px;
+}
+
+.toggle {
+  height: 1.55em;
+  overflow-y: hidden;
+}
+
+.toggle.open {
+  height: auto;
+}

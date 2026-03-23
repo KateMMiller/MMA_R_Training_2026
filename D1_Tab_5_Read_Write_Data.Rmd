@@ -1,0 +1,98 @@
+
+#### Importing and Saving Data
+Most of the work we do in R relies on one or more existing datasets that we want to query or summarize, rather than creating our own in R. Importing data in R is therefore an important skill. R can import just about any data type, including CSV and MS Excel files. You can also import tables from MS Access and SQL databases using ODBC drivers. That's beyond the scope of this class, but I can share examples for anyone needing to import from a database. For now, I'll show how to work with CSVs and Excel spreadsheets. 
+
+<details open><summary class = "drop">Import CSV</summary>
+We use the `read.csv()` function to import CSVs in R. The `read.csv()` function takes the file path or url to the CSV as input and outputs a data frame containing the data from the CSV. Here we're going to read a CSV from a website, then save that in the data folder of our project. We'll talk more about what data frames are next.
+
+```{r day1_rw, echo = F, include = F}
+#------------------------------------
+#     Day 1: Read and Write Code 
+#------------------------------------
+```
+
+
+<p class = "code">Run the following line to import a teaching ACAD wetland data set from the github repository for this training</p>
+```{r read_csv}
+# read in the data from ACAD_wetland_data_clean.csv and assign it as a dataframe to the variable "ACAD_wetland"
+ACAD_wetland <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+  )
+```
+
+<p class = "code">View the data in a separate window by running the `View()` function.</p>
+```{r view_aw, eval = F}
+# View the ACAD_wetland data frame we just created
+View(ACAD_wetland)
+```
+
+<p class = "code">Or, check out the first few or last few records in your console. Click on View R output to view output.</p> 
+```{r hdat, fold.output = TRUE}
+# Look at the top 6 rows of the data frame
+head(ACAD_wetland)
+```
+
+```{r tdat, fold.output = TRUE}
+# Look at the bottom 6 rows of the data frame
+tail(ACAD_wetland)
+```
+</details>
+<br>
+<details open><summary class = 'drop'>Save CSV</summary>
+<p class = "code">Now write the csv to disk and show how to import from your computer. </p>
+```{r write_csv}
+# Write the data frame to your data folder using a relative path. 
+# By default, write.csv adds a column with row names that are numbers. I don't
+# like that, so I turn that off.
+write.csv(ACAD_wetland, "./data/ACAD_wetland_data_clean.csv", row.names = FALSE)
+```
+
+<p class = "code">Make sure the writing to disk worked by importing the CSV from your computer</p>
+
+```{r exploredat}
+# Read the data frame in using a relative path
+ACAD_wetland <- read.csv("./data/ACAD_wetland_data_clean.csv")
+
+# Equivalent code to read in the data frame using full path on my computer, but won't match another user.
+ACAD_wetland <- read.csv("C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/IMD_R_Training_2026/data/ACAD_wetland_data_clean.csv")
+
+```
+
+</details>
+<br>
+<details open><summary class = 'drop'>Import from XLSX</summary>
+Base R does not have a way to import MS Excel files. The first step for working with Excel files (i.e., files with .xls or .xlsx extensions), therefore, is to install the `readxl` package to import .xlsx files and `writexl` to write files to .xlsx. The `readxl` package has a couple of options for loading Excel spreadsheets, depending on whether the extension is .xls, .xlsx, or unknown, along with options to import different worksheets within a spreadsheet. 
+
+The code below installs the required packages (if you forgot to ahead of time), loads them, then first writes the ACAD_wetland CSV we just imported to an .xlsx. The last step imports the .xslx version of the ACAD wetland data. 
+
+<ol>
+<li class = "code">Install packages (only if you haven't already)</li>
+```{r, c19b, echo=T, eval=F}
+install.packages("readxl") # only need to run once. 
+install.packages("writexl")
+```
+
+<li class = "code">Load packages</li>
+```{r libxl}
+library(writexl) # saving xlsx
+library(readxl) # importing xlsx
+```
+
+<li class = "code">Write CSV to .xlsx to data folder. I'm going in this order to keep this training stand-alone. The `read_xlsx()` function can't read from a url like `read.csv()` can.</li>
+```{r writexl, eval = F}
+write_xlsx(ACAD_wetland, "./data/ACAD_wetland_data_clean.xlsx")
+```
+
+<li class = "code">Import spreadsheet. Note that the default settings import the first sheet, so I didn't really 
+need to specify the sheet below. I included the sheet argument to show how it's done.</li>
+```{r, c19dd, echo=T}
+ACAD_wetxls <- read_xlsx(path = "./data/ACAD_wetland_data_clean.xlsx", sheet = "Sheet1") 
+```
+
+<li class = "code">View top 6 rows to check the data</li>
+```{r, c19e, echo=T}
+head(ACAD_wetxls)
+```
+</ol>
+</details>
+<br>

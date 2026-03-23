@@ -1,0 +1,296 @@
+#### Day 3 Questions
+<details open><summary class='drop'>Load Data and Packages</summary>
+<br>
+
+```{r day3_ch, echo = F, include = F}
+#------------------------------------
+#       Day 3: Challenges Code 
+#------------------------------------
+```
+
+<details open><summary class = 'drop2'>Pivoting tables</summary>
+<p class = 'code'>Load data and dplyr</p>
+```{r loaddat3}
+library(dplyr)
+
+# bat capture data
+bat_cap <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/example_bat_capture_data.csv")
+```
+</details>
+<br>
+<details open><summary class = 'drop2'>Joining tables</summary>
+<p class = 'code'>Load data and dplyr</p>
+```{r loaddat3j}
+library(dplyr)
+# tree data
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+# tree species table
+spp_tbl <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_species_table.csv")
+```
+</details>
+<br>
+<details open><summary class = 'drop2'>Dates and times</summary>
+
+<p class = 'code'>Load and prep data.</p>
+```{r loadhobodat}
+# Hobo Temp data
+temp_data <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", skip = 1)[,1:3]
+colnames(temp_data) <- c("index", "temp_time", "tempF")
+temp_data$timestamp_temp <- as.POSIXct(temp_data$temp_time, 
+                                       format = "%m/%d/%Y %H:%M", 
+                                       tz = "America/New_York")
+```
+</details>
+<br>
+<details open><summary class = 'drop2'>ggplot sections</summary>
+<p class = 'code'>Load packages and prep data for ggplot sections</p>
+```{r loadwdat}
+# Water chemistry data for ggplot section
+library(dplyr)
+library(ggplot2)
+library(patchwork) # for arranging ggplot objects
+library(RColorBrewer) # for palettes
+library(viridis) # for palettes
+chem <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_water_chemistry_data.csv")
+
+chem <- chem |> mutate(date = as.Date(EventDate, "%m/%d/%Y"),
+                       year = as.numeric(format(date, "%Y")),
+                       mon = as.numeric(format(date, "%m")),
+                       doy = as.numeric(format(date, "%j"))) 
+
+ACAD_lakes <- c("ACBUBL", "ACEAGL", "ACECHO", "ACJORD", 
+                "ACLONG", "ACSEAL", "ACUHAD", "ACWHOL")
+
+lakes_temp <- chem |> filter(SiteCode %in% ACAD_lakes) |> 
+  filter(Parameter %in% "Temp_F") 
+```
+</details>
+</details><br>
+
+<details open><summary class='drop'>Pivoting tables</summary>
+<div class="alert alert-info">
+<strong>Pivot the `bat_sum` data frame on year instead of species, so that you have a column for every year of captures. Remember to avoid column names starting with a number. </strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r pivwide2c1, fold.output = F}
+bat_wide_yr <- pivot_wider(bat_sum, names_from = Year, 
+                           values_from = num_indiv, 
+                           values_fill = 0, 
+                           names_prefix = "yr")
+head(bat_wide_yr)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Pivot the resulting data frame from the previous question to long on the years columns, and remove the "yr" from the year names using `names_prefix = 'yr'`. </strong>
+
+<details><summary class='code2'>Answer</summary>
+```{r pivwide2c2, fold.output = F}
+bat_long_yr <- pivot_longer(bat_wide_yr, 
+                            cols = -c(Site, sppcode),
+                            names_to = "Year", 
+                            values_to = "num_indiv", 
+                            names_prefix = "yr") # drops this string from values
+```
+</details>
+</div>
+</details><br> 
+
+<details open><summary class='drop'>Joining Tables</summary>
+<div class="alert alert-info">
+<strong>Join the NETN_tree_data.csv and NETN_tree_species_table.csv to connect the common name to the tree data.</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2bc1}
+# find the columns in common
+intersect(names(spp_tbl), names(trees)) # TSN and ScientificName
+# left join species to trees, because don't want to include species not found in tree data
+trees_spp <- left_join(trees, 
+                       spp_tbl |> select(TSN, ScientificName, CommonName), 
+                       by = c("TSN", "ScientificName"))
+
+head(trees_spp)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Find a species in the NETN tree data that doesn't have a match in the species table.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2d}
+# find the columns in common
+intersect(names(spp_tbl), names(trees)) # TSN and ScientificName
+# anti join of trees against species table, selecting only columns of interest
+anti_join(trees, spp_tbl, by = c("TSN", "ScientificName")) |> 
+  select(ParkUnit, PlotCode, SampleYear, ScientificName)
+```
+</details>
+</div>
+
+</details>
+</br>
+
+<details open><summary class='drop'>Dates and Times</summary>
+<div class="alert alert-info">
+<strong>Question: How would you return date1 as YYYYMMDD (20260312)?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald31dc}
+format(date1, format = "%Y%m%d")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How would you create a list of dates in 2026 that are evenly spaced by 3 months?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32bc}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "3 months")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How would you create a list of dates in 2026 that are evenly spaced by 1 week?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32bd}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "1 week")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How would you extract the month as a number ranging from 1-12 in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdatec1}
+temp_data$month_num <- as.numeric(format(temp_data$timestamp_temp, "%m"))
+head(temp_data)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How would you extract the julian date in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdatejc1}
+temp_data$julian <- as.numeric(format(temp_data$timestamp_temp, "%j"))
+head(temp_data)
+```
+</details>
+</div>
+
+</details>
+<br>
+
+<details open><summary class='drop'>Customizing ggplot</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: Review labels from Day 2. How would you change the X-axis label to "Year", and the Y-axis label to "Temp. (F)"?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challd3labd3}
+ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
+                       fill = SiteCode, shape = SiteCode)) + 
+  theme_bw() +
+  geom_point(color = "dimgrey", size = 2) +
+  scale_color_manual(values = site_cols, name = "Lake") +
+  scale_fill_manual(values = site_cols, name = "Lake") +
+  scale_shape_manual(values = site_shps, name = "Lake") +
+  labs(x = "Year", y = "Temp. (F)") # answer
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you change the smooth from LOESS to linear?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challd3lmc1}
+ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
+                       fill = SiteCode, shape = SiteCode)) + 
+  theme_bw() +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
+  geom_point(color = "dimgrey", alpha = 0.5) +
+  scale_color_manual(values = site_cols, name = "Lake") +
+  scale_fill_manual(values = site_cols, name = "Lake") +
+  scale_shape_manual(values = site_shps, name = "Lake")  +
+  labs(x = "Year", y = "Temp. (F)") 
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Recreate the plot below</strong>
+Note that the symbol outline is black. The alpha level is 0.6.
+```{r challd3copyc1, echo = F, fold.plot = F, fig.height = 7, fig.width = 5, fig.align = 'center'}
+ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
+                       fill = SiteCode, shape = SiteCode)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "black", alpha = 0.6, size = 2) +
+  scale_color_manual(values = site_cols, name = "Lake") +
+  scale_fill_manual(values = site_cols, name = "Lake") +
+  scale_shape_manual(values = site_shps, name = "Lake") +
+  labs(y = "Temp. (F)", x = "Year") +
+  facet_wrap(~SiteCode, ncol = 2) +
+  theme(legend.position = 'bottom')
+```
+
+<details><summary class='drop2'>Answer</summary>
+```{r challd3copyac1, fig.height = 7, fig.width = 5, fig.align = 'center'}
+ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
+                       fill = SiteCode, shape = SiteCode)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "black", alpha = 0.6, size = 2) +
+  scale_color_manual(values = site_cols, name = "Lake") +
+  scale_fill_manual(values = site_cols, name = "Lake") +
+  scale_shape_manual(values = site_shps, name = "Lake") +
+  labs(y = "Temp. (F)", x = "Year") +
+  facet_wrap(~SiteCode, ncol = 2) +
+  theme(legend.position = 'bottom')
+
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you change the plot called p_site2 so that x-axis labels were every 4 years, and angle is 45 degrees instead of 90?</strong><br>
+Hint: start with p_site, so you don't have to write that much code. You'll also need to tweak vjust and hjust to make the labels line up properly.
+<details><summary class='drop2'>Answer</summary>
+```{r challyearsc1, fig.height = 4.5, fig.width = 7}
+p_site + 
+  scale_x_date(date_labels = "%Y", date_breaks = "4 years") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+</details>
+</div>
+</details>
+<br>
+
+<details open><summary class = 'drop'>ggplot Palettes</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you specify the 'RdYlBu' palette instead of the ones used above?</strong><br>
+Hint: Start with p_pal to save time coding.
+<details><summary class='drop2'>Answer</summary>
+```{r challpalc1, fig.height = 4.5, fig.width = 7}
+p_pal +  scale_color_brewer(name = "Lake", palette = "RdYlBu", aesthetics = c("fill", "color"))  +
+         guides(fill = guide_legend(override.aes = list(alpha = 1))) # makes symbols not transparent in legend
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Create your own palette with at least three colors.</strong><br>
+Hint: Start with p_heat to save time coding.
+<details><summary class='drop2'>Answer</summary>
+```{r challpal2c, fig.height = 4.5, fig.width = 7}
+p_heat + scale_color_gradient2(low = "#3E693D", mid = "#FDFFC7", high = "#7A6646", 
+                               aesthetics = c("fill", 'color'),
+                               midpoint = mean(lakes_temp$Value), 
+                               name = "Temp. (F)") 
+```
+</details>
+</div>
+
+</details>
+<br>

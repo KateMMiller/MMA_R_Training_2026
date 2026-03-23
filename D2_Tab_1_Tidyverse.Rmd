@@ -1,0 +1,71 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+#### Tidyverse 
+
+<details open><summary class = 'drop'>Tidyverse background</summary>
+<img src = "./images/tidyverse_hex.png" alt = 'Tidyverse packages' style = "float:right; width:200px;">
+<span class = "capright"><a href="https://tidyverse.org?">From tidyverse.org</a></span>
+
+We are now going to learn how to subset rows and columns and other common data wrangling tasks using packages in the `tidyverse`. Taken directly from <a href="https://tidyverse.org?">tidyverse.org</a>: "The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures."
+
+Why I like the tidyverse:
+<ul>
+<li>Function names and arguments are well-named, clear, and consistent, making code easier to read/understand than base R.</li>
+<li>Functions assume the tidy data format (rows = observations; columns = variables).</li>
+<li>Availability of tidyverse help and free online learning materials is excellent.</li>
+<li>Functions take data as the first argument, making it easy to pipe together multiple tasks (more on pipes later).</li>
+<li>Column names don't need to be quoted to refer to them in function arguments (called non-standard evaluation), making typing faster. </li>
+<li>Taken together, these features make the learning curve much shallower than base R.</li>
+</ul>
+
+You should have installed all of the tidyverse packages in preparation for this training. If you missed that step, install tidyverse packages using code below. It can take a few minutes for all the packages to install.
+
+```{r day2_td, echo = F, include = F}
+#------------------------------------
+#       Day 2: Tidyverse Code 
+#------------------------------------
+```
+
+<p class ='code'>Only run if you haven't installed these packages yet</p>
+```{r intid, eval = F}
+install.packages('tidyverse')
+```
+
+<p class='code'>Load the tidyverse</p>
+```{r loadtidy, message = F, warning = F}
+library(tidyverse)
+```
+
+<p class='note'><b>Coding Tip:</b> When you type `library(tidyverse)`, you're loading all nine the packages in the tidyverse. If you're only using one or two packages, it's better to just load those to packages. It's clearer to the user which packages are needed to run your code and reduces dependencies. For this session, we're only going to use `dplyr`, so I will just load that.</p>
+
+```{r dplyr, message = F, warning = F}
+library(dplyr)
+```
+</details>
+<br>
+<details open><summary class = "drop">Tidy Data Format</summary>
+For most of the tasks you will do in R, you will want your data organized in a particular format, often referred to as Tidy Data (see below). Tidy data is organized such that columns are variables, like plot_number, date, measurement, and rows are observations. Each cell is a value. Base R and most R packages are designed to work with data in this format. Always following this approach saves mental and coding time in trying to figure out how to organize your data. The tidyverse suite of packages, which we'll talk about tomorrow, are especially optimized to work with data in this format. </p>
+
+<img src="./images/tidy_data.png" alt = "Tidy Data"  style = "width:90%;"><br>
+<a href = "https://r4ds.hadley.nz/data-tidy.html">Figure From R for Data Science</a>
+
+</details>
+<br>
+<details open><summary class = 'drop'>Core tidyverse packages (ordered from my most to least used): </summary>
+<ul>
+<li><b>ggplot2:</b> plotting package based on The Grammar of Graphics (more on that later).</li>
+<li><b>dplyr:</b> filtering, selecting, renaming, and summarizing based on SQL.</li>
+<li><b>purrr:</b> contains functions like `map()` that allow you to iterate functions or processes like a for loop.</li> 
+<li><b>tidyr:</b> reshaping data from wide to long and long to wide.</li> 
+<li><b>stringr:</b> functions that help you work with strings, such as extracting specific patterns, splitting strings using a specific character (e.g. the '_' in ACAD_101), left pad a number by 0s and turning into a string, etc. There's generally always a base R version of a stringr function, but stringr functions tend to be easier to use and read.</li>
+<li><b>readr:</b> includes `read` functions for csv, and other formats. The `read_csv()` function, for example has more bells and whistles than the base R `read.csv()` function. I've never needed those extra features, so I just use `read.csv()`.</li> 
+<li><b>lubridate:</b> package for working with dates easier. However, the functions are stricter than base R date functions. I tend to prefer base R for that reason.</li>
+<li><b>forcats: </b> package to work with factors, which are special character columns that are categorical with defined levels.</li>
+<li><b>tibble:</b> these are basically data frames with more checks on the data. When you create a new object from with a tidyverse function, the default result will be a tibble instead of a data frame. 99% of the time, it won't matter whether your data object is a data frame or tibble. The 1% of the time it does matter, has made me strongly dislike tibbles.  From <a href="https://tidyverse.org?">tidyverse.org</a>: 
+"Tibbles are data.frames that are lazy and surly: they do less and complain more forcing you to confront problems earlier, typically leading to cleaner, more expressive code". I also prefer the base R data frame format of `head(data.frame)` over the format for `head(tibble)`.</li> </ul>
+</details>
+<br>
+

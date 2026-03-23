@@ -1,0 +1,290 @@
+#### Day 2 Questions
+<details open><summary class = 'drop'>Load Data and Packages</summary>
+If you're starting a new session to answer these questions, you'll need to load dplyr and read in the tree and wetland data frames again.<br>
+<br>
+<details open><summary class = 'drop2'>Data and packages for Wrangling, Conditionals, and Summarizing sections</summary>
+<p class = 'code'>Load dplyr</p>
+
+```{r day2_ch, echo = F, include = F}
+#---- Day 2: Challenges Code ----
+```
+
+```{r ldpd2c}
+library(dplyr)
+```
+
+<p class = 'code'>Read in example NETN tree data from url</p>
+```{r c1readtree2c, eval = F}
+trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+```
+
+<p class = 'code'>Create the tree_final data frame</p>
+```{r tfc22c}
+trees_final <- trees |> 
+  mutate(DecayClassCode_num = as.numeric(DecayClassCode),
+         Plot_Name = paste(ParkUnit, PlotCode, sep = "-"),
+         Date = as.Date(SampleDate, format = "%m/%d/%Y")) |> 
+  rename("Species" = "ScientificName") |> 
+  filter(IsQAQC == FALSE) |> 
+  select(-DecayClassCode)
+```
+
+<p class = 'code'>Read in example ACAD wetland data from url</p>
+```{r c1rdat, eval = F}
+ACAD_wetland <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+  )
+```
+</details>
+<br>
+<details open><summary class = 'drop2'>Data and packages for plotting with ggplot2</summary>
+<p class = 'code'>Load packages</p>
+```{r chaldatgg}
+library(ggplot2)
+library(dplyr) # for mutate
+```
+
+<p class = 'code'>Prep the data </p>
+```{r visprep}
+visits <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_annual_visits.csv")
+visits <- visits |> mutate(Annual_Visits = as.numeric(gsub(",", "", Annual_Visits)))
+```
+</details>
+</details>
+<br>
+
+<details open><summary class = 'drop'>Data Wrangling with dplyr </summary>
+<div class="alert alert-info">
+<strong>How many trees are on Plot MIMA-12 (using trees_final)?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r chal4_d22c}
+trees_final |> filter(Plot_Name == "MIMA-12") |> nrow()
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot MIMA-12 (using trees_final)?</strong>
+<details><summary class='drop2'>Answer</summary>
+
+```{r chal5d22c, fold.output = F}
+trees_final |> filter(Plot_Name == "MIMA-12" & TreeStatusCode == "AS") |> nrow()
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>What is the exact value of the largest DBH, and which record does it belong to?</strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r maxdbhd22c, fold.output = T}
+# Base R and dplyr combo
+max_dbh <- max(trees_final$DBHcm, na.rm = TRUE)
+trees_final |> 
+  filter(DBHcm == max_dbh) |> 
+  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
+
+# dplyr with slice
+trees_final |> 
+  arrange(desc(DBHcm)) |> # arrange DBHcm high to low via desc()
+  slice(1) |> # slice the top record
+  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
+
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+
+<details><summary class = 'drop2'>Answer</summary>
+```{r trfxd22c, fold.output = F}
+# Base R
+# create copy of trees data
+trees_fix <- trees3
+# find the problematic DBH value, and change it to 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+
+# dplyr via replace
+trees_fix <- trees |> mutate(DBHcm = replace(DBHcm, DBHcm == 443.0, 44.3))
+```
+
+Check that it worked by showing the range of the original and fixed data frames.
+```{r check1d22c, fold.output = F}
+range(trees$DBHcm)
+range(trees_fix$DBHcm)
+```
+</details>
+</div>
+</details>
+<br>
+
+<details open><summary class = 'drop'>Conditionals</summary>
+<div class="alert alert-info">
+<strong>Using the ACAD_wetlands data, create a new column called Status that has "protected" for Protected = TRUE and "public" values for Protected = FALSE. </strong>
+
+<details><summary class='drop2'>Answer</summary>
+```{r wetcondc1, eval = F}
+# read in wetland data if you don't already have it loaded.
+ACAD_wetland <- read.csv("./data/ACAD_wetland_data_clean.csv")
+
+# Base R using the with() function
+ACAD_wetland$Status <- with(ACAD_wetland, ifelse(Protected == TRUE, "protected", "public"))
+table(ACAD_wetland$Status, ACAD_wetland$Protected)
+```
+
+```{r wetcond2c1, eval = T}
+# Tidyverse
+ACAD_wetland <- ACAD_wetland |> mutate(Status = ifelse(Protected == TRUE, "protected", "public"))
+table(ACAD_wetland$Status, ACAD_wetland$Protected) # check your work
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Using the ACAD_wetlands data, create a new column called abundance_cat that has levels High, Medium, Low, based on Ave_Cov, where "High" is >50%, "Medium" is 10-50%, and "Low" is < 10%. </strong>
+<details><summary class='drop2'>Answer</summary>
+```{r wetabc12, eval = F}
+# Base R using the with() function and nested ifelse()
+ACAD_wetland$abundance_cat <- with(ACAD_wetland, ifelse(Ave_Cov < 10, "Low",
+                                                        ifelse(Ave_Cov >= 10 & Ave_Cov <= 50, "Medium", "High")))
+```
+
+```{r wetab2c12, eval = T}
+# Tidyverse using case_when() and between
+ACAD_wetland <- ACAD_wetland |> mutate(abundance_cat = case_when(Ave_Cov < 10 ~ "Low",
+                                                                 between(Ave_Cov, 10, 50) ~ "Medium", 
+                                                                 TRUE ~ "High"))
+table(ACAD_wetland$abundance_cat)
+```
+Note the use of the `between()` function that saves typing. This function matches as >= and <=. 
+
+</details>
+</div>
+</details>
+<br>
+
+<details open><summary class='drop'>Summarizing</summary>
+<div class="alert alert-info">
+<strong>Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<details><summary class='code2'>Answer</summary>
+```{r wetinvcovc1}
+# Using group_by()
+ACAD_inv <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
+  summarize(Pct_Cov = sum(Ave_Cov), 
+            .groups = 'drop') |>  # optional line to keep console from being chatty
+  arrange(Site_Name) # sort by Site_Name for easier comparison
+
+head(ACAD_inv)
+
+# Using summarize(.by)
+ACAD_inv2 <- ACAD_wetland |> 
+  summarize(Pct_Cov = sum(Ave_Cov), .by = c(Site_Name, Year, Invasive)) |> 
+  arrange(Site_Name) # sort by Site_Name for easier comparison
+
+head(ACAD_inv2) # should be the same as ACAD_inv
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the ACAD_wetland data, count the number of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<details><summary class='code2'>Answer</summary>
+```{r wetinvrc1}
+# Using group_by()
+ACAD_spp <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
+  summarize(num_spp = n(), 
+            .groups = 'drop') |>  # optional line to keep console from being chatty
+  arrange(Site_Name) # sort by Site_Name for easier comparison
+
+head(ACAD_spp)
+
+# Using summarize(.by)
+ACAD_spp2 <- ACAD_wetland |> 
+  summarize(num_spp = n(), .by = c(Site_Name, Year, Invasive)) |> 
+  arrange(Site_Name) # sort by Site_Name for easier comparison
+
+head(ACAD_spp2) # should be the same as ACAD_inv
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>Using ACAD_wetland data, calculate relative % cover of species within each site. This one is challenging! </strong>
+<details><summary class='code2'>Answer</summary>
+<p class = 'code'>First sum site-level cover using mutate to return a value for every original row.</p>
+```{r wetrelcovc1}
+ACAD_wetland <- ACAD_wetland |> group_by(Site_Name, Year) |> 
+  mutate(Site_Cover = sum(Ave_Cov)) |> 
+  ungroup() # good practice to ungroup after group.
+
+table(ACAD_wetland$Site_Name, ACAD_wetland$Site_Cover) # check that each site has a unique value.
+head(ACAD_wetland)
+```
+
+<p class = 'code'>Next calculate relative cover grouped on Site_Name, Year, Latin_Name, and Common </p> 
+```{r wetrelcov2c1}
+# Create new dataset because collapsing rows on grouping variables
+# Using group_by() and summarize()
+ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Common) |> 
+  summarize(rel_cov = (Ave_Cov/Site_Cover)*100,
+            .groups = 'drop') |> 
+  ungroup()
+
+```
+
+<p class = 'code'>Check that relative cover sums to 100% within each site</p>
+```{r wetrelcovcheckc1}
+# Using summarize(.by = ) 
+ACAD_wetland_relcov2 <- ACAD_wetland |> #group_by(Site_Name, Year, Latin_Name, Common) |> 
+  summarize(rel_cov = Ave_Cov/Site_Cover, 
+            .by = c("Site_Name", "Year", "Latin_Name", "Common"))
+
+# Check that your relative cover sums to 100 for each site
+relcov_check <- ACAD_wetland_relcov2 |> group_by(Site_Name, Year) |> 
+  summarize(tot_relcov = sum(rel_cov)*100, .groups = 'drop')
+table(relcov_check$tot_relcov) # they should all be 100
+
+```
+</details>
+</div>
+</details>
+<br>
+<details open><summary class = 'drop'>Plotting with ggplot2</summary>
+<div class="alert alert-info">
+<strong>Recreate the plot below (or customize your own plot). </strong>
+Note that the fill color is "#0080FF", and the shape is 21, and the theme is classic. The linewidth = 0.75, and linetype = 'dashed' .
+
+```{r pq1c, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+pq <- 
+  ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+    geom_line(linewidth = 0.75, linetype = 'dashed') + 
+    geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
+    labs(x = "Year", y = "Annual visits in 1,000s") +
+    scale_y_continuous(limits = c(2000, 4500),
+                       breaks = seq(2000, 4500, by = 500)) + 
+    scale_x_continuous(limits = c(1994, 2024),
+                       breaks = c(seq(1994, 2024, by = 5))) + 
+    theme_classic()
+pq
+```
+
+<details><summary class='code2'>Answer</summary>
+```{r pq1ac, eval = F, results = 'hide'}
+ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
+  geom_line(linewidth = 0.75, linetype = 'dashed') + 
+  geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
+  labs(x = "Year", y = "Annual visits in 1,000s") +
+  scale_y_continuous(limits = c(2000, 4500),
+                     breaks = seq(2000, 4500, by = 500)) + 
+  scale_x_continuous(limits = c(1994, 2024),
+                     breaks = c(seq(1994, 2024, by = 5))) + 
+  theme_classic()
+
+```
+</details>
+</div>
+<br>
+</details>
+<br>
