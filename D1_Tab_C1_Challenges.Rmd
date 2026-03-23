@@ -8,10 +8,10 @@ If you're starting a new R session to answer these questions, you'll need to rea
 #------------------------------------
 ```
 
-<p class = 'code'>Read in example ACAD wetland data from url</p>
-```{r c1rdatc1, eval = F}
-ACAD_wetland <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+<p class = 'code'>Read in example Bass Harbor motile invertebrate data from url</p>
+```{r c1rdatc1, eval = T}
+motinv <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
   )
 ```
 
@@ -23,44 +23,50 @@ trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_
 
 <details open><summary class = 'drop'>Data Structures</summary>
 <div class="alert alert-info">
-<strong>How would you look at the the first 4 even rows (2, 4, 6, 8), and first 2 columns?</strong>
+<strong>CHALLENGE: How would you look at the the first 4 even rows (2, 4, 6, 8), and first 2 columns of the `motinv` data frame?</strong>
 
-<details><summary class='code2'>Answer</summary>
-```{r d1chal1, fold.output = F}
-ACAD_wetland[c(2, 4, 6, 8), c(1, 2)]
+<details><summary class='drop2'>Answer</summary>
+<h5>Answer that works<h5>
+```{r chal1d1c, fold.output = F}
+motinv[c(2, 4, 6, 8), c(1, 2)]
 ```
+
+<h5>Better answer that's more stable</h5>
+```{r chal1bd1c, fold.output = F}
+names(motinv) # get the names of the first 2 columns
+motinv[c(2, 4, 6, 8), c("Network", "UnitCode")]
+```
+
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>How many unique species are there in the ACAD_wetland data frame?</strong>
+<strong>CHALLENGE: How many unique species are there in the `motinv` data frame?</strong>
 
-<details><summary class='code2'>Answer</summary>
-```{r d1rows2a, results = "hide"}
+<details><summary class='drop2'>Answer</summary>
+```{r rows2ad1c, results = "hide"}
 # Option 1
-length(unique(ACAD_wetland[, "Latin_Name"]))
+length(unique(motinv[, "ScientificName"])) # 6
 ```
 
-```{r d1rows2b, fold.output = FALSE}
+```{r rows2d1cb, fold.output = FALSE}
 # Option 2
-length(unique(ACAD_wetland$Latin_Name)) # equivalent
+length(unique(motinv$ScientificName)) # equivalent
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Which sites have species that are considered protected on them (Protected = TRUE)?</strong>
-
-<details><summary class='code2'>Answer</summary>
-```{r, d1rows2a2, results = 'hide'}
+<strong>CHALLENGE: What years were QAQC visits conducted (QAQC = TRUE)?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r, rows2a2d1c, results = 'hide'}
 # Option 1 - used unique to just return unique site name
-unique(ACAD_wetland$Site_Name[ACAD_wetland$Protected == TRUE])
-
+unique(motinv$Year[motinv$QAQC == TRUE]) # 2013
 ```
 
-```{r, d1rows2b2, fold.output=FALSE}
+```{r, rows2b2d1c, fold.output=FALSE}
 # Option 2
-unique(ACAD_wetland[ACAD_wetland$Protected == TRUE, "Site_Name"])
+unique(motinv[motinv$QAQC == TRUE, "Year"])
 ```
 </details>
 </div>

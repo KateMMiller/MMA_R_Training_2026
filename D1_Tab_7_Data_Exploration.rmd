@@ -8,6 +8,8 @@ output:
 <details open><summary class = 'drop'>Exploring the data</summary>
 We've already explored the wetland data a bit using `head()`, `str()`, `names()`, and `View()`. These are functions that you will use over and over as you work with data in R. Below, I'm going to show how I get to know a data set in R.
 
+#++++ ENDED HERE +++++
+
 ```{r day1_de, echo = F, include = F}
 #-----------------------------------------
 #     Day 1: Data Exploration Code 

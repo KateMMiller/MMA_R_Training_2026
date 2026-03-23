@@ -12,29 +12,29 @@ We use the `read.csv()` function to import CSVs in R. The `read.csv()` function 
 ```
 
 
-<p class = "code">Run the following line to import a teaching ACAD wetland data set from the github repository for this training</p>
+<p class = "code">Run the following line to import a teaching data set of motile invertebrates collected in the Bass Harbor rocky intertidal zone from the github repository for this training</p>
 ```{r read_csv}
-# read in the data from ACAD_wetland_data_clean.csv and assign it as a dataframe to the variable "ACAD_wetland"
-ACAD_wetland <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+# read in the data from BASHAR_motile_invert_counts.csv and assign it as a dataframe to the variable "motinv"
+motinv <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
   )
 ```
 
 <p class = "code">View the data in a separate window by running the `View()` function.</p>
 ```{r view_aw, eval = F}
-# View the ACAD_wetland data frame we just created
-View(ACAD_wetland)
+# View the BASHAR_motile data frame we just created
+View(motinv)
 ```
 
 <p class = "code">Or, check out the first few or last few records in your console. Click on View R output to view output.</p> 
 ```{r hdat, fold.output = TRUE}
 # Look at the top 6 rows of the data frame
-head(ACAD_wetland)
+head(motinv)
 ```
 
 ```{r tdat, fold.output = TRUE}
 # Look at the bottom 6 rows of the data frame
-tail(ACAD_wetland)
+tail(motinv)
 ```
 </details>
 <br>
@@ -44,17 +44,17 @@ tail(ACAD_wetland)
 # Write the data frame to your data folder using a relative path. 
 # By default, write.csv adds a column with row names that are numbers. I don't
 # like that, so I turn that off.
-write.csv(ACAD_wetland, "./data/ACAD_wetland_data_clean.csv", row.names = FALSE)
+write.csv(motinv, "./data/BASHAR_motile_invert_counts.csv", row.names = FALSE)
 ```
 
 <p class = "code">Make sure the writing to disk worked by importing the CSV from your computer</p>
 
 ```{r exploredat}
 # Read the data frame in using a relative path
-ACAD_wetland <- read.csv("./data/ACAD_wetland_data_clean.csv")
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 
 # Equivalent code to read in the data frame using full path on my computer, but won't match another user.
-ACAD_wetland <- read.csv("C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/IMD_R_Training_2026/data/ACAD_wetland_data_clean.csv")
+motinv <- read.csv("C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/MMA_R_Training_2026/data/BASHAR_motile_invert_counts.csv")
 
 ```
 
@@ -80,18 +80,18 @@ library(readxl) # importing xlsx
 
 <li class = "code">Write CSV to .xlsx to data folder. I'm going in this order to keep this training stand-alone. The `read_xlsx()` function can't read from a url like `read.csv()` can.</li>
 ```{r writexl, eval = F}
-write_xlsx(ACAD_wetland, "./data/ACAD_wetland_data_clean.xlsx")
+write_xlsx(motinv, "./data/BASHAR_motile_invert_counts.xlsx")
 ```
 
 <li class = "code">Import spreadsheet. Note that the default settings import the first sheet, so I didn't really 
 need to specify the sheet below. I included the sheet argument to show how it's done.</li>
 ```{r, c19dd, echo=T}
-ACAD_wetxls <- read_xlsx(path = "./data/ACAD_wetland_data_clean.xlsx", sheet = "Sheet1") 
+motivn_xls <- read_xlsx(path = "./data/BASHAR_motile_invert_counts.xlsx", sheet = "Sheet1") 
 ```
 
 <li class = "code">View top 6 rows to check the data</li>
 ```{r, c19e, echo=T}
-head(ACAD_wetxls)
+head(motivn_xls)
 ```
 </ol>
 </details>
