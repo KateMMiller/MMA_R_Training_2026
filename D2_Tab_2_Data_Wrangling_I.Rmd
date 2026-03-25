@@ -131,9 +131,9 @@ The warning in the console tells us that in converting DecayClassCode to numeric
 
 The `arrange()` line just shows how to order the data by plot name and tree tag number. 
 
-Hopefully you agree that pipes are amazing! They allow for more efficient coding and is relatively easy to follow the steps, and make the dplyr functions, like `mutate()` so much more useful. Outside of pipes for example, `mutate()` doesn't feel more useful than base R for creating a new column. From now on, I will use pipes regularly in the code. 
+Hopefully you agree that pipes are amazing! They allow for more efficient coding and in relatively easy to follow the steps, and make the dplyr functions, like `mutate()` so much more useful. Outside of pipes for example, `mutate()` doesn't feel more useful than base R for creating a new column. From now on, I will use pipes regularly in the code. 
 
-If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%` pipe was originally introduced by the tidverse in the `magrittr` package. The `magrittr` pipe was so popular, that starting in R 4.0, a base R pipe was introduced (`|>`). It's supposed to be better optimized for order of operations and reduces a package you need to install. So, in general, use the base R pipe `|>`. It's also why I had you set the default pipe in Global Options to the `|>`. A useful keyboard shortcut for the pipe is Ctrl + Shift + M. You should see the `|>` pipe in your script when you type that shortcut. If you get the `%>%` pipe instead, you need to change that default setting in Global Options (see Day 1 > R and RStudio > RStudio Global Options > Step 3. Change default pipe.)
+If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%` pipe was the original pipe taht was introduced by the tidverse in the `magrittr` package. The `magrittr` pipe was so popular, that starting in R 4.0, a base R pipe was introduced (`|>`). It's supposed to be better optimized for order of operations and reduces a package you need to install. So, in general, use the base R pipe `|>`. It's also why I had you set the default pipe in Global Options to the `|>`. A useful keyboard shortcut for the pipe is Ctrl + Shift + M. You should see the `|>` pipe in your script when you type that shortcut. If you get the `%>%` pipe instead, you need to change that default setting in Global Options (see Day 1 > R and RStudio > RStudio Global Options > Step 3. Change default pipe.)
 <br>
 <br>
 <p class = 'note'><b>Coding Tip:</b> While the number of steps you can pipe together is virtually endless, piping many tasks, especially complex ones, can make code hard to read and troubleshoot. It's best to limit number of pipes to 3-4, and/or to do complex tasks that might fail or require checking on their own.</p>
@@ -192,7 +192,7 @@ trees_final |>
 # create copy of trees data
 trees_fix <- trees3
 # find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
 
 # dplyr via replace
 trees_fix <- trees |> mutate(DBHcm = replace(DBHcm, DBHcm == 443.0, 44.3))

@@ -2,14 +2,14 @@
 <h3>Installing required software</h3>
 The only prerequisite for the R training is to install the latest version of R and RStudio on your computer and the packages we're using for the training. These are available online and are free to download and install. We'll talk about the difference between R and RStudio on the first day, but for now, just make sure they're installed. 
 
-</ul>
+<ol>
 <li><b>Install R:</b> Download and install R 4.5.3 <a href="https://cran.r-project.org/bin/windows/base/">for Windows</a> or for <a href="https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.5.3-arm64.pkg"> for macOS</a>. 
   <ul>
   <li>If you run into issues with the link for Windows, go back to the <a href="https://cran.r-project.org/bin/windows/">Windows install page</a>, and click on <a href="https://cran.r-project.org/bin/windows/base/">install for the first time</a>, then <a href="https://cran.r-project.org/bin/windows/base/R-4.5.3-win.exe">Download R-4.5.3 for Windows</a> link.</li>
   <li>If you have issues with the macOS link, try downloading R-4.5.3-arm64.pkg from the <a href="https://cran.r-project.org/bin/macosx/">macOS install page</a>.</li>
-  </ul>
+  </ul><br>
 <li><b>Install R Studio:</b> The main <a href="https://posit.co/download/rstudio-desktop/">RStudio page</a> has links to download <a href = "https://download1.rstudio.org/electron/windows/RStudio-2026.01.1-403.exe">RStudio-2026.01.01-403.EXE</a> for Windows (assuming your operating system is at least Windows 10), and <a href='https://download1.rstudio.org/electron/macos/RStudio-2026.01.1-403.dmg'>RStudio-2026.01.01-403.DMG</a> for macOS (assuming OS 14 or greater)</li>
-</ul>
+</1l>
 <br>
 
 <p class = 'note'>

@@ -20,7 +20,7 @@ library(kableExtra)
 
 <details open><summary class='drop'>The Power of (Good) Data Visualizations</summary>
 <br>
-<h3 style="color:red;">Data are useful only when used. Data are used only when understood.</h3>
+<h3 style="color:#BD2A11;">Data are useful only when used. Data are used only when understood.</h3>
 Consider three example data visualizations that demonstrate how some approaches are more effective than others in conveying patterns. 
 
 <details open><summary class = "drop2">Example 1. Plots convey messages faster than tables</summary>

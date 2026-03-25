@@ -190,8 +190,20 @@ There's a lot of great online material for learning new applications of R. The o
 ```
 
 #### Advanced topics
-- R Markdown (stand alone websites/docs) and R Shiny (interactive websites)
-- Writing your own functions and iteration
+Additional skills that can greatly improve your workflow are: 
+<ul>
+<li>Using R Markdown (stand alone websites/docs) or R Shiny (interactive websites) for automated reporting or visualizing your data.</li>
+<li>Writing your own functions and iterating tasks.</li>
+<li>Version control using git/GitHub.</li>
+<li>Building R packages. </li>
+</ul>
+
+While we won't get to these topics this during this training, the <a href = "https://katemmiller.github.io/IMD_R_Training_Advanced/">2022 Advanced R training</a> has sessions covering all of these topics. The Resources tab includes other online resources that cover these topics as well. 
+
+<center><img src = "./images/R_Markdown.png" alt = 'R Markdown wizards' style = "width:600px;">
+<br>
+<a href="https://allisonhorst.com">Artwork by @allison_horst</a>
+</center>
 
 ### Code printout {.tabset}
 ```{r show-code, ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE, attr.source='.numberLines'}

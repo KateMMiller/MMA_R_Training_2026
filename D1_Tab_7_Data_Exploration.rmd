@@ -6,9 +6,11 @@ output:
 
 #### Data Exploration
 <details open><summary class = 'drop'>Exploring the data</summary>
-We've already explored the wetland data a bit using `head()`, `str()`, `names()`, and `View()`. These are functions that you will use over and over as you work with data in R. Below, I'm going to show how I get to know a data set in R.
+We've already explored the motile invertebrate dta a bit using `head()`, `str()`, `names()`, and `View()`. These are functions that you will use over and over as you work with data in R. Below, I'm going to show how I get to know a data set in R. First, to help you picture how these data are collected, here's a site map of the Bass Harbor monitoring site. 
 
-#++++ ENDED HERE +++++
+<details open><summary class = 'drop'>Bass Harbor site map</summary>
+<center><img src="./images/BASHAR_site_map.png" alt = 'dplyr filter' style = "width:600px;"></center>
+</details><br>
 
 ```{r day1_de, echo = F, include = F}
 #-----------------------------------------
@@ -16,19 +18,20 @@ We've already explored the wetland data a bit using `head()`, `str()`, `names()`
 #-----------------------------------------
 ```
 
-<p class = 'code'>Read in example NETN tree data</p>
+<p class = 'code'>Read in example rocky intertidal motile invertebrate data</p>
 ```{r readtree}
-trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+motinv <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
 ```
 
 <p class = 'code'>Look at first few records</p>
 ```{r headt, fold.output = F}
-head(trees)
+head(motinv)
 ```
 
 <p class = 'code'>Look at structure of each column</p>
 ```{r strt, fold.output = F}
-str(trees)
+str(motinv)
 ```
 
 <p class = 'code'>Look at summary of the columns</p>
@@ -236,7 +239,7 @@ But first, it's good to create a new data frame when modifying the original data
 trees_fix <- trees3
 
 # find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
 ```
 
 Check that it worked by showing the range of the original and fixed data frames.

@@ -157,7 +157,7 @@ But first, it's good to create a new data frame when modifying the original data
 trees_fix <- trees
 
 # find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
 ```
 
 Check that it worked by showing the range of the original and fixed data frames.

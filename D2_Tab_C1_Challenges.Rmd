@@ -104,7 +104,7 @@ trees_final |>
 # create copy of trees data
 trees_fix <- trees3
 # find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == "443"] <- 44.3
+trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
 
 # dplyr via replace
 trees_fix <- trees |> mutate(DBHcm = replace(DBHcm, DBHcm == 443.0, 44.3))
