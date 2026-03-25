@@ -68,8 +68,8 @@ NETN,ACAD,BASHAR,6/24/2013,2013,TRUE,A3,Ascophyllum,Littorina obtusata,Smooth pe
 NETN,ACAD,BASHAR,6/24/2013,2013,TRUE,A3,Ascophyllum,Nucella lapillus,Dogwhelk,NUCLAP,0,4,No
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,A3,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,0,14,No
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,A3,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,0,18,No
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A3,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,1,27,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A3,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,0,19,NA
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A3,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,1,27,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A3,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,0,19,
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,A3,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,0,59,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,A3,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,2,20,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,A3,Ascophyllum,Nucella lapillus,Dogwhelk,NUCLAP,0,1,No
@@ -135,9 +135,9 @@ NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A5,Ascophyllum,Littorina littorea,Common p
 NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,A5,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,PM,11,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,A5,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,4,113,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,A5,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,2,30,No
-NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,4,62,NA
-NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,0,14,NA
-NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Nucella lapillus,Dogwhelk,NUCLAP,0,2,NA
+NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,4,62,
+NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,0,14,
+NETN,ACAD,BASHAR,6/25/2017,2017,FALSE,A5,Ascophyllum,Nucella lapillus,Dogwhelk,NUCLAP,0,2,
 NETN,ACAD,BASHAR,5/18/2018,2018,FALSE,A5,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,1,65,No
 NETN,ACAD,BASHAR,5/18/2018,2018,FALSE,A5,Ascophyllum,Littorina obtusata,Smooth periwinkle,LITOBT,1,15,No
 NETN,ACAD,BASHAR,6/11/2019,2019,FALSE,A5,Ascophyllum,Littorina littorea,Common periwinkle,LITLIT,1,93,No
@@ -406,9 +406,9 @@ NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F3,Fucus,Littorina littorea,Common periwin
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F3,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,0,59,No
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F3,Fucus,Nucella lapillus,Dogwhelk,NUCLAP,0,3,No
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F3,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,3,No
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Littorina littorea,Common periwinkle,LITLIT,3,23,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,0,25,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,5,NA
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Littorina littorea,Common periwinkle,LITLIT,3,23,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,0,25,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F3,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,5,
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F3,Fucus,Littorina littorea,Common periwinkle,LITLIT,2,46,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F3,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,1,42,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F3,Fucus,Nucella lapillus,Dogwhelk,NUCLAP,1,2,No
@@ -490,10 +490,10 @@ NETN,ACAD,BASHAR,6/24/2013,2013,TRUE,F5,Fucus,Testudinalia testudinalis,Limpet,T
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F5,Fucus,Littorina littorea,Common periwinkle,LITLIT,0,9,Yes
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F5,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,0,35,Yes
 NETN,ACAD,BASHAR,6/21/2014,2014,FALSE,F5,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,1,Yes
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Littorina littorea,Common periwinkle,LITLIT,5,17,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,4,35,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Nucella lapillus,Dogwhelk,NUCLAP,1,6,NA
-NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,2,NA
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Littorina littorea,Common periwinkle,LITLIT,5,17,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,4,35,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Nucella lapillus,Dogwhelk,NUCLAP,1,6,
+NETN,ACAD,BASHAR,6/12/2015,2015,FALSE,F5,Fucus,Testudinalia testudinalis,Limpet,TECTES,0,2,
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F5,Fucus,Littorina littorea,Common periwinkle,LITLIT,0,61,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F5,Fucus,Littorina obtusata,Smooth periwinkle,LITOBT,2,49,No
 NETN,ACAD,BASHAR,6/28/2016,2016,FALSE,F5,Fucus,Nucella lapillus,Dogwhelk,NUCLAP,1,10,No
