@@ -8,8 +8,8 @@ output:
 <details open><summary class = 'drop'>Exploring the data</summary>
 We've already explored the motile invertebrate dta a bit using `head()`, `str()`, `names()`, and `View()`. These are functions that you will use over and over as you work with data in R. Below, I'm going to show how I get to know a data set in R. First, to help you picture how these data are collected, here's a site map of the Bass Harbor monitoring site. 
 
-<details open><summary class = 'drop'>Bass Harbor site map</summary>
-<center><img src="./images/BASHAR_site_map.png" alt = 'dplyr filter' style = "width:600px;"></center>
+<details open><summary class = 'drop2'>Bass Harbor site map</summary>
+<center><img src="./images/BASHAR_site_map.png" alt = 'dplyr filter' style = "width:800px;"></center>
 </details><br>
 
 ```{r day1_de, echo = F, include = F}
@@ -22,6 +22,7 @@ We've already explored the motile invertebrate dta a bit using `head()`, `str()`
 ```{r readtree}
 motinv <- read.csv(
   "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
+
 ```
 
 <p class = 'code'>Look at first few records</p>
@@ -35,24 +36,29 @@ str(motinv)
 ```
 
 <p class = 'code'>Look at summary of the columns</p>
-```{r sumtree, fold.output = F}
-summary(trees)
+```{r summi, fold.output = F}
+summary(motinv)
 ```
 
-<p class = 'code'>Check for complete cases for the first 10 columns that should always have data.</p>
+<p class = 'code'>Check for complete cases, assuming every column should requires a value (i.e. no blanks).</p>
 ```{r}
-table(complete.cases(trees[,1:10]))# all true
+table(complete.cases(motinv))# 12 FALSE
+table(complete.cases(motinv[,1:13]))# first 13 columns are all complete
+table(complete.cases(motinv$Subsampled))# where the FALSE are introduced
+table(motinv$Subsampled, useNA = 'always')
+
 ```
 
 There's a lot to digest from the summary results. 
 <ul>
-<li>We can see that Park_Unit and ScientificName are treated as characters, which makes sense.</li>
-<li>PlotCode is numeric, the range of plot numbers is 1 to 20, and there are no blanks (NAs) </li>
-<li>SampleDate is being interpreted as a character, not date. We'll fix that later.</li>
-<li>IsQAQC is being treated as TRUE/FALSE. We'll use that to filter out QAQC visits.</li>
-<li>SampleYear is all 2022.</li>
-<li>DBH ranges from 10 to 443.0, with 14 blanks (NAs).</li>
-<li>DecayClassCode is reading in as a character, not a number. That's weird. We will look deeper into that next.</li>
+<li>We can see that Network, UnitCode, and SiteCode, are treated as characters, which makes sense.</li>
+<li>StartDate is interpreted as a character, not date. We'll fix that later.</li>
+<li>Year is treated as an integer, meaning it's a number with no decimals. That's correct.</li>
+<li>QAQC is treated as TRUE/FALSE. We'll use that to filter out QAQC visits.</li>
+<li>PlotName through SpeciesCode are characters, which also makes sense.</li>
+<li>Damage, which is a count of the individuals of a species that are found damaged, is coming in as a character instead of a number. That's weird, we'll look deeper into why and fix this.</li>
+<li>No.Damage is interpreted as an integer, which again makes sense. This is the count of non-damaged individuals found in a given Plot. The summary shows a max count of 1960, which seems high.</li>
+<li>Subsampled is interpreted as a character consisting of "No" and "Yes" values. This would be better handled as a logical TRUE/FALSE data type. There are also 12 NAs in that column.</li>
 </ul>
 
 </details><br>
@@ -72,57 +78,57 @@ mean(x, na.rm = TRUE)
 <br>
 
 <details open><summary class ='drop'>Fix the data </summary>
-The steps we are going to take with the NETN tree data were: 
+The steps we are going to take with the Bass Harbor motile invertebrate data were: 
 <ol>
-<li>Replace decay class code "PM" with NA (blank).</li>
-<li>Convert SampleDate (character) to Date (date-time). </li>
+<li>Figure out why Damage is a character, and fix the issue.</li>
+<li>Convert StartDate (character) to a Date type. </li>
 <li>Rename the ScientificName column to Species.</li>
-<li>Create a Plot_Name column that's a combination of ParkUnit and PlotCode.</li>
-<li>Change tree DBH that's 443.0 to 44.3.</li>
+<li>Create a Site_Plot column that's a combination of SiteCode and PlotName.</li>
+<li>Change No.Damage count that's 1960 to 196.</li>
 <li>Drop records that are QAQC visits. </li>
 </ol>
 
-<details open><summary class ='drop2'>Fix DecayClassCode</summary>
-<p class = 'code'>Look at unique values for DecayClassCode.</p>
+<details open><summary class ='drop2'>Fix the Damage column</summary>
+<p class = 'code'>Look at unique values for Damage.</p>
 ```{r trdecay, fold.output = F}
-sort(unique(trees$DecayClassCode)) # sorts the unique values in the column
-table(trees$DecayClassCode) # shows the number of records per value - very handy
+sort(unique(motinv$Damage)) # sorts the unique values in the column
+table(unique(motinv$Damage)) # shows the number of records per value - very handy
 ```
 
-There are 2 records called "PM", which stands for Permanently Missing in our forest data. We will convert PM to a blank, which R calls NA, and create a new decay class column that is converted to numeric.
+There's 1 record called "PM", which stands for Permanently Missing in our data. We will convert PM to a blank, which R calls NA, and create a new Damage class column that is converted to numeric.
 
 <p class = 'code'>Convert "PM" to blank. I will first make a copy of the data frame.</p>
 ```{r tr2, fold.output = TRUE}
-trees2 <- trees
-trees2$DecayClassCode[trees2$DecayClassCode == "PM"] <- NA
-trees2$DecayClassCode_num <- as.numeric(trees2$DecayClassCode)
+motinv2 <- motinv
+motinv2$Damage[motinv2$Damage == "PM"] <- NA
+motinv2$Damage_num <- as.numeric(motinv2$Damage)
 
 # check that it worked
-str(trees2) # DecayClassCode_num is numeric
-sort(unique(trees2$DecayClassCode_num)) # Only numbers show in table
+str(motinv2) # Damage_num is numeric
+sort(unique(motinv2$Damage_num)) # Only numbers show in table
 ```
 </details>
 
 <details open><summary class ='drop2'>Remove QAQC visits</summary>
-Using the `trees2` data frame, which fixed the decay class column by making the `DecayClassCode_num` field numeric, we're now going to drop visits that were for QAQC using a new base R function called `subset()`. The `subset()` function allows you to reduce the dimensions of a data frame. You can reduce rows, columns, or both in the same function call. I will also show the bracket approach. 
+Using the `motinv2` data frame, which fixed the Damage column by making the `Damage_num` field numeric, we're now going to drop visits that were for QAQC using a new base R function called `subset()`. The `subset()` function allows you to reduce the dimensions of a data frame. You can reduce rows, columns, or both in the same function call. I will also show the bracket approach. 
 
-<p class = 'code'>Remove QAQC visits (IsQAQC == TRUE) and drop the DecayClassCode column </p>
+<p class = 'code'>Remove QAQC visits (IsQAQC == TRUE) and drop the original Damage column </p>
 ```{r tr3}
-trees3 <- subset(trees2, IsQAQC == FALSE, select = -DecayClassCode) # Note the importance of FALSE all caps
-trees3 <- subset(trees2, IsQAQC != TRUE, select = -DecayClassCode) # equivalent
-trees3 <- trees2[trees2$IsQAQC == FALSE, -12] #equivalent but not as easy to follow
+motinv3 <- subset(motinv2, QAQC == FALSE, select = -Damage) # Note the importance of FALSE all caps
+motinv3 <- subset(motinv2, QAQC != TRUE, select = -Damage) # equivalent
+motinv3 <- motinv2[motinv2$QAQC == FALSE, -12] #equivalent but not as easy to follow
 ```
 </details>
 
-<details open><summary class = "drop2">Convert SampleDate to Date</summary>
-<p class = 'code'>Convert SampleDate into a date-time instead of character. </p>
+<details open><summary class = "drop2">Convert StartDate to Date</summary>
+<p class = 'code'>Convert StartDate into a date-time instead of character. </p>
 ```{r tr3dt}
-# Look at the sample date format
-head(trees3$SampleDate) # month/day/year
+# Look at the start date format
+head(motinv3) # month/day/year
 
 # Create new column called Date
-trees3$Date <- as.Date(trees3$SampleDate, format = "%m/%d/%Y")
-str(trees3)
+motinv3$Date <- as.Date(motinv3$StartDate, format = "%m/%d/%Y")
+str(motinv3)
 
 ```
 </details>
@@ -132,19 +138,19 @@ Renaming columns in base R is kind of a pain, to the point that I have to look i
 
 <p class = 'code'>Rename ScientificName column</p>
 ```{r rename, fold.output = T}
-names(trees3) # original names
-names(trees3)[names(trees3) == "ScientificName"] <- "Species"
-names(trees3) # check that it worked
+names(motinv3) # original names
+names(motinv3)[names(motinv3) == "ScientificName"] <- "Species"
+names(motinv3) # check that it worked
 ```
 </details>
 
-<details open><summary class = 'drop2'>Create a `Plot_Name` column via `paste()`</summary>
-The `paste()` and `paste0()` functions are very handy for creating new columns that are combinations of existing functions. The code below will create a new column named `Plot_Name` that's a combination of `ParkUnit` and `PlotCode`. 
+<details open><summary class = 'drop2'>Create a `Site_Plot` column via `paste()`</summary>
+The `paste()` and `paste0()` functions are very handy for creating new columns that are combinations of existing functions. The code below will create a new column named `Site_Plot` that's a combination of `SiteCode` and `PlotName`. 
 
-<p class ='code'>Create new `Plot_Name` column</p>
+<p class ='code'>Create new `Site_Plot` column</p>
 ```{r paste1}
-trees3$Plot_Name <- paste(trees3$ParkUnit, trees3$PlotCode, sep = "-")
-trees3$Plot_Name <- paste0(trees3$ParkUnit, "-", trees3$PlotCode) #equivalent- by default no separation between elements of paste.
+motinv3$Site_Plot <- paste(motinv3$SiteCode, motinv3$PlotName, sep = "-")
+motinv3$Site_Plot <- paste0(motinv3$SiteCode, "-", motinv3$PlotName) #equivalent- by default no separation between elements of paste.
 
 ```
 
@@ -153,12 +159,14 @@ trees3$Plot_Name <- paste0(trees3$ParkUnit, "-", trees3$PlotCode) #equivalent- b
 </details>
 <br>
 
+
+#++++ ENDED HERE ++++
 <details open><summary class = 'drop'>Test your skills!</summary>
 <!-- Test skills section -->
 <div class="alert alert-info">
 <strong>CHALLENGE: How many trees are on Plot MIMA-12?</strong>
 <details><summary class='drop2'>Answer</summary>
-```{r chal4}
+```{r chal4, eval = F}
 mima12 <- subset(trees3, Plot_Name == "MIMA-12")
 nrow(mima12) # 12
 ```
@@ -170,13 +178,13 @@ nrow(mima12) # 12
 <details><summary class='drop2'>Answer</summary>
 
 Option 1. Subset data then calculate number of rows
-```{r chal5, fold.output = F}
+```{r chal5, fold.output = F, eval = F}
 mima12_as <- subset(trees3, Plot_Name == "MIMA-12" & TreeStatusCode == "AS")
 nrow(mima12_as) # 6
 ```
 
 Option 2. Subset the data with brackets and use the `table()` function to tally status codes.
-```{r chal5b, fold.output = F}
+```{r chal5b, fold.output = F, eval = F}
 # OPTION 2
 mima12 <- trees3[trees3$Plot_Name == "MIMA-12",]
 table(mima12$TreeStatusCode) # 6
@@ -197,7 +205,7 @@ View(trees3)
 ```
 
 Option 2. Find the max DBH value and subset the data frame
-```{r maxdbh, fold.output = F}
+```{r maxdbh, fold.output = F, eval = F}
 max_dbh <- max(trees3$DBHcm, na.rm = TRUE)
 trees3[trees3$DBHcm == max_dbh,]
 ```
@@ -211,12 +219,12 @@ trees3[trees3$DBHcm == max_dbh,]
 There are multiple ways to do this. Two examples are below.
 
 Option 1. View the data and sort by DBH.
-```{r vtrees2, eval = F}
+```{r vtrees2, eval = F, eval = F}
 View(trees)
 ```
 
 Option 2. Find the max DBH value and subset the data frame
-```{r maxdbh2}
+```{r maxdbh2, eval = F}
 max_dbh <- max(trees3$DBHcm, na.rm = TRUE)
 max_dbh #443
 trees[trees3$DBHcm == max_dbh,]
@@ -234,7 +242,7 @@ Let's say that you looked at the datasheet, and the actual DBH for that tree was
 But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
 
 <p class = 'code'>Replace 443 with 44.3</p>
-```{r trfx, fold.output = F}
+```{r trfx, fold.output = F, eval = F}
 # create copy of trees data
 trees_fix <- trees3
 
@@ -243,7 +251,7 @@ trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & tre
 ```
 
 Check that it worked by showing the range of the original and fixed data frames.
-```{r check1, fold.output = F}
+```{r check1, fold.output = F, eval = F}
 range(trees$DBHcm)
 range(trees_fix$DBHcm)
 ```

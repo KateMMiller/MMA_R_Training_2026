@@ -77,7 +77,7 @@ unique(motinv[motinv$QAQC == TRUE, "Year"])
 <strong>How many trees are on Plot 12?</strong>
 <details><summary class='code2'>Answer</summary>
 
-```{r d1chal4}
+```{r d1chal4, eval = F}
 mima12 <- subset(trees, PlotCode == 12)
 nrow(mima12) # 12
 ```
@@ -89,13 +89,13 @@ nrow(mima12) # 12
 <details><summary class='code2'>Answer</summary>
 
 Option 1. Subset data then calculate number of rows
-```{r d1chal5, fold.output = F}
+```{r d1chal5, fold.output = F, eval = F}
 mima12_as <- subset(trees, PlotCode == 12 & TreeStatusCode == "AS")
 nrow(mima12_as) # 6
 ```
 
 Option 2. Subset the data with brackets and use the `table()` function to tally status codes.
-```{r d1chal5b, fold.output = F}
+```{r d1chal5b, fold.output = F, eval = F}
 mima12 <- trees[trees$Plot_Name == "MIMA-012",]
 table(mima12$TreeStatusCode) # 6
 
@@ -115,7 +115,7 @@ View(trees)
 ```
 
 Option 2. Find the max DBH value and subset the data frame
-```{r d1maxdbh, fold.output = F}
+```{r d1maxdbh, fold.output = F, eval = F}
 max_dbh <- max(trees$DBHcm, na.rm = TRUE)
 trees[trees$DBHcm == max_dbh,]
 ```
@@ -129,12 +129,12 @@ trees[trees$DBHcm == max_dbh,]
 There are multiple ways to do this. Two examples are below.
 
 Option 1. View the data and sort by DBH.
-```{r d1vtrees2, eval = F}
+```{r d1vtrees2, eval = F, eval = F}
 View(trees)
 ```
 
 Option 2. Find the max DBH value and subset the data frame
-```{r d1maxdbh2b}
+```{r d1maxdbh2b, eval = F}
 max_dbh <- max(trees$DBHcm, na.rm = TRUE)
 max_dbh #443
 trees[trees$DBHcm == max_dbh,]
@@ -152,7 +152,7 @@ Let's say that you looked at the datasheet, and the actual DBH for that tree was
 But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
 
 <p class = 'code'>Replace 443 with 44.3</p>
-```{r trfx2, fold.output = F}
+```{r trfx2, fold.output = F, eval = F}
 # create copy of trees data
 trees_fix <- trees
 
@@ -161,7 +161,7 @@ trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & tre
 ```
 
 Check that it worked by showing the range of the original and fixed data frames.
-```{r check1b, fold.output = F}
+```{r check1b, fold.output = F, eval = F}
 range(trees$DBHcm)
 range(trees_fix$DBHcm)
 ```
@@ -175,7 +175,7 @@ range(trees_fix$DBHcm)
 <strong>Plot a histogram of percent cover (`Ave_Cov`) in the `ACAD_wetland` </strong>
 
 <details><summary class='code2'>Answer</summary>
-```{r wethist2}
+```{r wethist2, eval = F}
 hist(ACAD_wetland$Ave_Cov)
 ```
 </details>
