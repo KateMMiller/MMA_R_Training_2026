@@ -6,16 +6,17 @@ output:
 #### Day 2 Goals
 
 <b>Goals for Day 2: </b>
-<ol>
-<li>Understanding of tidy data format (rows are observations; columns are variables).</li>
-<li>Exposure to the main tidyverse packages and philosophy behind it.</li>
-<li>Comfortable filtering and selecting data, and renaming and creating new columns in `dplyr`. </li>
-<li>How to use `ifelse()` and `case_when()` conditional statements.</li>
+<ul>
+<li>Understanding of tidy data format (rows are observations; columns are variables)</li>
+<li>Exposure to the main tidyverse packages and philosophy behind it</li>
+<li>Comfortable filtering and selecting data, and renaming and creating new columns in `dplyr` </li>
+<li>How to use `ifelse()` and `case_when()` conditional statements</li>
 <li>Comfortable grouping and summarizing data in `dplyr`. </li>
 <li>Difference between `summarize()` and `mutate()`. </li>
-<li>Data visualization best practices.</li>
-<li>Understanding the building blocks of ggplot2 plotting package.</li>
-</ol>
+<li>Learn how to pivot data from long to wide and wide to long</li>
+<li>Learn how to join tables and apply the different join types</li>
+<li>Working with dates and times</li>
+</ul>
 
 <br>
 <b>Feedback: </b>Please leave feedback in the training feedback form. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.

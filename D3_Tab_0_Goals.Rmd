@@ -8,22 +8,17 @@ output:
 <img src = "./images/poor_management.png" alt = 'Poor file management illustration' style = "float:right; width:400px;">
 <span class = "capright"><a href="https://allisonhorst.com">Artwork by @allison_horst</a></span>
 
-<ol>
-<li>More advanced data wrangling</li>
+Data Visualization:  
 <ul>
-<li>Learn how to pivot data from long to wide and wide to long</li>
-<li>Learn how to join tables and apply the different join types</li>
-<li>Working with dates and times</li>
-</ul>
-<li>More advanced ggplot2:</li> 
-<ul>
+<li>Data visualization best practices</li>
+<li>Understanding the building blocks of ggplot2 plotting package</li>
 <li>Custom colors and shapes by grouping variables</li>
 <li>Customizing axes</li>
 <li>Combining plots with facets and patchwork</li>
 <li>Working with legends</li>
 <li>Color palettes</li>
 </ul>
-<li>Coding best practices</li>
+Coding best practices:
 <ul>
 <li>Commenting code</li>
 <li>Putting packages, datasets, and parameters on top of script</li>
@@ -32,7 +27,6 @@ output:
 <li>Using projects instead of stand alone scripts where possible</li>
 <li>How to choose R packages</li>
 </ul>
-</ol>
 
 <br>
 <b>Feedback: </b>Please leave feedback in the training feedback form. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.

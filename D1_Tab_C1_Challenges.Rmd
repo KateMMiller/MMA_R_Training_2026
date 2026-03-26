@@ -72,100 +72,86 @@ unique(motinv[motinv$QAQC == TRUE, "Year"])
 </div>
 </details><br>
 
-<details open><summary class = 'drop'>Data Exploration</summary>
 <div class="alert alert-info">
-<strong>How many trees are on Plot 12?</strong>
-<details><summary class='code2'>Answer</summary>
-
-```{r d1chal4, eval = F}
-mima12 <- subset(trees, PlotCode == 12)
-nrow(mima12) # 12
+<strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
+<details><summary class='drop2'>Answer</summary>
+Option 1. Use brackets, then calculate the number of rows.
+```{r chal4c1}
+# with brackets
+A1_2024 <- motinv3[motinv3$PlotName == "A1" & motinv3$Year == 2024, ]
+nrow(A1_2024) # 3
+```
+Option 2. Use base R subset, then view the data.frame to see.
+```{r chal4bc1, eval = F}
+# with base R subset
+A1_2024b <- subset(motinv3, PlotName == "A1" & Year == 2024)
+View(A1_2024b) # 3
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot 12?</strong>
-<details><summary class='code2'>Answer</summary>
+<strong>CHALLENGE: What years have green crabs (Latin: Carcinus maenas) been detected? </strong>
+<details><summary class='drop2'>Answer</summary>
 
-Option 1. Subset data then calculate number of rows
-```{r d1chal5, fold.output = F, eval = F}
-mima12_as <- subset(trees, PlotCode == 12 & TreeStatusCode == "AS")
-nrow(mima12_as) # 6
-```
-
-Option 2. Subset the data with brackets and use the `table()` function to tally status codes.
-```{r d1chal5b, fold.output = F, eval = F}
-mima12 <- trees[trees$Plot_Name == "MIMA-012",]
-table(mima12$TreeStatusCode) # 6
+Option 1. Subset the data with brackets and use the `sort(unique())` to give an easier to read output.
+```{r chal5bc1, fold.output = F}
+# OPTION 2
+gcrab <- motinv3[motinv3$Species == "Carcinus maenas",]
+sort(unique(gcrab$Year)) #2019, 2021, 2022, 2023, 2024
 
 ```
+
+Option 2. Subset data then use `table()` to tally the years and number of rows green crabs were found.
+```{r chal5c1, fold.output = F}
+gcrab2 <- subset(motinv3, Species == "Carcinus maenas")
+table(gcrab2$Year)
+```
+
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Find the DBH record that's > 400cm DBH.</strong>
-
-<details><summary class='code2'>Answer</summary>
+<strong>CHALLENGE: Find the highest value recorded in No.Damage column.</strong>
+<details><summary class='drop2'>Answer</summary>
 There are multiple ways to do this. Two examples are below.
 
-Option 1. View the data and sort by DBH.
-```{r d1vtrees, eval = F}
-View(trees)
+Option 1. View the data and sort by No.Damage.
+```{r vmotc1, eval = F}
+View(motinv3)
 ```
 
-Option 2. Find the max DBH value and subset the data frame
-```{r d1maxdbh, fold.output = F, eval = F}
-max_dbh <- max(trees$DBHcm, na.rm = TRUE)
-trees[trees$DBHcm == max_dbh,]
-```
-</details>
-</div>
-
-<div class="alert alert-info">
-<strong>What is the exact value of the largest DBH, and which record does it belong to?</strong>
-
-<details><summary class='code2'>Answer</summary>
-There are multiple ways to do this. Two examples are below.
-
-Option 1. View the data and sort by DBH.
-```{r d1vtrees2, eval = F, eval = F}
-View(trees)
-```
-
-Option 2. Find the max DBH value and subset the data frame
-```{r d1maxdbh2b, eval = F}
-max_dbh <- max(trees$DBHcm, na.rm = TRUE)
-max_dbh #443
-trees[trees$DBHcm == max_dbh,]
-# Plot MIMA-016, TagCode = 1.
+Option 2. Find the max No.Damage count and subset the data frame
+```{r maxndc1, fold.output = F}
+max_nd <- max(motinv3$No.Damage, na.rm = TRUE)
+motinv3[motinv3$No.Damage == max_nd,]
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+<strong>CHALLENGE: Fix the No.Damage typo by replacing 1960 with 196.</strong>
 
 <details><summary class = 'drop2'>Answer</summary>
-Let's say that you looked at the datasheet, and the actual DBH for that tree was 44.3 instead of 443.0. You can change that value in the original CSV by hand. But even better is to document that change in code. There are multiple ways to do this. Two examples are below.
+Let's say that you looked at the datasheet, and the actual count for No.Damage was 196 instead of 1960. You can change that value in the original CSV by hand. But even better is to document that change in code. There are multiple ways to do this. Two examples are below.
 
 But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
 
-<p class = 'code'>Replace 443 with 44.3</p>
-```{r trfx2, fold.output = F, eval = F}
-# create copy of trees data
-trees_fix <- trees
+<p class = 'code'>Replace 1960 with 196</p>
+```{r trfxc1, fold.output = F}
+# create copy of motinv data
+motinv_fix <- motinv3
 
-# find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
+# find the problematic value, and change it to 196
+motinv_fix$No.Damage[motinv_fix$Year == 2019 & 
+                       motinv_fix$PlotName == "R4" & 
+                       motinv_fix$No.Damage == 1960] <- 196
+
+# check your work
+range(motinv3$No.Damage) #1960
+range(motinv_fix$No.Damage) # now 282
+
 ```
-
-Check that it worked by showing the range of the original and fixed data frames.
-```{r check1b, fold.output = F, eval = F}
-range(trees$DBHcm)
-range(trees_fix$DBHcm)
-```
-
 </details>
 </div>
 </details><br>

@@ -3,7 +3,7 @@ output:
   html_document:
     css: custom_styles.css
 ---
-#### Coding Best Practices
+### Coding Best Practices
 <details open><summary class = 'drop'>Background</summary>
 Knowing how to code is only part of being a good coder. Below are general best practices to make code easier to run, understand, and be more stable with a relatively low maintenance cost. Many of these suggestions come from lessons working with my and other peoples' code. The <a href="https://r4ds.hadley.nz/">R for Data Science</a> also has a lot of great information on coding best practices in 
 

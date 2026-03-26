@@ -54,69 +54,72 @@ visits <- visits |> mutate(Annual_Visits = as.numeric(gsub(",", "", Annual_Visit
 <br>
 
 <details open><summary class = 'drop'>Data Wrangling with dplyr </summary>
+<details open><summary class = 'drop'>Test your skills with dplyr!</summary>
 <div class="alert alert-info">
-<strong>How many trees are on Plot MIMA-12 (using trees_final)?</strong>
-
+<strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
 <details><summary class='drop2'>Answer</summary>
-```{r chal4_d22c}
-trees_final |> filter(Plot_Name == "MIMA-12") |> nrow()
+
+```{r chal4dpc1}
+# with brackets
+A1_2024 <- motinv3 |> filter(PlotName == "A1" & Year == 2024)
+nrow(A1_2024) # 3
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>How many trees with a TreeStatusCode of "AS" (alive standing) are on Plot MIMA-12 (using trees_final)?</strong>
+<strong>CHALLENGE: What years have green crabs (Latin: Carcinus maenas) been detected? </strong>
 <details><summary class='drop2'>Answer</summary>
 
-```{r chal5d22c, fold.output = F}
-trees_final |> filter(Plot_Name == "MIMA-12" & TreeStatusCode == "AS") |> nrow()
+```{r chal5bdpc1, fold.output = F}
+# OPTION 2
+gcrab <- motinv3 |> filter(Species == "Carcinus maenas") |> 
+  select(Year) |> unique()
+
+gcrab
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>What is the exact value of the largest DBH, and which record does it belong to?</strong>
-
+<strong>CHALLENGE: Find the highest value recorded in No.Damage column.</strong>
 <details><summary class='drop2'>Answer</summary>
-```{r maxdbhd22c, fold.output = T}
-# Base R and dplyr combo
-max_dbh <- max(trees_final$DBHcm, na.rm = TRUE)
-trees_final |> 
-  filter(DBHcm == max_dbh) |> 
-  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
+```{r maxnddpc1, fold.output = F}
+max_nd <- max(motinv3$No.Damage, na.rm = TRUE)
 
-# dplyr with slice
-trees_final |> 
-  arrange(desc(DBHcm)) |> # arrange DBHcm high to low via desc()
-  slice(1) |> # slice the top record
-  select(Plot_Name, SampleYear, TagCode, Species, DBHcm)
-
+motinv3 |> filter(No.Damage == max_nd)
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Fix the DBH typo by replacing 443.0 with 44.3.</strong>
+<strong>CHALLENGE: Fix the No.Damage typo by replacing 1960 with 196.</strong>
 
 <details><summary class = 'drop2'>Answer</summary>
-```{r trfxd22c, fold.output = F}
-# Base R
-# create copy of trees data
-trees_fix <- trees3
-# find the problematic DBH value, and change it to 44.3
-trees_fix$DBHcm[trees_fix$Plot_Name == "MIMA-016" & trees_fix$TagCode == 1 & trees_fix$DBHcm == 443] <- 44.3
+Let's say that you looked at the datasheet, and the actual count for No.Damage was 196 instead of 1960. You can change that value in the original CSV by hand. But even better is to document that change in code. There are multiple ways to do this. Two examples are below.
 
-# dplyr via replace
-trees_fix <- trees |> mutate(DBHcm = replace(DBHcm, DBHcm == 443.0, 44.3))
-```
+But first, it's good to create a new data frame when modifying the original data frame, so you can refer back to the original if needed. I also use a really specific filter to make sure I'm not accidentally changing other data.
 
-Check that it worked by showing the range of the original and fixed data frames.
-```{r check1d22c, fold.output = F}
-range(trees$DBHcm)
-range(trees_fix$DBHcm)
+<p class = 'code'>Replace 1960 with 196</p>
+```{r trfxc1d2, fold.output = F}
+# Reminder of the base R approach
+
+# create copy of motinv data
+motinv_fix <- motinv3
+
+# find the problematic value, and change it to 196
+motinv_fix$No.Damage[motinv_fix$Year == 2019 & 
+                       motinv_fix$PlotName == "R4" & 
+                       motinv_fix$No.Damage == 1960] <- 196
+
+# dplyr approach
+motinv_fix <- motinv3 |> mutate(No.Damage = replace(No.Damage, No.Damage == 1960, 196))
+range(motinv_fix$No.Damage)
 ```
 </details>
 </div>
+</details>
+<br>
 </details>
 <br>
 
