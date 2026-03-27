@@ -40,7 +40,7 @@ str(motinv)
 summary(motinv)
 ```
 
-<p class = 'code'>Check for complete cases, assuming every column should requires a value (i.e. no blanks).</p>
+<p class = 'code'>Check for complete cases, assuming every column requires a value (i.e. no blanks).</p>
 ```{r}
 table(complete.cases(motinv[,1:13]))# first 13 columns are all complete
 table(complete.cases(motinv$Subsampled))# where the FALSE are introduced
@@ -132,7 +132,7 @@ str(motinv3)
 </details>
 
 <details open><summary class = 'drop2'>Rename ScientificName to Species for shorter typing</summary>
-Renaming columns in base R is kind of a pain, to the point that I have to look it up every time I need to do it. I'll show you an easier way to do that tomorrow.
+Renaming columns in base R is kind of a pain, and I have to look it up every time I need to do it. I'll show you an easier way to do this tomorrow.
 
 <p class = 'code'>Rename ScientificName column</p>
 ```{r rename, fold.output = T}

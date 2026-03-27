@@ -9,11 +9,11 @@ The only prerequisite for the R training is to install the latest version of R a
   <li>If you have issues with the macOS link, try downloading R-4.5.3-arm64.pkg from the <a href="https://cran.r-project.org/bin/macosx/">macOS install page</a>.</li>
   </ul><br>
 <li><b>Install R Studio:</b> The main <a href="https://posit.co/download/rstudio-desktop/">RStudio page</a> has links to download <a href = "https://download1.rstudio.org/electron/windows/RStudio-2026.01.1-403.exe">RStudio-2026.01.01-403.EXE</a> for Windows (assuming your operating system is at least Windows 10), and <a href='https://download1.rstudio.org/electron/macos/RStudio-2026.01.1-403.dmg'>RStudio-2026.01.01-403.DMG</a> for macOS (assuming OS 14 or greater)</li>
-</1l>
-<br>
+</li>
+</ol>
 
 <p class = 'note'>
-<b>NOTE:</b>If you already have R and RStudio on your computer, the R version should be at least 4.4.3 and the RStudio version at least 2025.06.2-418 to make sure everyone's code behaves the same way. You can check your software versions by opening RStudio. The console in the bottom left will display the R version. Check the RStudio version by going to Help > About RStudio. The first 4 numbers should be 2025 or higher.</p>
+<b>NOTE:</b> If you already have R and RStudio on your computer, the R version should be at least 4.4.3 and the RStudio version at least 2025.06.2-418 to make sure everyone's code behaves the same way. You can check your software versions by opening RStudio. The console in the bottom left will display the R version. Check the RStudio version by going to Help > About RStudio. The first 4 numbers should be 2025 or higher.</p>
 
 </br>
 <details open><summary class='drop'><b style="color:red">Required Packages</b></summary>
@@ -49,13 +49,11 @@ This is completely optional, but if you have any time before training starts, I 
 
 <details open><summary class='drop'>About the Training</summary>
 <ul>
-<li><b>Timing:</b> The training will take place over three consecutive Fridays (4/3, 4/10, 4/17. Each day will run from 12:30 - 3:30pm EST. We'll try to take short breaks every 30 minutes or so. </li>
+<li><b>Timing:</b> The training will take place over three consecutive Fridays (4/3, 4/10, 4/17). Each day will run from 12:30 - 3:30pm EST. We'll take short breaks between topics. </li>
 
 <li><b>Office Hours:</b> For the day prior to training, I will be available virtually from 12:30 - 2pm EST for office hours in case there are questions that couldn't be handled before or during training. I will send a Teams link to participants for this office hours via email. Folks also welcome to email me questions.</li>
 
-<li><b>Structure:</b> For most of the training, I will share my screen as I go through the website and then demo with live coding. You should have your own laptop to follow along with the code. </li>
-
-<li><b>Getting Help:</b> My hope is that this group is small and supportive enough that everyone feels comfortable openly asking questions and providing feedback to the group. I'm also available the afternoon prior to training to answer questions remotely using MS Teams. </li>
+<li><b>Structure:</b> For most of the training, I will share my screen as I go through the website and then demo with live coding. Participants should have their own laptop to follow along with the code. </li>
 
 <li><b>Objectives:</b> Three days is barely enough to scratch the surface on what you can do in R. My goals with this training are to:
 <ol>
@@ -65,7 +63,7 @@ This is completely optional, but if you have any time before training starts, I 
 </ol>
 </li>
 
-<li><b>Credit:</b> Much of this training was borrowed heavily from <a href = "https://katemmiller.github.io/IMD_R_Training_Intro/">IMD Intro to R</a> training in 2022. A ton of credit for this training goes to the developers of those lessons:
+<li><b>Credit:</b> Much of this training was borrowed heavily from <a href = "https://katemmiller.github.io/IMD_R_Training_Intro/">NPS IMD Intro to R</a> training in 2022. A ton of credit for this training goes to the developers of those lessons:
 <ul>
 <li>Day 1 Intro to R: Sarah Wright and Andrew Birch</li>
 <li>Day 2 Data Wrangling: John Paul Schmit and Lauren Pandori</li>
@@ -74,7 +72,7 @@ This is completely optional, but if you have any time before training starts, I 
 </ul>
 </li>
 
-<li><b>Feedback:</b> Finally, to help me improve this training for future sessions, please leave feedback in the training feedback form sent in your email invite. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.</li>
+<li><b>Feedback:</b> To help me improve this training for future sessions, please leave feedback in the training feedback form in the initial email. You can submit feedback multiple times and don't need to answer every question. Responses are anonymous.</li>
 </ul>
 </details>
 <br>
