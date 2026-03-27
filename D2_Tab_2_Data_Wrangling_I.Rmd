@@ -17,22 +17,22 @@ Commonly used `dplyr` functions and their use:
 <li><b>arrange():</b> sorts data by specified column. </li>
 <li><b>mutate():</b> adds new column(s) to a data frame. </li>
 <li><b>slice():</b> slices the data based on specified number of rows</li>
-<li><b>group_by() |> summarize():</b> summarizes by groups/factor levels and returns data for each group (e.g. mean cover grouped by plot).
-<li><b>group_by() |> mutate():</b> summarizes by groups/factor levels and returns data for each observation.</li>
+<li><b>summarize(.by = groups):</b> summarizes by groups/factor levels and returns data for each group (e.g. mean cover grouped by plot).
+<li><b>mutate(.by = groups):</b> summarizes by groups/factor levels and returns data for each observation.</li>
 <li><b>rename():</b> renames columns</li>
 </ul>
 
 Now, using the `dplyr` package in the `tidyverse`, we're going to do the same operations we did yesterday with brackets. 
 
 The steps we took with the Bass Harbor motile invertebrate data were: 
-<ol>
-<li>Figure out why Damage is a character, and fix the issue.</li>
+<ul>
+<li>Convert Damage to a number.</li>
 <li>Convert StartDate (character) to a Date type. </li>
 <li>Rename the ScientificName column to Species.</li>
 <li>Create a Site_Plot column that's a combination of SiteCode and PlotName.</li>
 <li>Change No.Damage count that's 1960 to 196.</li>
 <li>Drop records that are QAQC visits. </li>
-</ol>
+</ul>
 </details>
 <br>
 
@@ -43,67 +43,73 @@ The steps we took with the Bass Harbor motile invertebrate data were:
 ```
 
 <details open><summary class = 'drop'>Wrangle in dplyr</summary>
-<p class = 'code'>Read in example NETN tree data</p>
-```{r readtree3b}
-trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
+<ol>
+<li><p class = 'code'>Read in example motile invertebrate data</p></li>
+```{r readmotinv3b, eval = F}
+motinv <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
+  )
 ```
 
-<ol>
-<li><p class = 'code'>Replace decay class code "PM" with NA (blank).</p></li>
+```{r motinvd2, echo = F}
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
+```
+
+<li><p class = 'code'>Replace "PM" with NA (blank) in Damage columns.</p></li>
 ```{r pmfixd2, eval = F}
 # Base R
-trees2 <- trees
-trees2$DecayClassCode[trees2$DecayClassCode == "PM"] <- NA
-trees2$DecayClassCode_num <- as.numeric(trees2$DecayClassCode)
+motinv2 <- motinv
+motinv2$Damage[motinv2$Damage == "PM"] <- NA
+motinv2$Damage_num <- as.numeric(motinv2$Damage)
 ```
 ```{r pmfixbased2, fold.output = T}
 # dplyr approach with mutate
-trees2 <- mutate(trees, DecayClassCode_num = as.numeric(replace(DecayClassCode, DecayClassCode == "PM", NA)))
-str(trees2)
+motinv2 <- mutate(motinv, Damage_num = as.numeric(replace(Damage, Damage == "PM", NA)))
+str(motinv2)
 ```
 
-<li><p class = 'code'>Convert SampleDate (character) to Date (date-time).</p></li>
+<li><p class = 'code'>Convert StartDate (character) to Date (date-time).</p></li>
 ```{r tr3dtd2, eval = F}
 # Base R
-trees3$Date <- as.Date(trees3$SampleDate, format = "%m/%d/%Y")
+motinv2$Date <- as.Date(motinv2$StartDate, format = "%m/%d/%Y")
 ```
 ```{r trdtd2dp, fold.output = T}
 # dplyr approach with mutate
-trees3 <- mutate(trees2, Date = as.Date(SampleDate, format = "%m/%d/%Y"))
+motinv2 <- mutate(motinv2, Date = as.Date(StartDate, format = "%m/%d/%Y"))
 ```
 
 <li><p class = 'code'>Rename the ScientificName column to Species.</p></li>
 ```{r renamed2, eval = F}
 # Base R code
-names(trees2)[names(trees2) == "ScientificName"] <- "Species"
+names(motinv2)[names(motinv2) == "ScientificName"] <- "Species"
 ```
 ```{r renamedd2, fold.output = T}
 # dplyr approach with rename
-trees2 <- rename(trees2, "Species" = "ScientificName")
-names(trees2)
+motinv2 <- rename(motinv2, "Species" = "ScientificName")
+names(motinv2)
 ```
 
-<li><p class ='code'>Create a Plot_Name column that's a combination of ParkUnit and PlotCode.</p></li>
+<li><p class ='code'>Create a Site_Plot column that's a combination of SiteCode and PlotName.</p></li>
 ```{r pasta2d2, eval = F}
 # Base R
-trees2$Plot_Name <- paste(trees2$ParkUnit, trees2$PlotCode, sep = "-")
+motinv2$Site_Plot <- paste(motinv2$SiteCode, motinv2$PlotName, sep = "-")
 ```
 ```{r pasta2bd2}
 # dplyr approach with mutate
-trees2 <- mutate(trees2, Plot_Name = paste(ParkUnit, PlotCode, sep = "-"))
+motinv2 <- mutate(motinv2, Site_Plot = paste(SiteCode, PlotName, sep = "-"))
 ```
 
-<li><p class = 'code'>Drop records that are QAQC visits.</p></li>
+<li><p class = 'code'>Drop records that are QAQC visits and drop original Damage column.</p></li>
 ```{r tr3d2, eval = F}
 # Base R
-trees3 <- subset(trees2, IsQAQC == FALSE, select = -DecayClassCode) # Note the importance of FALSE all caps
+motinv3 <- subset(motinv2, QAQC == FALSE, select = -Damage) # Note the importance of FALSE all caps
 ```
 ```{r tr3bd2, fold.output = T}
 # dplyr
-trees3a <- filter(trees2, IsQAQC == FALSE)
-trees3 <- select(trees3a, -DecayClassCode)
+motinv3a <- filter(motinv2, QAQC == FALSE)
+motinv3 <- select(motinv3a, -Damage)
 
-head(trees3)
+head(motinv3)
 ```
 </ol>
 Note that subsetting data frames in R, which refers to reducing rows, columns, or both, is split between 2 functions in `dplyr`. The `filter()` function reduces rows. The `select()` function reduces columns. 
@@ -113,27 +119,23 @@ Note that subsetting data frames in R, which refers to reducing rows, columns, o
 <details open><summary class = 'drop'>The magic pipe `|>`</summary>
 The pipe (`|>` or `%>%`) makes `dplyr` and other tidyverse packages even more powerful. The pipe `|>` allows you to string together commands. So, taking all of the code above, we can do it all in the same function call. 
 
-<p class='code'>Wrangle tree data with pipes</p>
+<p class='code'>Wrangle motile invertebrate data with pipes</p>
 ```{r pipe, fold.output = T}
-trees_final <- trees |> 
-  mutate(DecayClassCode_num = as.numeric(DecayClassCode),
-         Plot_Name = paste(ParkUnit, PlotCode, sep = "-"),
-         Date = as.Date(SampleDate, format = "%m/%d/%Y")) |> 
-  rename("Species" = "ScientificName") |> 
-  filter(IsQAQC == FALSE) |> 
-  select(-DecayClassCode) |> 
-  arrange(Plot_Name, TagCode)
+motinv_final <- motinv |> 
+  mutate(Damage_num = as.numeric(replace(Damage, Damage == "PM", NA)), # Fix Damage PM
+         SitePlot = paste(SiteCode, PlotName, sep = "-"), # create new SitePlot column
+         Date = as.Date(StartDate, format = "%m/%d/%Y")) |> # create new Date column
+  rename("Species" = "ScientificName") |> # change column name
+  filter(QAQC == FALSE) |> # drop QAQC visits
+  select(-Damage) |> # drop original Damage column
+  arrange(SitePlot, Year, Species) # optional sorting the data
 
-head(trees_final)  
+head(motinv_final)  
 ```
-
-The warning in the console tells us that in converting DecayClassCode to numeric, some NAs were introduced. This means that any row in DecayClassCode that had text in it was converted to a NA. In this case it's the 'PM' records, and we're expecting this warning. 
-
-The `arrange()` line just shows how to order the data by plot name and tree tag number. 
 
 Hopefully you agree that pipes are amazing! They allow for more efficient coding and in relatively easy to follow the steps, and make the dplyr functions, like `mutate()` so much more useful. Outside of pipes for example, `mutate()` doesn't feel more useful than base R for creating a new column. From now on, I will use pipes regularly in the code. 
 
-If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%` pipe was the original pipe taht was introduced by the tidverse in the `magrittr` package. The `magrittr` pipe was so popular, that starting in R 4.0, a base R pipe was introduced (`|>`). It's supposed to be better optimized for order of operations and reduces a package you need to install. So, in general, use the base R pipe `|>`. It's also why I had you set the default pipe in Global Options to the `|>`. A useful keyboard shortcut for the pipe is Ctrl + Shift + M. You should see the `|>` pipe in your script when you type that shortcut. If you get the `%>%` pipe instead, you need to change that default setting in Global Options (see Day 1 > R and RStudio > RStudio Global Options > Step 3. Change default pipe.)
+If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%` pipe was the original pipe that was introduced by the tidyverse in the `magrittr` package. The `magrittr` pipe was so popular, that starting in R 4.0, a base R pipe was introduced (`|>`). It's supposed to be better optimized for order of operations and reduces a package you need to install. So, in general, use the base R pipe `|>`. It's also why I had you set the default pipe in Global Options to the `|>`. A useful keyboard shortcut for the pipe is Ctrl + Shift + M. You should see the `|>` pipe in your script when you type that shortcut. If you get the `%>%` pipe instead, you need to change that default setting in Global Options (see Day 1 > R and RStudio > RStudio Global Options > Step 3. Change default pipe.)
 <br>
 <br>
 <p class = 'note'><b>Coding Tip:</b> While the number of steps you can pipe together is virtually endless, piping many tasks, especially complex ones, can make code hard to read and troubleshoot. It's best to limit number of pipes to 3-4, and/or to do complex tasks that might fail or require checking on their own.</p>
@@ -142,12 +144,12 @@ If you've ever seen the `%>%`, that also functions as a pipe with code. The `%>%
 
 <details open><summary class = 'drop'>Test your skills with dplyr!</summary>
 <div class="alert alert-info">
-<strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
+<strong>CHALLENGE: Using `motinv`, how many species are found in PlotName A1 in 2024?</strong>
 <details><summary class='drop2'>Answer</summary>
 
 ```{r chal4dp}
 # with brackets
-A1_2024 <- motinv3 |> filter(PlotName == "A1" & Year == 2024)
+A1_2024 <- motinv |> filter(PlotName == "A1" & Year == 2024)
 nrow(A1_2024) # 3
 ```
 </details>
@@ -158,7 +160,7 @@ nrow(A1_2024) # 3
 <details><summary class='drop2'>Answer</summary>
 
 ```{r chal5bdp, fold.output = F}
-gcrab <- motinv3 |> filter(Species == "Carcinus maenas") |> 
+gcrab <- motinv |> filter(ScientificName == "Carcinus maenas") |> 
   select(Year) |> unique()
 
 gcrab
@@ -170,9 +172,9 @@ gcrab
 <strong>CHALLENGE: Find the highest value recorded in No.Damage column.</strong>
 <details><summary class='drop2'>Answer</summary>
 ```{r maxnddp, fold.output = F}
-max_nd <- max(motinv3$No.Damage, na.rm = TRUE)
+max_nd <- max(motinv$No.Damage, na.rm = TRUE)
 
-motinv3 |> filter(No.Damage == max_nd)
+motinv |> filter(No.Damage == max_nd)
 ```
 </details>
 </div>
@@ -190,15 +192,15 @@ But first, it's good to create a new data frame when modifying the original data
 # Reminder of the base R approach
 
 # create copy of motinv data
-motinv_fix <- motinv3
+motinv_fix <- motinv
 
 # find the problematic value, and change it to 196
 motinv_fix$No.Damage[motinv_fix$Year == 2019 & 
-                       motinv_fix$PlotName == "R4" & 
-                       motinv_fix$No.Damage == 1960] <- 196
+                     motinv_fix$PlotName == "R4" & 
+                     motinv_fix$No.Damage == 1960] <- 196
 
 # dplyr approach
-motinv_fix <- motinv3 |> mutate(No.Damage = replace(No.Damage, No.Damage == 1960, 196))
+motinv_fix <- motinv |> mutate(No.Damage = replace(No.Damage, No.Damage == 1960, 196))
 range(motinv_fix$No.Damage)
 ```
 </details>

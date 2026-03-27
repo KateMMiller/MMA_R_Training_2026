@@ -19,10 +19,14 @@ We've already explored the motile invertebrate dta a bit using `head()`, `str()`
 ```
 
 <p class = 'code'>Read in example rocky intertidal motile invertebrate data</p>
-```{r readtree}
+```{r readmot, eval = F}
 motinv <- read.csv(
   "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
 
+```
+
+```{r readmotl, echo = F}
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 ```
 
 <p class = 'code'>Look at first few records</p>

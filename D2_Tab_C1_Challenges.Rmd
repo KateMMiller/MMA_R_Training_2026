@@ -1,10 +1,8 @@
 #### Day 2 Questions
 <details open><summary class = 'drop'>Load Data and Packages</summary>
-If you're starting a new session to answer these questions, you'll need to load dplyr and read in the tree and wetland data frames again.<br>
-<br>
-<details open><summary class = 'drop2'>Data and packages for Wrangling, Conditionals, and Summarizing sections</summary>
-<p class = 'code'>Load dplyr</p>
+If you're starting a new session to answer these questions, you'll need to load dplyr and read in the motile invertebrate data frame again.<br>
 
+<p class = 'code'>Load dplyr</p>
 ```{r day2_ch, echo = F, include = F}
 #---- Day 2: Challenges Code ----
 ```
@@ -13,55 +11,33 @@ If you're starting a new session to answer these questions, you'll need to load 
 library(dplyr)
 ```
 
-<p class = 'code'>Read in example NETN tree data from url</p>
-```{r c1readtree2c, eval = F}
-trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
-```
-
-<p class = 'code'>Create the tree_final data frame</p>
-```{r tfc22c}
-trees_final <- trees |> 
-  mutate(DecayClassCode_num = as.numeric(DecayClassCode),
-         Plot_Name = paste(ParkUnit, PlotCode, sep = "-"),
-         Date = as.Date(SampleDate, format = "%m/%d/%Y")) |> 
-  rename("Species" = "ScientificName") |> 
-  filter(IsQAQC == FALSE) |> 
-  select(-DecayClassCode)
-```
-
-<p class = 'code'>Read in example ACAD wetland data from url</p>
-```{r c1rdat, eval = F}
-ACAD_wetland <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv"
+<p class = 'code'>Read in example motile invertebrate and point intercept data</p>
+```{r readmotinv3bc1, eval = F}
+motinv <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
   )
-```
-</details>
-<br>
-<details open><summary class = 'drop2'>Data and packages for plotting with ggplot2</summary>
-<p class = 'code'>Load packages</p>
-```{r chaldatgg}
-library(ggplot2)
-library(dplyr) # for mutate
+
+pi_dat <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
+)
 ```
 
-<p class = 'code'>Prep the data </p>
-```{r visprep}
-visits <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_annual_visits.csv")
-visits <- visits |> mutate(Annual_Visits = as.numeric(gsub(",", "", Annual_Visits)))
+```{r motinvd2c1, echo = F}
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
+pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
 ```
-</details>
+
 </details>
 <br>
 
 <details open><summary class = 'drop'>Data Wrangling with dplyr </summary>
-<details open><summary class = 'drop'>Test your skills with dplyr!</summary>
 <div class="alert alert-info">
-<strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
+<strong>CHALLENGE: Using `motinv`, how many species are found in PlotName = A1 in 2024?</strong>
 <details><summary class='drop2'>Answer</summary>
 
 ```{r chal4dpc1}
 # with brackets
-A1_2024 <- motinv3 |> filter(PlotName == "A1" & Year == 2024)
+A1_2024 <- motinv |> filter(PlotName == "A1" & Year == 2024)
 nrow(A1_2024) # 3
 ```
 </details>
@@ -72,8 +48,7 @@ nrow(A1_2024) # 3
 <details><summary class='drop2'>Answer</summary>
 
 ```{r chal5bdpc1, fold.output = F}
-# OPTION 2
-gcrab <- motinv3 |> filter(Species == "Carcinus maenas") |> 
+gcrab <- motinv |> filter(ScientificName == "Carcinus maenas") |> 
   select(Year) |> unique()
 
 gcrab
@@ -85,8 +60,7 @@ gcrab
 <strong>CHALLENGE: Find the highest value recorded in No.Damage column.</strong>
 <details><summary class='drop2'>Answer</summary>
 ```{r maxnddpc1, fold.output = F}
-max_nd <- max(motinv3$No.Damage, na.rm = TRUE)
-
+max_nd <- max(motinv$No.Damage, na.rm = TRUE)
 motinv3 |> filter(No.Damage == max_nd)
 ```
 </details>
@@ -102,69 +76,56 @@ But first, it's good to create a new data frame when modifying the original data
 
 <p class = 'code'>Replace 1960 with 196</p>
 ```{r trfxc1d2, fold.output = F}
-# Reminder of the base R approach
-
-# create copy of motinv data
-motinv_fix <- motinv3
-
-# find the problematic value, and change it to 196
-motinv_fix$No.Damage[motinv_fix$Year == 2019 & 
-                       motinv_fix$PlotName == "R4" & 
-                       motinv_fix$No.Damage == 1960] <- 196
-
 # dplyr approach
-motinv_fix <- motinv3 |> mutate(No.Damage = replace(No.Damage, No.Damage == 1960, 196))
+motinv_fix <- motinv |> mutate(No.Damage = replace(No.Damage, No.Damage == 1960, 196))
+range(motinv$No.Damage)
 range(motinv_fix$No.Damage)
+
 ```
 </details>
 </div>
 </details>
-<br>
-</details>
+
 <br>
 
 <details open><summary class = 'drop'>Conditionals</summary>
 <div class="alert alert-info">
-<strong>Using the ACAD_wetlands data, create a new column called Status that has "protected" for Protected = TRUE and "public" values for Protected = FALSE. </strong>
+<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
+<details><summary class='code2'>Answer</summary>
+```{r micondc1}
+herb <- c("LITLIT", "LITOBT", "LITSAX", "TECTES")
+pred <- c("CARMAE", "NUCLAP")
 
-<details><summary class='drop2'>Answer</summary>
-```{r wetcondc1, eval = F}
-# read in wetland data if you don't already have it loaded.
-ACAD_wetland <- read.csv("./data/ACAD_wetland_data_clean.csv")
+# base R
+motinv$trophic <- ifelse(motinv$SpeciesCode %in% pred, "predator", "herbivore")
+table(motinv$trophic, motinv$SpeciesCode)
 
-# Base R using the with() function
-ACAD_wetland$Status <- with(ACAD_wetland, ifelse(Protected == TRUE, "protected", "public"))
-table(ACAD_wetland$Status, ACAD_wetland$Protected)
-```
-
-```{r wetcond2c1, eval = T}
-# Tidyverse
-ACAD_wetland <- ACAD_wetland |> mutate(Status = ifelse(Protected == TRUE, "protected", "public"))
-table(ACAD_wetland$Status, ACAD_wetland$Protected) # check your work
+# tidyverse
+motinv <- motinv |> mutate(trophic = ifelse(SpeciesCode %in% pred, "predator", "herbivore"))
+table(motinv$trophic, motinv$SpeciesCode)
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Using the ACAD_wetlands data, create a new column called abundance_cat that has levels High, Medium, Low, based on Ave_Cov, where "High" is >50%, "Medium" is 10-50%, and "Low" is < 10%. </strong>
-<details><summary class='drop2'>Answer</summary>
-```{r wetabc12, eval = F}
+<strong>CHALLENGE: Using the motile invertebrate data, create a new column called count_level that has levels High, Medium, Low, based on No.Damage, where "High" is > 35, "Medium" is 10 - 35, and "Low" is < 10. </strong>
+<details><summary class='code2'>Answer</summary>
+```{r miabc1}
 # Base R using the with() function and nested ifelse()
-ACAD_wetland$abundance_cat <- with(ACAD_wetland, ifelse(Ave_Cov < 10, "Low",
-                                                        ifelse(Ave_Cov >= 10 & Ave_Cov <= 50, "Medium", "High")))
+motinv$count_level <- 
+  ifelse(motinv$No.Damage > 35, "High", 
+         ifelse(motinv$No.Damage >=10 & motinv$No.Damage <=35, "Medium", "Low"))
+table(motinv$count_level)
 ```
 
-```{r wetab2c12, eval = T}
+```{r miab2c1}
 # Tidyverse using case_when() and between
-ACAD_wetland <- ACAD_wetland |> mutate(abundance_cat = case_when(Ave_Cov < 10 ~ "Low",
-                                                                 between(Ave_Cov, 10, 50) ~ "Medium", 
-                                                                 TRUE ~ "High"))
-table(ACAD_wetland$abundance_cat)
+motinv <- motinv |> mutate(count_level = case_when(No.Damage > 35 ~ "High",
+                                                   between(No.Damage, 10, 35) ~ "Medium",
+                                                   No.Damage < 10 ~ "Low"))
+table(motinv$count_level)
 ```
 Note the use of the `between()` function that saves typing. This function matches as >= and <=. 
-
-</details>
-</div>
 </details>
 <br>
 
@@ -172,7 +133,7 @@ Note the use of the `between()` function that saves typing. This function matche
 <div class="alert alert-info">
 <strong>Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvcovc1}
+```{r minvcovc1, eval = F}
 # Using group_by()
 ACAD_inv <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
   summarize(Pct_Cov = sum(Ave_Cov), 
@@ -194,7 +155,7 @@ head(ACAD_inv2) # should be the same as ACAD_inv
 <div class="alert alert-info">
 <strong>CHALLENGE: Using the ACAD_wetland data, count the number of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvrc1}
+```{r wetinvrc1, eval = F}
 # Using group_by()
 ACAD_spp <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
   summarize(num_spp = n(), 
@@ -217,7 +178,7 @@ head(ACAD_spp2) # should be the same as ACAD_inv
 <strong>Using ACAD_wetland data, calculate relative % cover of species within each site. This one is challenging! </strong>
 <details><summary class='code2'>Answer</summary>
 <p class = 'code'>First sum site-level cover using mutate to return a value for every original row.</p>
-```{r wetrelcovc1}
+```{r wetrelcovc1, eval = F}
 ACAD_wetland <- ACAD_wetland |> group_by(Site_Name, Year) |> 
   mutate(Site_Cover = sum(Ave_Cov)) |> 
   ungroup() # good practice to ungroup after group.
@@ -227,7 +188,7 @@ head(ACAD_wetland)
 ```
 
 <p class = 'code'>Next calculate relative cover grouped on Site_Name, Year, Latin_Name, and Common </p> 
-```{r wetrelcov2c1}
+```{r wetrelcov2c1, eval = F}
 # Create new dataset because collapsing rows on grouping variables
 # Using group_by() and summarize()
 ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Common) |> 
@@ -238,7 +199,7 @@ ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Com
 ```
 
 <p class = 'code'>Check that relative cover sums to 100% within each site</p>
-```{r wetrelcovcheckc1}
+```{r wetrelcovcheckc1, eval = F}
 # Using summarize(.by = ) 
 ACAD_wetland_relcov2 <- ACAD_wetland |> #group_by(Site_Name, Year, Latin_Name, Common) |> 
   summarize(rel_cov = Ave_Cov/Site_Cover, 
@@ -259,7 +220,7 @@ table(relcov_check$tot_relcov) # they should all be 100
 <strong>Recreate the plot below (or customize your own plot). </strong>
 Note that the fill color is "#0080FF", and the shape is 21, and the theme is classic. The linewidth = 0.75, and linetype = 'dashed' .
 
-```{r pq1c, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
+```{r pq1c, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center', eval = F}
 pq <- 
   ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
     geom_line(linewidth = 0.75, linetype = 'dashed') + 
@@ -274,7 +235,7 @@ pq
 ```
 
 <details><summary class='code2'>Answer</summary>
-```{r pq1ac, eval = F, results = 'hide'}
+```{r pq1ac, eval = F, results = 'hide', eval = F}
 ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
   geom_line(linewidth = 0.75, linetype = 'dashed') + 
   geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +

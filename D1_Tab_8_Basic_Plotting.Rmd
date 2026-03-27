@@ -43,7 +43,7 @@ Here you can see there's one value that's greater than all of the others in both
 <strong>CHALLENGE: Plot a histogram of `Damage_num` in the motinv3 data frame</strong>
 
 <details><summary class='code2'>Answer</summary>
-```{r wethist, fig.height = 4, fig.width = 6}
+```{r wethist, fig.height = 4, fig.width = 6, fold.plot = F}
 hist(motinv3$Damage_num)
 ```
 </details>

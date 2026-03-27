@@ -10,6 +10,20 @@ output:
 #------------------------------------
 ```
 
+```{r testcodegg, eval = F, echo = F}
+ggplot(motinv_sum, aes(x = Year, y = mean_count, fill = SpeciesCode,
+                        color = SpeciesCode)) +
+   geom_point() +
+   geom_errorbar(aes(ymin = mean_count - se_counts,
+                 ymax = mean_count + se_counts)) +
+   facet_wrap(~CommunityType) +
+   scale_color_brewer(palette = "Set1") + theme_bw()
+
+
+```
+
+
+
 ```{r optchunk, echo = F}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.align = 'center', fig.height = 3, fig.width = 5)
 ```

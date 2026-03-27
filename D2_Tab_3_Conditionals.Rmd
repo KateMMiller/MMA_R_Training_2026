@@ -17,7 +17,7 @@ The main differences between the most common conditional functions:
 <details open><summary class = 'drop2'>`ifelse()`</summary>
 The `ifelse()` function takes 3 arguments organized like: `ifelse(condition == TRUE, return this, return this instead)`. The first is the condition you're testing. The second argument is what to return if the condition is met. The third is what to return if the condition is not met. You can also nest `ifelse()` to include more than 2 conditions, but it can quickly get out of hand and hard to follow (see below).
 
-Let's start by adding a column to the NETN tree data that uses the `TreeStatusCode` to create a new column called `status` that is either live or dead conditional on the abbreviated code in `TreeStatusCode` in `trees_final`.
+Let's start by adding a column to the motile invertebrate that uses the `SpeciesCode` to create a new column called `native` that is either TRUE for native species, or FALSE for non-native species. We'll add a second column named `native_grp` that is "native", "exotic", and "invasive". The invasive group includes Asian shore crabs and green crabs.
 
 ```{r day2_cd, echo = F, include = F}
 #------------------------------------
@@ -25,44 +25,50 @@ Let's start by adding a column to the NETN tree data that uses the `TreeStatusCo
 #------------------------------------
 ```
 
-<p class = 'code'>Create status column conditioning on TreeStatusCode</p>
-```{r statc, results = 'hide'}
-# Check the levels of TreeStatusCode
-sort(unique(trees_final$TreeStatusCode))
-alive <- c("AB", "AL", "AS", "RS")
-dead <- c("DB", "DM", "DS")
+<p class = 'code'>Create nativity column conditioning on SpeciesCode</p>
+```{r statc,}
+# green crab, Asian shore crab, and common periwinkle species codes
+exo_spp <- c("CARMAE", "HEMISAN", "LITLIT") 
+# smooth periwinkle, rough periwinkle, dogwhelk, and limpet species codes
+nat_spp <- c("LITOBT", "LITSAX", "NUCLAP", "TECTES")
+# Make a table of species codes in BASHAR
+table(motinv$SpeciesCode)
 
-trees_final <- trees_final |> 
-  mutate(status = ifelse(TreeStatusCode %in% alive, "live", "dead"))
+# Add native column with ifelse
+motinv <- motinv |> mutate(native = ifelse(SpeciesCode %in% nat_spp, TRUE, FALSE))
 
-# nested ifelse to make alive, dead, and recruit 
-trees_final <- trees_final |> 
-  mutate(status2 = ifelse(TreeStatusCode %in% dead, "dead",
-                          ifelse(TreeStatusCode == "RS", "recruit", 
-                                 "dead")))
+# Add native_status column with nested ifelse
+motinv <- motinv |> mutate(native_status = ifelse(SpeciesCode %in% nat_spp, "native",
+                                                  ifelse(SpeciesCode %in% c("CARMAE", "HEMISAN"), "invasive", 
+                                                         "exotic")))
 
+table(motinv$SpeciesCode, motinv$native)
+table(motinv$SpeciesCode, motinv$native_status)
 ```
 
-Remember that we used `%in%` instead of `==` because alive has multiple status codes. We used `==` in `TreeStatusCode == "RS"` because there's only one status code considered a recruit. We could have also used `%in%` with the same results, but that would not be true for matching the alive status codes.
+Remember that we used `%in%` instead of `==` because exotic has multiple species codes. Only use `==` when there's only one condition to match against. The `%in%` approach can with with any combination of matching conditions, so I almost always use `%in%` instead of `==`.
 </details>
 <br>
 
 <details open><summary class = 'drop2'>`case_when()`</summary>
-The `case_when()` function allows you to have multiple conditions, each with their own return. The syntax is a bit different than `ifelse()` to allow for the multiple conditions and returns. Using the same approach as above, we'll create a third status code with `case_when()`. We'll specify the output for when a tree status code is in the dead category, recruit, and live category. We'll then add a fourth output for status codes that don't match any of the previous conditions and set that as 'unknown'. Basically the `TRUE` just means, any records left are assigned 'unknown'. Note also the order of operations in `case_when()`. The alive group includes "RS", but is not assigned "live", because it was alreay matched. The `case_when()` function starts with the first statement at the top (i.e. dead trees). Any record that matches the first statement is then dropped from additional statements. The second statement considers all trees not matched as dead. The third statment considers all trees not matched as dead or recruit. Then the fourth statement considers any trees not matched as dead, recruit, or live. Rather than relying on this function behavior, it's better to not have overlapping categories (e.g. not include "RS" in alive). I include it here to demonstrate the point. 
+The `case_when()` function allows you to have multiple conditions, each with their own return. The syntax is a bit different than `ifelse()` to allow for the multiple conditions and returns. Using the same approach as above, we'll recreate the native_status column with `case_when()`. We'll then add a fourth output for species codes that don't match any of the previous conditions and set that as 'unknown'. Basically the `TRUE` just means, any records left are assigned 'unknown'. 
 
-<p class = 'code'>Create status column conditioning on TreeStatusCode</p>
+Note the order of operations in `case_when()`. The first step assigns native species a 'native' status. Then, only non-native species are left to condition on. The next step assigns CARMAE and HEMISAN as 'invasive'. The third step conditions on species on the exo_spp group, but only those that weren't already handled in previous steps. Then the fourth statement considers any species not matched as native, invasive, exotic. Rather than relying on this function behavior, it's better to not have overlapping categories (e.g. not include CARMAE and HEMISAN in the exo_spp). I include it here to demonstrate the point. 
+
+<p class = 'code'>Create status column conditioning on SpeciesCode</p>
 ```{r statc2}
-# Check the levels of TreeStatusCode
-alive <- c("AB", "AL", "AS", "RS")
-dead <- c("DB", "DM", "DS")
+# green crab, Asian shore crab, and common periwinkle species codes
+exo_spp <- c("CARMAE", "HEMISAN", "LITLIT") 
+# smooth periwinkle, rough periwinkle, dogwhelk, and limpet species codes
+nat_spp <- c("LITOBT", "LITSAX", "NUCLAP", "TECTES")
 
-trees_final <- trees_final |> 
-  mutate(status3 = case_when(TreeStatusCode %in% dead ~ 'dead',
-                             TreeStatusCode == 'RS' ~ 'recruit',
-                             TreeStatusCode %in% alive ~ 'live', 
-                             TRUE ~ 'unknown'))
+motinv <- motinv |> 
+  mutate(native_status = case_when(SpeciesCode %in% nat_spp ~ 'native',
+                                   SpeciesCode %in% c("CARMAE", "HEMISAN") ~ 'invasive',
+                                   SpeciesCode %in% exo_spp ~ 'exotic', 
+                                   TRUE ~ 'unknown'))
 
-table(trees_final$status2, trees_final$status3) # check that the output is the same
+table(motinv$SpeciesCode, motinv$native_status) # check that the output worked
 
 ```
 </details>
@@ -70,24 +76,26 @@ table(trees_final$status2, trees_final$status3) # check that the output is the s
 <details open><summary class = 'drop2'>`if(){ }else{ }`</summary>
 This style of `if(){ }else{ }`, hereafter called if/else, conditionals is best used for operations outside of data frames, like turning code on or off based on specific conditions. I use if/else with ggplot (graphing R package we'll cover later) to turn certain features on or off based on a condition in the data or a condition I set. If/else statements are also helpful for bug handling in your code. For example, if you want the code to send a warning when your data frame is empty (no rows), you can have an if/else statement that prints to the console. You can string together multiple conditions to test by adding more `else{ }` statements.
 
-<p class = 'code'>Print warning in console that indicates if invasive species are found in wetland data</p>
+<p class = 'code'>Print warning in console that indicates if invasive species are found in the motile invertebrate data.</p>
 ```{r ifelsebug1, fold.output = F}
-inv <- ACAD_wetland |> filter(Invasive == TRUE)
+inv <- motinv |> filter(native_status == "invasive")
+spp_det <- unique(inv$CommonName)
 
-if(nrow(inv) > 0){print("Invasive species were detected in the data.")
+if(nrow(inv) > 0){print(paste0("The following invasive species were detected in the data: ", 
+                               paste0(spp_det, collapse = ", ")))
   } else {print("No invasive species were detected in the data.")}
 
 ```
 
-<p class = 'code'>Force the else statement to print, by filtering out invasive species before testing. I added another potential else statment just to show that syntax.</p>
+<p class = 'code'>Force the else statement to print, by filtering out invasive species before testing. I added another potential else statement just to show that syntax.</p>
 ```{r ifelsebug2, fold.output = F}
-native_only <- ACAD_wetland |> filter(Invasive == FALSE) 
-inv2 <- native_only |> filter(Invasive == TRUE)
+inv <- motinv |> filter(SpeciesCode %in% nat_spp) |> 
+  filter(native_status == "invasive")
+spp_det <- unique(inv$CommonName)
 
-if(nrow(inv2) > 0){print("Invasive species were detected in the data.")
-  } else if(nrow(inv2) == 0){print("No invasive species were detected in the data.")
-    } else {"Invasive species detections unclear"}
-
+if(nrow(inv) > 0){print(paste0("The following invasive species were detected in the data: ", 
+                               paste0(spp_det, collapse = ", ")))
+  } else {print("No invasive species were detected in the data.")}
 ```
 
 </details>
@@ -97,40 +105,40 @@ if(nrow(inv2) > 0){print("Invasive species were detected in the data.")
 <details open><summary class = "drop">Test your skills with conditionals</summary>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the ACAD_wetlands data, create a new column called Status that has "protected" for Protected = TRUE and "public" values for Protected = FALSE. </strong>
+<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetcond, eval = F}
-# read in wetland data if you don't already have it loaded.
-ACAD_wetland <- read.csv("./data/ACAD_wetland_data_clean.csv")
+```{r wetcond}
+herb <- c("LITLIT", "LITOBT", "LITSAX", "TECTES")
+pred <- c("CARMAE", "NUCLAP")
 
-# Base R using the with() function
-ACAD_wetland$Status <- with(ACAD_wetland, ifelse(Protected == TRUE, "protected", "public"))
-table(ACAD_wetland$Status, ACAD_wetland$Protected)
-```
+# base R
+motinv$trophic <- ifelse(motinv$SpeciesCode %in% pred, "predator", "herbivore")
+table(motinv$trophic, motinv$SpeciesCode)
 
-```{r wetcond2, eval = T}
-# Tidyverse
-ACAD_wetland <- ACAD_wetland |> mutate(Status = ifelse(Protected == TRUE, "protected", "public"))
-table(ACAD_wetland$Status, ACAD_wetland$Protected) # check your work
+# tidyverse
+motinv <- motinv |> mutate(trophic = ifelse(SpeciesCode %in% pred, "predator", "herbivore"))
+table(motinv$trophic, motinv$SpeciesCode)
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the ACAD_wetlands data, create a new column called abundance_cat that has levels High, Medium, Low, based on Ave_Cov, where "High" is >50%, "Medium" is 10-50%, and "Low" is < 10%. </strong>
+<strong>CHALLENGE: Using the motile invertebrate data, create a new column called count_level that has levels High, Medium, Low, based on No.Damage, where "High" is > 35, "Medium" is 10 - 35, and "Low" is < 10. </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetab, eval = F}
+```{r wetab}
 # Base R using the with() function and nested ifelse()
-ACAD_wetland$abundance_cat <- with(ACAD_wetland, ifelse(Ave_Cov < 10, "Low",
-                                                        ifelse(Ave_Cov >= 10 & Ave_Cov <= 50, "Medium", "High")))
+motinv$count_level <- 
+  ifelse(motinv$No.Damage > 35, "High", 
+         ifelse(motinv$No.Damage >=10 & motinv$No.Damage <=35, "Medium", "Low"))
+table(motinv$count_level)
 ```
 
-```{r wetab2, eval = T}
+```{r wetab2}
 # Tidyverse using case_when() and between
-ACAD_wetland <- ACAD_wetland |> mutate(abundance_cat = case_when(Ave_Cov < 10 ~ "Low",
-                                                                 between(Ave_Cov, 10, 50) ~ "Medium", 
-                                                                 TRUE ~ "High"))
-table(ACAD_wetland$abundance_cat)
+motinv <- motinv |> mutate(count_level = case_when(No.Damage > 35 ~ "High",
+                                                   between(No.Damage, 10, 35) ~ "Medium",
+                                                   No.Damage < 10 ~ "Low"))
+table(motinv$count_level)
 ```
 Note the use of the `between()` function that saves typing. This function matches as >= and <=. 
 

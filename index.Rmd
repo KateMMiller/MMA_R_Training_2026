@@ -61,12 +61,12 @@ library(tidyverse)
 #------------------------------------
 #        Day 0 - prep code 
 #------------------------------------
-ACAD_wetland <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_wetland_data_clean.csv")
-trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
 motinv <- read.csv(
   "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
   )
+pi_dat <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
+)
 ```
 
 ```{r Install_instructions, child = "D0_Install_R_and_RStudio.Rmd", eval = T}

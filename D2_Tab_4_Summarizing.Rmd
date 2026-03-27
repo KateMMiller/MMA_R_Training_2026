@@ -5,13 +5,13 @@ output:
 ---
 
 #### Summarizing with dplyr
-<details open><summary class = 'drop'>Using `group_by()` and `summarize()`</summary>
+<details open><summary class = 'drop'>Using `summarize()`</summary>
 Yesterday, we used functions like `mean()`, `min()`, and `max()` to summarize entire datasets. Now we're going to use those same functions to summarize data by grouping variables, such as park, year, plot, etc. The process is similar to using Totals in Access or subtotals in Excel, although it is more flexible and efficient in R.
 
 Difference between `summarize()` and `mutate()`:
 <ul>
 <li>`mutate()` returns the same number of <b>rows</b> as the original data frame. This function also returns all of the rows that were in the original data frame.</li>
-<li>`summarize()` returns the same number of rows as there are <b>grouping levels</b> in the original data frame. This function only returns the rows that were part of the `group_by()` and that were created in the `summarize()` function. 
+<li>`summarize()` returns the same number of rows as there are <b>grouping levels</b> in the original data frame. This function only returns the rows that were part of the `.by = c()` and that were created in the `summarize()` function. 
 </ul>
 
 Common functions used to summarize:
@@ -24,61 +24,69 @@ Common functions used to summarize:
 <li>`n()`: tally the number of rows within each group</li>
 </ul>
 
+To demonstrate summarize and mutate in dplyr, we're going to use the point intercept data collected along 3 transects in the Bass Harbor site. The data have already been summarized by transect (T1, T2, T3). We now want to calculate site-level median elevation and percent frequency for each cover type.
+
+<p class = 'code'>Read in the point intercept data </p>
+
 ```{r day2_gs, echo = F, include = F}
 #------------------------------------
 #      Day 2: Summarizing Code 
 #------------------------------------
 ```
 
-<p class = 'code'>Sum the number of trees per plot, year, and species using mutate. </p>
-Note the use of `n()`, which counts the number of rows within a group. Be careful here. If there are NAs in a group, they are counted by `n()`. Whether that's okay or not depends on the data. 
-```{r ttrsummut, message = F, warning = F}
-num_trees_mut <- trees_final |> 
-  group_by(Plot_Name, SampleYear, Species) |> 
-  mutate(num_trees = n()) |> 
-  select(Plot_Name, SampleYear, Species, num_trees)
-
-nrow(trees_final) #164
-nrow(num_trees_mut) #164
-head(num_trees_mut)
-```
-Note how the format of `head(num_trees_mut)` differs from output for a data frame. This is how you know your dataset has been turned into a tibble.
-
-
-<p class = 'code'>Sum the number of trees per plot, year, and species using mutate.</p>
-```{r ttrsumsum}
-num_trees_sum <- trees_final |> 
-  group_by(Plot_Name, SampleYear, Species) |> 
-  summarize(num_trees = n()) 
-
-nrow(trees_final) #164
-nrow(num_trees_sum) #164
-head(num_trees_sum)
+```{r pid2s, eval = F}
+pi_dat <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
+)
+head(pi_dat)
 ```
 
-The `group_by()` + `mutate()` approach is helpful if you're trying to standardize values within your group. But in most cases, the `group_by()` + `summarize()` approach, which collapses to the group level, is what you're looking for. 
+```{r pid2sl, echo = F}
+pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
+```
 
-Note the warning that `summarize()` gave you in the console. The tidyverse is chatty. They have a lot of checks built into their functions based on how the developers think you should be using their functions. The warning with `summarize()` is particularly annoying. To turn the warning off, you can specify `.groups = 'drop'`. I'll show that next. 
+<p class = 'code'>Calculate the average percent frequency and median elevation by CoverType using mutate</p>
+```{r ttrsummut, message = F, warning = F, eval = F}
+pi_dat_mut <- pi_dat |> mutate(med_elev_sl = median(med_elev), 
+                               avg_pct_freq = mean(pct_freq), 
+                               .by = c(Year, CoverType, CoverCode))
+nrow(pi_dat) #317
+nrow(pi_dat_mut) #317
+head(pi_dat_mut)
+```
+Note how `pi_dat_mut` has the same number of rows and all the original columns plus the two we calculated (site-level median, and average % frequency).
 
-There's also a new `.by` argument in summarize that allows you to skip the `group_by()` step. It came after I learned dplyr, so I often forget to use it. Most examples I see online use the original way, I include both approaches below. Interestingly, using `.by` returns a data frame, whereas `group_by()` returns a tibble. The differences are small and not something to be too concerned about.
+<p class = 'code'>Calculate the average percent frequency and median elevation by CoverType using summarize</p>
+```{r ttrsummut2, message = F, warning = F, eval = F}
+pi_dat_sum <- pi_dat |> summarize(med_elev_sl = median(med_elev), 
+                                  avg_pct_freq = mean(pct_freq), 
+                                  .by = c(Year, CoverType, CoverCode))
+nrow(pi_dat) #317
+nrow(pi_dat_sum) #127
+head(pi_dat_sum)
+```
+Note how `pi_dat_sum` has the 1/3 of the rows and only the grouping columns and the two we calculated (site-level median, and average % frequency).
 
-<p class = 'code'>Summarize the average and standard error of tree DBH by plot and year</p>
-```{r trdbhsum}
-tree_dbh <- trees_final |> 
-  group_by(Plot_Name, SampleYear) |> 
-  summarize(mean_dbh = mean(DBHcm),
-            num_trees = n(),
-            se_dbh = sd(DBHcm)/sqrt(num_trees),
-            .groups = 'drop') # prevents warning in console
+The `mutate(.by = c())` approach is helpful if you're trying to standardize values within your group. But in most cases, the `summarize(.by = c())` approach, which collapses to the group level, is what you're looking for. Note that in older versions of dplyr, the syntax was `group_by() |> summarize()` with no `.by = c()`.
 
-tree_dbh2 <- trees_final |> 
-  summarize(mean_dbh = mean(DBHcm),
-            num_trees = n(),
-            se_dbh = sd(DBHcm)/sqrt(num_trees),
-           .by = c(Plot_Name, SampleYear))
+<p class = 'code'>Summarize the average and standard error total counts for the motile invertebrate data by CommunityType.</p>
+We will first fix the 1960 and PM errors from before, drop QAQC visits, then combine the Damage and No.Damage columns to make a total_count column.
+```{r trdbhsum, eval = F}
+# Fix the data issues again
+motinv <- motinv |> 
+  mutate(NoDamage_fix = replace(No.Damage, Damage == 1960, 196),
+         Damage_fix = as.numeric(replace(Damage, Damage == "PM", NA)),
+         total_count = NoDamage_fix + Damage_fix) |> 
+  filter(QAQC == FALSE)
 
-tree_dbh == tree_dbh2 # tests that all the values in 1 data frame match the 2nd. 
+# Summarize the mean count per plot of each species by year and community type
+motinv_sum <- motinv |> 
+  summarize(mean_count = sum(total_count)/5, # 5 plots per site
+            se_counts = sd(total_count)/sqrt(5), # 5 plots per site
+            .by = c(SiteCode, Year, CommunityType, 
+                    ScientificName, CommonName, SpeciesCode))
 
+head(motinv_sum)
 ```
 </details>
 <br>
@@ -88,7 +96,7 @@ tree_dbh == tree_dbh2 # tests that all the values in 1 data frame match the 2nd.
 <div class="alert alert-info">
 <strong>CHALLENGE: Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvcov}
+```{r wetinvcov, eval = F}
 # Using group_by()
 ACAD_inv <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
   summarize(Pct_Cov = sum(Ave_Cov), 
@@ -110,7 +118,7 @@ head(ACAD_inv2) # should be the same as ACAD_inv
 <div class="alert alert-info">
 <strong>CHALLENGE: Using the ACAD_wetland data, count the number of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvr}
+```{r wetinvr, eval = F}
 # Using group_by()
 ACAD_spp <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
   summarize(num_spp = n(), 
@@ -134,7 +142,7 @@ head(ACAD_spp2) # should be the same as ACAD_inv
 <details><summary class='code2'>Answer</summary>
 
 <p class = 'code'>First sum site-level cover using mutate to return a value for every original row.</p>
-```{r wetrelcov, eval = T}
+```{r wetrelcov, eval = F}
 ACAD_wetland <- ACAD_wetland |> group_by(Site_Name, Year) |> 
   mutate(Site_Cover = sum(Ave_Cov)) |> 
   ungroup() # good practice to ungroup after group.
@@ -144,7 +152,7 @@ head(ACAD_wetland)
 ```
 
 <p class = 'code'>Next calculate relative cover grouped on Site_Name, Year, Latin_Name, and Common </p> 
-```{r wetrelcov2}
+```{r wetrelcov2, eval = F}
 # Create new dataset because collapsing rows on grouping variables
 # Using group_by() and summarize()
 ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Common) |> 
@@ -155,7 +163,7 @@ ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Com
 ```
 
 <p class = 'code'>Check that relative cover sums to 100% within each site</p>
-```{r wetrelcovcheck}
+```{r wetrelcovcheck, eval = F}
 # Using summarize(.by = ) 
 ACAD_wetland_relcov2 <- ACAD_wetland |> #group_by(Site_Name, Year, Latin_Name, Common) |> 
   summarize(rel_cov = Ave_Cov/Site_Cover, 
