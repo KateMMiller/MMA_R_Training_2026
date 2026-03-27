@@ -93,6 +93,8 @@ head(motinv_sum)
 
 <details open><summary class = "drop">Test your summarizing skills</summary>
 
+#+++++ ENDED HERE ++++++
+
 <div class="alert alert-info">
 <strong>CHALLENGE: Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
 <details><summary class='code2'>Answer</summary>

@@ -4,6 +4,7 @@ output:
     css: custom_styles.css
     self_contained: true
     highlight: tango
+    md_extensions: -smart
     
 title: "2026 MMA Intro to R"
 ---
