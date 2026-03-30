@@ -1,0 +1,7 @@
+"ScientificName","CommonName","SpeciesCode","Invasive","Exotic"
+"Littorina littorea","Common periwinkle","LITLIT",FALSE,TRUE
+"Littorina obtusata","Smooth periwinkle","LITOBT",FALSE,FALSE
+"Carcinus maenas","Green crab","CARMAE",TRUE,TRUE
+"Littorina saxatilis","Rough periwinkle","LITSAX",FALSE,FALSE
+"Nucella lapillus","Dogwhelk","NUCLAP",FALSE,FALSE
+"Testudinalia testudinalis","Limpet","TECTES",FALSE,FALSE
