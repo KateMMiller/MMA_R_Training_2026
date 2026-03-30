@@ -18,7 +18,7 @@ Commonly used `dplyr` functions and their use:
 <li><b>mutate():</b> adds new column(s) to a data frame. </li>
 <li><b>slice():</b> slices the data based on specified number of rows</li>
 <li><b>summarize(.by = groups):</b> summarizes by groups/factor levels and returns data for each group (e.g. mean cover grouped by plot).
-<li><b>mutate(.by = groups):</b> summarizes by groups/factor levels and returns data for each observation.</li>
+<li><b>mutate(.by = groups):</b> summarizes by groups/factor levels and returns the original number of rows and columns.</li>
 <li><b>rename():</b> renames columns</li>
 </ul>
 

@@ -45,24 +45,24 @@ head(pi_dat)
 pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
 ```
 
-<p class = 'code'>Calculate the average percent frequency and median elevation by CoverType using mutate</p>
+<p class = 'code'>Using `mutate()`, calculate the average percent frequency and median elevation by CoverType and Year</p>
 ```{r ttrsummut, message = F, warning = F, eval = F}
 pi_dat_mut <- pi_dat |> mutate(med_elev_sl = median(med_elev), 
                                avg_pct_freq = mean(pct_freq), 
-                               .by = c(Year, CoverType, CoverCode))
-nrow(pi_dat) #317
-nrow(pi_dat_mut) #317
+                               .by = c(SiteCode, Year, CoverType, CoverCode))
+nrow(pi_dat) #314
+nrow(pi_dat_mut) #314
 head(pi_dat_mut)
 ```
-Note how `pi_dat_mut` has the same number of rows and all the original columns plus the two we calculated (site-level median, and average % frequency).
+Note how `pi_dat_mut` has the same number of rows and all the original columns plus the two we calculated (site-level median, and average % frequency). More often we're interested in reducing the data to one row per grouping level. That's what `summarize()` is for.
 
-<p class = 'code'>Calculate the average percent frequency and median elevation by CoverType using summarize</p>
+<p class = 'code'>Using `summarize()`, calculate the average percent frequency and median elevation by CoverType and Year.</p>
 ```{r ttrsummut2, message = F, warning = F, eval = F}
 pi_dat_sum <- pi_dat |> summarize(med_elev_sl = median(med_elev), 
                                   avg_pct_freq = mean(pct_freq), 
-                                  .by = c(Year, CoverType, CoverCode))
-nrow(pi_dat) #317
-nrow(pi_dat_sum) #127
+                                  .by = c(SiteCode, Year, CoverType, CoverCode))
+nrow(pi_dat) #314
+nrow(pi_dat_sum) #124
 head(pi_dat_sum)
 ```
 Note how `pi_dat_sum` has the 1/3 of the rows and only the grouping columns and the two we calculated (site-level median, and average % frequency).
@@ -93,92 +93,32 @@ head(motinv_sum)
 
 <details open><summary class = "drop">Test your summarizing skills</summary>
 
-#+++++ ENDED HERE ++++++
-
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<strong>CHALLENGE: Using the point intercept data (`pi_dat`), calculate the average percent frequency of each non-vegetated substrate by year. Note that non-vegetated substrates are CoverCode = c('BOLT', 'ROCK', 'WATER'). </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvcov, eval = F}
-# Using group_by()
-ACAD_inv <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
-  summarize(Pct_Cov = sum(Ave_Cov), 
-            .groups = 'drop') |>  # optional line to keep console from being chatty
-  arrange(Site_Name) # sort by Site_Name for easier comparison
+```{r sumnv, eval = F}
+pi_nonveg <- pi_dat |> filter(CoverCode %in% c("BOLT", "ROCK", "WATER")) |> # filter nonveg grps
+  summarize(avg_freq = mean(pct_freq), # calc avg.
+            .by = c(SiteCode, Year, CoverCode, CoverType)) # grouping variables 
 
-head(ACAD_inv)
-
-# Using summarize(.by)
-ACAD_inv2 <- ACAD_wetland |> 
-  summarize(Pct_Cov = sum(Ave_Cov), .by = c(Site_Name, Year, Invasive)) |> 
-  arrange(Site_Name) # sort by Site_Name for easier comparison
-
-head(ACAD_inv2) # should be the same as ACAD_inv
+head(pi_nonveg) # check output
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the ACAD_wetland data, count the number of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<strong>CHALLENGE: Using the point intercept data (`pi_dat`), calculate the average percent frequency of each non-vegetated vs vegetated cover types by year. Note that non-vegetated substrates are CoverCode = c('BOLT', 'ROCK', 'WATER'). </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvr, eval = F}
-# Using group_by()
-ACAD_spp <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
-  summarize(num_spp = n(), 
-            .groups = 'drop') |>  # optional line to keep console from being chatty
-  arrange(Site_Name) # sort by Site_Name for easier comparison
+```{r sumnv2, eval = F}
+pi_subtype <- pi_dat |>
+  mutate(sub_type = ifelse(CoverCode %in% c("BOLT", "ROCK", "WATER"), "nonveg", "veg")) |> # filter nonveg grps
+  summarize(avg_freq = mean(pct_freq), # calc avg.
+            .by = c(SiteCode, Year, sub_type)) |> # grouping variables 
+  arrange(SiteCode, Year, sub_type) # sort variables
 
-head(ACAD_spp)
-
-# Using summarize(.by)
-ACAD_spp2 <- ACAD_wetland |> 
-  summarize(num_spp = n(), .by = c(Site_Name, Year, Invasive)) |> 
-  arrange(Site_Name) # sort by Site_Name for easier comparison
-
-head(ACAD_spp2) # should be the same as ACAD_inv
+head(pi_subtype) # check output
 ```
 </details>
 </div>
-
-<div class="alert alert-info">
-<strong>CHALLENGE: Using ACAD_wetland data, calculate relative % cover of species within each site. This one is challenging!</strong>
-<details><summary class='code2'>Answer</summary>
-
-<p class = 'code'>First sum site-level cover using mutate to return a value for every original row.</p>
-```{r wetrelcov, eval = F}
-ACAD_wetland <- ACAD_wetland |> group_by(Site_Name, Year) |> 
-  mutate(Site_Cover = sum(Ave_Cov)) |> 
-  ungroup() # good practice to ungroup after group.
-
-table(ACAD_wetland$Site_Name, ACAD_wetland$Site_Cover) # check that each site has a unique value.
-head(ACAD_wetland)
-```
-
-<p class = 'code'>Next calculate relative cover grouped on Site_Name, Year, Latin_Name, and Common </p> 
-```{r wetrelcov2, eval = F}
-# Create new dataset because collapsing rows on grouping variables
-# Using group_by() and summarize()
-ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Common) |> 
-  summarize(rel_cov = (Ave_Cov/Site_Cover)*100,
-            .groups = 'drop') |> 
-  ungroup()
-
-```
-
-<p class = 'code'>Check that relative cover sums to 100% within each site</p>
-```{r wetrelcovcheck, eval = F}
-# Using summarize(.by = ) 
-ACAD_wetland_relcov2 <- ACAD_wetland |> #group_by(Site_Name, Year, Latin_Name, Common) |> 
-  summarize(rel_cov = Ave_Cov/Site_Cover, 
-            .by = c("Site_Name", "Year", "Latin_Name", "Common"))
-
-# Check that your relative cover sums to 100 for each site
-relcov_check <- ACAD_wetland_relcov2 |> group_by(Site_Name, Year) |> 
-  summarize(tot_relcov = sum(rel_cov)*100, .groups = 'drop')
-table(relcov_check$tot_relcov) # they should all be 100
-
-```
-</details>
-</div>
-
 </details>
 <br>

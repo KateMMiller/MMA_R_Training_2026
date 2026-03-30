@@ -1,4 +1,4 @@
-#### Day 1 Questions
+#### Day 1 Questions {.tabset}
 <details open><summary class = 'drop'>Load Data </summary>
 If you're starting a new R session to answer these questions, you'll need to read in the wetland and tree data frames again.
 
@@ -72,6 +72,7 @@ unique(motinv[motinv$QAQC == TRUE, "Year"])
 </div>
 </details><br>
 
+<details open><summary class = 'drop'>Data Exploration</summary>
 <div class="alert alert-info">
 <strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
 <details><summary class='drop2'>Answer</summary>

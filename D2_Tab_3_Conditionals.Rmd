@@ -29,8 +29,10 @@ Let's start by adding a column to the motile invertebrate that uses the `Species
 ```{r statc,}
 # green crab, Asian shore crab, and common periwinkle species codes
 exo_spp <- c("CARMAE", "HEMISAN", "LITLIT") 
+
 # smooth periwinkle, rough periwinkle, dogwhelk, and limpet species codes
 nat_spp <- c("LITOBT", "LITSAX", "NUCLAP", "TECTES")
+
 # Make a table of species codes in BASHAR
 table(motinv$SpeciesCode)
 
@@ -59,6 +61,7 @@ Note the order of operations in `case_when()`. The first step assigns native spe
 ```{r statc2}
 # green crab, Asian shore crab, and common periwinkle species codes
 exo_spp <- c("CARMAE", "HEMISAN", "LITLIT") 
+
 # smooth periwinkle, rough periwinkle, dogwhelk, and limpet species codes
 nat_spp <- c("LITOBT", "LITSAX", "NUCLAP", "TECTES")
 
@@ -105,10 +108,10 @@ if(nrow(inv) > 0){print(paste0("The following invasive species were detected in 
 <details open><summary class = "drop">Test your skills with conditionals</summary>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
+<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. <br>
+Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
 <details><summary class='code2'>Answer</summary>
 ```{r wetcond}
-herb <- c("LITLIT", "LITOBT", "LITSAX", "TECTES")
 pred <- c("CARMAE", "NUCLAP")
 
 # base R
@@ -126,11 +129,12 @@ table(motinv$trophic, motinv$SpeciesCode)
 <strong>CHALLENGE: Using the motile invertebrate data, create a new column called count_level that has levels High, Medium, Low, based on No.Damage, where "High" is > 35, "Medium" is 10 - 35, and "Low" is < 10. </strong>
 <details><summary class='code2'>Answer</summary>
 ```{r wetab}
-# Base R using the with() function and nested ifelse()
+# Base R using a nested ifelse()
 motinv$count_level <- 
   ifelse(motinv$No.Damage > 35, "High", 
-         ifelse(motinv$No.Damage >=10 & motinv$No.Damage <=35, "Medium", "Low"))
-table(motinv$count_level)
+         ifelse(motinv$No.Damage >= 10 & motinv$No.Damage <= 35, "Medium", "Low"))
+
+table(motinv$count_level) # check that it worked
 ```
 
 ```{r wetab2}
@@ -138,7 +142,8 @@ table(motinv$count_level)
 motinv <- motinv |> mutate(count_level = case_when(No.Damage > 35 ~ "High",
                                                    between(No.Damage, 10, 35) ~ "Medium",
                                                    No.Damage < 10 ~ "Low"))
-table(motinv$count_level)
+
+table(motinv$count_level) # check that it worked
 ```
 Note the use of the `between()` function that saves typing. This function matches as >= and <=. 
 

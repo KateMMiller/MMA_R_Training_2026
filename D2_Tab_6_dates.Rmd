@@ -92,7 +92,7 @@ seq.Date(date_list[1], date_list[2], by = "6 months")
 ```
 
 <div class="alert alert-info">
-<strong>Question: How would you return date1 as YYYYMMDD (20260312)?</strong>
+<strong>CHALLENGE: How would you return date1 as YYYYMMDD (20260312)?</strong>
 <details><summary class='drop2'>Answer</summary>
 ```{r chald31d}
 format(date1, format = "%Y%m%d")
@@ -101,7 +101,7 @@ format(date1, format = "%Y%m%d")
 </div>
 
 <div class="alert alert-info">
-<strong>Question: How would you create a list of dates in 2026 that are evenly spaced by 3 months?</strong>
+<strong>CHALLENGE: How would you create a list of dates in 2026 that are evenly spaced by 3 months?</strong>
 <details><summary class='drop2'>Answer</summary>
 ```{r chald32b}
 date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
@@ -111,7 +111,7 @@ seq.Date(date_list[1], date_list[2], by = "3 months")
 </div>
 
 <div class="alert alert-info">
-<strong>Question: How would you create a list of dates in 2026 that are evenly spaced by 1 week?</strong>
+<strong>CHALLENGE: How would you create a list of dates in 2026 that are evenly spaced by 1 week?</strong>
 <details><summary class='drop2'>Answer</summary>
 ```{r chald32cb}
 date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 

@@ -4,7 +4,9 @@ If you're starting a new session to answer these questions, you'll need to load 
 
 <p class = 'code'>Load dplyr</p>
 ```{r day2_ch, echo = F, include = F}
-#---- Day 2: Challenges Code ----
+#------------------------------------
+#     Day 2: Challenges Code 
+#------------------------------------
 ```
 
 ```{r ldpd2c}
@@ -13,18 +15,24 @@ library(dplyr)
 
 <p class = 'code'>Read in example motile invertebrate and point intercept data</p>
 ```{r readmotinv3bc1, eval = F}
+# Point intercept data
+pi_dat <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
+)
+
+# Motile invert count
 motinv <- read.csv(
   "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
   )
 
-pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
-)
+# Motile invert site
+motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")\
 ```
 
 ```{r motinvd2c1, echo = F}
 motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
+motspp <- read.csv("./data/motile_invert_species_table.csv")
 ```
 
 </details>
@@ -90,10 +98,10 @@ range(motinv_fix$No.Damage)
 
 <details open><summary class = 'drop'>Conditionals</summary>
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
+<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. <br>
+Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
 <details><summary class='code2'>Answer</summary>
 ```{r micondc1}
-herb <- c("LITLIT", "LITOBT", "LITSAX", "TECTES")
 pred <- c("CARMAE", "NUCLAP")
 
 # base R
@@ -111,144 +119,245 @@ table(motinv$trophic, motinv$SpeciesCode)
 <strong>CHALLENGE: Using the motile invertebrate data, create a new column called count_level that has levels High, Medium, Low, based on No.Damage, where "High" is > 35, "Medium" is 10 - 35, and "Low" is < 10. </strong>
 <details><summary class='code2'>Answer</summary>
 ```{r miabc1}
-# Base R using the with() function and nested ifelse()
+# Base R using a nested ifelse()
 motinv$count_level <- 
   ifelse(motinv$No.Damage > 35, "High", 
-         ifelse(motinv$No.Damage >=10 & motinv$No.Damage <=35, "Medium", "Low"))
-table(motinv$count_level)
+         ifelse(motinv$No.Damage >= 10 & motinv$No.Damage <= 35, "Medium", "Low"))
+
+table(motinv$count_level) # check that it worked
 ```
 
 ```{r miab2c1}
-# Tidyverse using case_when() and between
+# Tidyverse using case_when() and between()
 motinv <- motinv |> mutate(count_level = case_when(No.Damage > 35 ~ "High",
                                                    between(No.Damage, 10, 35) ~ "Medium",
                                                    No.Damage < 10 ~ "Low"))
-table(motinv$count_level)
+
+table(motinv$count_level) # check that it worked
 ```
 Note the use of the `between()` function that saves typing. This function matches as >= and <=. 
+</details>
+</div>
 </details>
 <br>
 
 <details open><summary class='drop'>Summarizing</summary>
 <div class="alert alert-info">
-<strong>Using the ACAD_wetland data, calculate the average percent cover of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<strong>CHALLENGE: Using the point intercept data (`pi_dat`), calculate the average percent frequency of each non-vegetated substrate by year. Note that non-vegetated substrates are CoverCode = c('BOLT', 'ROCK', 'WATER'). </strong>
 <details><summary class='code2'>Answer</summary>
-```{r minvcovc1, eval = F}
-# Using group_by()
-ACAD_inv <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
-  summarize(Pct_Cov = sum(Ave_Cov), 
-            .groups = 'drop') |>  # optional line to keep console from being chatty
-  arrange(Site_Name) # sort by Site_Name for easier comparison
+```{r sumnvc1}
+pi_nonveg <- pi_dat |> filter(CoverCode %in% c("BOLT", "ROCK", "WATER")) |> # filter nonveg grps
+  summarize(avg_freq = mean(pct_freq), # calc avg.
+            .by = c(SiteCode, Year, CoverCode, CoverType)) # grouping variables 
 
-head(ACAD_inv)
-
-# Using summarize(.by)
-ACAD_inv2 <- ACAD_wetland |> 
-  summarize(Pct_Cov = sum(Ave_Cov), .by = c(Site_Name, Year, Invasive)) |> 
-  arrange(Site_Name) # sort by Site_Name for easier comparison
-
-head(ACAD_inv2) # should be the same as ACAD_inv
+head(pi_nonveg) # check output
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the ACAD_wetland data, count the number of native vs. invasive species per plot. Note that Invasive = TRUE is invasive and FALSE is native. </strong>
+<strong>CHALLENGE: Using the point intercept data (`pi_dat`), calculate the average percent frequency of each non-vegetated vs vegetated cover types by year. Note that non-vegetated substrates are CoverCode = c('BOLT', 'ROCK', 'WATER'). </strong>
 <details><summary class='code2'>Answer</summary>
-```{r wetinvrc1, eval = F}
-# Using group_by()
-ACAD_spp <- ACAD_wetland |> group_by(Site_Name, Year, Invasive) |> 
-  summarize(num_spp = n(), 
-            .groups = 'drop') |>  # optional line to keep console from being chatty
-  arrange(Site_Name) # sort by Site_Name for easier comparison
+```{r sumnv2c1}
+pi_subtype <- pi_dat |>
+  mutate(sub_type = ifelse(CoverCode %in% c("BOLT", "ROCK", "WATER"), "nonveg", "veg")) |> # filter nonveg grps
+  summarize(avg_freq = mean(pct_freq), # calc avg.
+            .by = c(SiteCode, Year, sub_type)) |> # grouping variables 
+  arrange(SiteCode, Year, sub_type) # sort variables
 
-head(ACAD_spp)
+head(pi_subtype) # check output
+```
+</details>
+</div>
+</details>
+<br>
 
-# Using summarize(.by)
-ACAD_spp2 <- ACAD_wetland |> 
-  summarize(num_spp = n(), .by = c(Site_Name, Year, Invasive)) |> 
-  arrange(Site_Name) # sort by Site_Name for easier comparison
+<details open><summary class='drop'>Pivoting Tables</summary>
 
-head(ACAD_spp2) # should be the same as ACAD_inv
+<div class="alert alert-info">
+<strong>CHALLENGE: Use the `motinv_sum` data frame from the "Summarizing with dplyr" tab to pivot on SpeciesCode and mean_count, and fill the NAs with 0s. If you don't have the motinv_sum data frame handy, run the code below to create it. <br>
+Hint: Drop the ScientificName and CommonName columns before you pivot.
+</strong>
+
+```{r motinvredo1c2}
+# Fix the data issues again
+motinv <- motinv |> 
+  mutate(NoDamage_fix = replace(No.Damage, Damage == 1960, 196),
+         Damage_fix = as.numeric(replace(Damage, Damage == "PM", NA)),
+         total_count = NoDamage_fix + Damage_fix) |> 
+  filter(QAQC == FALSE)
+
+# Summarize the mean count per plot of each species by year and community type
+motinv_sum <- motinv |> 
+  summarize(mean_count = sum(total_count)/5, # 5 plots per site
+            se_counts = sd(total_count)/sqrt(5), # 5 plots per site
+            .by = c(SiteCode, Year, CommunityType, 
+                    ScientificName, CommonName, SpeciesCode))
+```
+
+<details><summary class='code2'>Answer</summary>
+```{r pivwide2bc, fold.output = F}
+motinv_wide <- motinv_sum |> 
+  arrange(SpeciesCode) |> # sorting so columns are alphabetical 
+  select(-ScientificName, -CommonName) |> 
+  pivot_wider(names_from = SpeciesCode,
+              values_from = mean_count, 
+              values_fill = 0)
+
+head(motinv_wide)
+
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>Using ACAD_wetland data, calculate relative % cover of species within each site. This one is challenging! </strong>
+<strong>CHALLENGE: Use the `motinv_sum` data frame from the "Summarizing with dplyr" tab to pivot on Year and mean_count, fill the NAs with 0s, and add "yr_" to the column names to prevent column names starting with numbers. If you don't have the motinv_sum data frame handy, run the code below to create it. <br>
+Hint: Drop the se_counts column before you pivot.
+</strong>
+
+```{r motinvredoc1}
+# Fix the data issues again
+motinv <- motinv |> 
+  mutate(NoDamage_fix = replace(No.Damage, Damage == 1960, 196),
+         Damage_fix = as.numeric(replace(Damage, Damage == "PM", NA)),
+         total_count = NoDamage_fix + Damage_fix) |> 
+  filter(QAQC == FALSE)
+
+# Summarize the mean count per plot of each species by year and community type
+motinv_sum <- motinv |> 
+  summarize(mean_count = sum(total_count)/5, # 5 plots per site
+            se_counts = sd(total_count)/sqrt(5), # 5 plots per site
+            .by = c(SiteCode, Year, CommunityType, 
+                    ScientificName, CommonName, SpeciesCode))
+```
+
 <details><summary class='code2'>Answer</summary>
-<p class = 'code'>First sum site-level cover using mutate to return a value for every original row.</p>
-```{r wetrelcovc1, eval = F}
-ACAD_wetland <- ACAD_wetland |> group_by(Site_Name, Year) |> 
-  mutate(Site_Cover = sum(Ave_Cov)) |> 
-  ungroup() # good practice to ungroup after group.
+```{r pivwide2c1c, fold.output = F}
+motinv_wide_yr <- motinv_sum |> 
+  arrange(Year) |> # sorting so columns are alphabetical 
+  select(-se_counts) |> 
+  pivot_wider(names_from = Year,
+              values_from = mean_count, 
+              values_fill = 0, 
+              names_prefix = "yr_")
 
-table(ACAD_wetland$Site_Name, ACAD_wetland$Site_Cover) # check that each site has a unique value.
-head(ACAD_wetland)
-```
-
-<p class = 'code'>Next calculate relative cover grouped on Site_Name, Year, Latin_Name, and Common </p> 
-```{r wetrelcov2c1, eval = F}
-# Create new dataset because collapsing rows on grouping variables
-# Using group_by() and summarize()
-ACAD_wetland_relcov <- ACAD_wetland |> group_by(Site_Name, Year, Latin_Name, Common) |> 
-  summarize(rel_cov = (Ave_Cov/Site_Cover)*100,
-            .groups = 'drop') |> 
-  ungroup()
-
-```
-
-<p class = 'code'>Check that relative cover sums to 100% within each site</p>
-```{r wetrelcovcheckc1, eval = F}
-# Using summarize(.by = ) 
-ACAD_wetland_relcov2 <- ACAD_wetland |> #group_by(Site_Name, Year, Latin_Name, Common) |> 
-  summarize(rel_cov = Ave_Cov/Site_Cover, 
-            .by = c("Site_Name", "Year", "Latin_Name", "Common"))
-
-# Check that your relative cover sums to 100 for each site
-relcov_check <- ACAD_wetland_relcov2 |> group_by(Site_Name, Year) |> 
-  summarize(tot_relcov = sum(rel_cov)*100, .groups = 'drop')
-table(relcov_check$tot_relcov) # they should all be 100
-
+head(motinv_wide_yr)
 ```
 </details>
 </div>
-</details>
-<br>
-<details open><summary class = 'drop'>Plotting with ggplot2</summary>
+
+
 <div class="alert alert-info">
-<strong>Recreate the plot below (or customize your own plot). </strong>
-Note that the fill color is "#0080FF", and the shape is 21, and the theme is classic. The linewidth = 0.75, and linetype = 'dashed' .
-
-```{r pq1c, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center', eval = F}
-pq <- 
-  ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
-    geom_line(linewidth = 0.75, linetype = 'dashed') + 
-    geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
-    labs(x = "Year", y = "Annual visits in 1,000s") +
-    scale_y_continuous(limits = c(2000, 4500),
-                       breaks = seq(2000, 4500, by = 500)) + 
-    scale_x_continuous(limits = c(1994, 2024),
-                       breaks = c(seq(1994, 2024, by = 5))) + 
-    theme_classic()
-pq
-```
+<strong>CHALLENGE: Pivot the motinv_wide_yr data frame on the years columns, and remove the "yr_" from the year names using `names_prefix = 'yr_'`. </strong>
 
 <details><summary class='code2'>Answer</summary>
-```{r pq1ac, eval = F, results = 'hide', eval = F}
-ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
-  geom_line(linewidth = 0.75, linetype = 'dashed') + 
-  geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
-  labs(x = "Year", y = "Annual visits in 1,000s") +
-  scale_y_continuous(limits = c(2000, 4500),
-                     breaks = seq(2000, 4500, by = 500)) + 
-  scale_x_continuous(limits = c(1994, 2024),
-                     breaks = c(seq(1994, 2024, by = 5))) + 
-  theme_classic()
+```{r pivwide2a1c, fold.output = F}
+motinv_long_yr <- pivot_longer(motinv_wide_yr, 
+                               cols = -c(SiteCode, CommunityType, ScientificName, 
+                                         CommonName, SpeciesCode),
+                               names_to = "Year", 
+                               values_to = "mean_counts", 
+                               names_prefix = "yr_") # drops this string from values
+```
+</details>
+</div>
+
+</details><br>
+
+
+<details open><summary class='drop'>Joining Tables</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: Join the motile invertebrate count data frame to the motile invertebrate species table to get Invasive and Exotic columns added to the data. </strong>
+
+<p class = 'code'>Import motinv data frames</p>
+```{r challtr1cc}
+# Read in motinv data if you haven't yet
+motinv <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
+head(motinv)
+
+# Read in species table
+motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
+head(motspp)
+
+intersect(names(motinv), names(motspp)) # 3 columns in common
+```
+
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2ac1}
+# left join species to motinv, because don't want to include species not found in count data
+motinv_spp <- left_join(motinv, 
+                        motspp, 
+                        by = c("SpeciesCode", "ScientificName", "CommonName"))
+
+head(motinv_spp)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Find species in motspp data frame that don't have a match in the motinv data frame.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challtr2bc1c}
+# anti join of 
+anti_join(motspp, motinv, by = c("SpeciesCode", "ScientificName", "CommonName"))
 
 ```
 </details>
 </div>
-<br>
+
+</details><br>
+
+<details open><summary class='drop'>Dates and Times</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you return date1 as YYYYMMDD (20260312)?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald31dc1}
+format(date1, format = "%Y%m%d")
+```
 </details>
-<br>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you create a list of dates in 2026 that are evenly spaced by 3 months?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32bc1}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "3 months")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you create a list of dates in 2026 that are evenly spaced by 1 week?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r chald32cbc1}
+date_list <- as.Date(c("01/01/2026", "12/31/2026"), format = "%m/%d/%Y") 
+seq.Date(date_list[1], date_list[2], by = "1 week")
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you extract the month as a number ranging from 1-12 in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdatec1}
+temp_data$month_num <- as.numeric(format(temp_data$timestamp, "%m"))
+head(temp_data)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you extract the Julian date in temp_data?.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r challdatejc1}
+temp_data$julian <- as.numeric(format(temp_data$timestamp, "%j"))
+head(temp_data)
+```
+</details>
+</div>
+</details><br>
+
+
+
+
