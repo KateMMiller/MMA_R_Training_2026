@@ -10,22 +10,8 @@ output:
 #------------------------------------
 ```
 
-```{r testcodegg, eval = F, echo = F}
-ggplot(motinv_sum, aes(x = Year, y = mean_count, fill = SpeciesCode,
-                        color = SpeciesCode)) +
-   geom_point() +
-   geom_errorbar(aes(ymin = mean_count - se_counts,
-                 ymax = mean_count + se_counts)) +
-   facet_wrap(~CommunityType) +
-   scale_color_brewer(palette = "Set1") + theme_bw()
-
-
-```
-
-
-
 ```{r optchunk, echo = F}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.align = 'center', fig.height = 3, fig.width = 5)
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.align = 'center', fig.height = 4, fig.width = 6)
 ```
 
 #### Intro to `ggplot2`
@@ -50,253 +36,238 @@ Important concepts with `ggplot2`:
 </details>
 <br>
 
-<details open><summary class='drop'>Plot Park Visitation in Acadia NP</summary>
-We will build our first ggplot object step-by-step to demonstrate how each component contributes to the final plot. Our first ggplot object will create a line graph of trends in visits to Acadia National Park from 1994 to 2024.
+#### Building a ggplot 
+<details open><summary class = "drop">Building up a ggplot</summary>
+We're going to use the summarized photo plot cover to create the plot below, and will work through the code one piece at a time. 
 
-<p class = 'code'>Step 1. Import the visitation data and load ggplot2</p>
-```{r import_gvdata, echo = TRUE, eval = F, message = FALSE, warning = FALSE}
-library(ggplot2)
-library(dplyr) # for filter 
-visits <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/ACAD_annual_visits.csv")
-```
-```{r import_gvdata2, echo = F, results = 'hide', eval = T, message = FALSE, warning = FALSE}
-library(ggplot2)
-visits <- read.csv("./data/ACAD_annual_visits.csv")
-```
+```{r echo = F, fig.height = 5, fig.width = 7, fold.plot = F}
+library(ggplot2) # load ggplot
+pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") # import data
 
-<p class = 'code'>Step 2. Look over the data for any potential problems.</p>
+cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
+         "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
+         "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")
 
-```{r view_data, eval = F, message = FALSE, warning = FALSE}
-# Examine the data to understand data structure, data types, and potential problems
-head(visits) 
-summary(visits)
-table(visits$Year) 
-table(complete.cases(visits))
-```
-```{r view_data2, fold.output = F}
-str(visits)
-```
+shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
+          "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
 
-<p class = 'code'>Step 3. Fix the annual visitation variable</p>
-Note that Annual_Visits is treated like a character because there are "," thousands separators. We have to fix that before we can plot the data. There are multiple ways to do this. I'm going to use the `gsub()` function that behaves like `gsub([find "pattern"], [replace with "pattern"], [column to search])`. The empty "" removes the ",". The `as.numeric()` converts a character to numeric. As long as you don't get the "NAs introduced through coersion" warning in the console, all rows in the column of interest were successfully converted to a number.
+xrange <- range(pcov$Year)
 
-```{r fixav2, message = F, warning = F}
-# Base R
-visits$Annual_Visits <- as.numeric(gsub(",", "", visits$Annual_Visits))
-
-# Tidyverse
-library(dplyr) # load package first
-visits <- visits |> mutate(Annual_Visits = as.numeric(gsub(",", "", Annual_Visits)))
-str(visits) #check that it worked
+ggplot(data = pcov, aes(x = Year, y = median_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  #geom_smooth(se = F, span = 0.75) +
+  #geom_line(linewidth = 0.6) +
+  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) +
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Median. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), # turns of major grids
+        panel.grid.minor = element_blank(), # turns off minor grids
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
 ```
 
-<p class = 'code'>Step 4. Create the ggplot template of annual visitation per 1000 visitors over time</p>
-```{r p1, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p <- ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000))
+
+<p class = 'code'>Import photoplot cover data from Ship Harbor</p>
+```{r gg1, eval = F}
+library(ggplot2) # load package
+
+pcov <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import the data set
+
+head(pcov) # check out data set
+```
+
+<p class = 'code'>Create the ggplot template of median cover over time.</p>
+I'm going to assign this to an object named `p`. We're going to have unique colors and shapes for the CoverCode column in our data, so we need to indicate that in the `aes()` along with our x and y variables. If we didn't include color, fill, and shape in the `aes()`, the points would all be the same color (default = black) and shape (default is filled circle)
+```{r gg2, fold.plot = F}
+p <- ggplot(data = pcov, aes(x = Year, y = median_cover, 
+                             color = CoverCode, 
+                             fill = CoverCode,
+                             shape = CoverCode))
+
 p
 ```
 
-<p class = 'code'>Step 5. Add line and point geometry, starting with default, and ending with customized symbols</p>
-The plot below has custom the shape, color (outline), fill, and size of the points, but all points are the same. Note the hexcode used for the fill color. This is a 6 digit code that gives maximum flexibility on selecting colors. I often use <a href="https://htmlcolorcodes/com">HTML color codes</a> to find colors and their associated hexcode.
+<p class = 'code'>Add point and errorbar geometry</p>
+The order of geoms is the order they're drawn. I generally prefer the look of the points after the error bars. 
+```{r gg3, fold.plot = F}
+p2 <- p + 
+  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover)) +
+  geom_point(color = 'dimgrey', size = 2.5) # setting point outline to dark grey (bear with me)
 
-Note that I usually specify the `geom_line()` before the `geom_point()`, because the geoms are drawn in the order they're specified. Specifying the opposite order will make the lines cross over the points and doesn't look as nice. I also made the linewidth a bit thicker than default.
-```{r p2, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p1a <- p + geom_line() + geom_point() # default color and shape to points
-p1a
-
-p1 <- p + 
-  geom_line(linewidth = 0.6) + 
-  geom_point(color = "black", fill = "#82C2a3", size = 2.5, shape = 24)
-p1
-```
-
-<p class = 'code'>Step 6. Fine tune the Y and X axis breaks</p>
-```{r p4, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p2 <- p1 + scale_y_continuous(name = "Annual visitors in 1000's",
-                              limits = c(2000, 4500),
-                              breaks = seq(2000, 4500, by = 500)) + # label at 2000, 2500, ... up to 4500
-           scale_x_continuous(limits = c(1994, 2024),
-                              breaks = c(seq(1994, 2024, by = 5))) # label at 1994, 1999, ... up to 2024
 p2
 ```
 
-<p class = 'code'>Step 7. Change the labels</p>
-```{r p5, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p3 <- p2 + labs(x = "Year", 
-                title = "Annual visitation/1000 people in Acadia NP 1994 - 2024")
+The default colors and symbols in ggplot aren't great. We're going to start by specifying our own colors and shapes manually. Then we'll use color palettes from different packages. Specifying shapes in R requires knowing the shape's symbol code. To view that, run `?points`, or search "pch in R plot" and you'll get the info below. Note that 0-14 are just lines with no fill. To change their color, use the color aesthetic. Symbols 15-20 are solid, but also use color to change their aesthetic. Symbols 21-25 have both a color (outline) and fill (inside) aesthetic.
+
+<center><img src = "./images/r_pch_symbols.png" alt = 'R pch symbols' style = "width:250px;background:white;"><br>
+<p class = "cap">Figure of symbol codes in R.</p></center>
+<br>
+
+<p class = 'code'>Specify colors and shapes</p>
+```{r gg4, fold.plot = F}
+p3 <- p2 + 
+  scale_fill_manual(values = c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
+                               "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
+                               "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")) +
+  scale_color_manual(values = c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
+                               "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
+                               "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")) +
+  scale_shape_manual(values = c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
+                                "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25))
 p3
 ```
-<br>
-Note how the axis labels can be specified either in the scale (step 4) or in the `labs()` function.
+The code above was redundant and tedious to code. Changing colors means changing them in two places. Imagine you're making one of these plots for every rocky intertidal site in Acadia. It quickly becomes cumbersome. A more efficient way to code this is below. 
 
-<p class = 'code'>Step 8. Modify the theme using built-in themes</p>
-There are built in themes that change the default formatting of the plot. Here I show `theme_bw()`, but there are many options. Play around with the other themes to get a feel for the options: `theme_linedraw()`, `theme_light()`, `theme_dark()`, `theme_minimal()`, `theme_classic()`, `theme_void()`. The two I use most often are `theme_bw()` and `theme_classic()`.  There's a package called `ggthemes` that you can install with even more themes. You can also create your own themes.
+<p class = 'code'>Assign colors and shapes to variables </p>
+Adding the name to the scales renames the legend title. But to keep the shapes and colors in the same legend, you have to name all of them the same name.
+```{r gg4b, fold.plot = F}
+cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
+         "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
+         "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")
 
-```{r p6, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p4 <- p3 + theme_bw() 
+shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
+          "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
+
+p3 <- p2 + 
+  scale_fill_manual(values = cols, name = "Species Group") +
+  scale_color_manual(values = cols, name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group")
+  
+p3
+```
+
+<p class = 'code'>Improve axes ticks and labels </p>
+```{r gg5, fold.plot = F}
+# Determine year range (so not hard coded/easily updated in future)
+xrange <- range(pcov$Year)
+
+p4 <- p3 + 
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Median. Percent Cover") 
+  
 p4
 ```
 
-<p class ='code'>Or change theme elements manually</p>
-Note that `?theme` takes you to the help that shows all the options. 
+<p class = 'code'>Improve theme components</p>
+```{r gg6, fold.plot = F} 
+p5 <- p4 +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), # angle x text
+          panel.grid.major = element_blank(), # turns of major grids
+          panel.grid.minor = element_blank(), # turns off minor grids
+          panel.background = element_rect(fill = 'white', color = 'dimgrey'),# makes background white 
+          legend.key = element_blank()) # removes square fill around symbols in legend
 
-```{r p5b, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-p4b <- p3 + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), # make x axis text bigger and angle
-                  panel.grid.major = element_blank(), # turns of major grids
-                  panel.grid.minor = element_blank(), # turns off minor grids
-                  panel.background = element_rect(fill = 'white', color = 'dimgrey'), # panel white w/ grey border
-                  plot.margin = margin(2, 3, 2, 3), # increase white margin around plot 
-                  title = element_text(size = 10) # reduce title size 
-                  )
-
-p4b
+p5
 ```
-<br>
-Note the order of margins in ggplot is Top, Right, Bottom, Left, which sounds like trouble. 
 
-<p class = 'code'>Putting it all together</p>
-```{r combg, fold.plot = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
-  geom_line() + 
-  geom_point(color = "black", fill = "#82C2a3", size = 2.5, shape = 24) +
-  labs(x = "Year", title = "Annual visitation/1000 people in Acadia NP 1994 - 2024") +
-  scale_y_continuous(name = "Annual visitors in 1000's",
-                     limits = c(2000, 4500),
-                     breaks = seq(2000, 4500, by = 500)) + 
-  scale_x_continuous(limits = c(1994, 2024),
-                     breaks = c(seq(1994, 2024, by = 5))) + 
-  theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1), # make x axis text bigger and angle
+<p class = 'code'>Facet on CommunityType</p>
+```{r gg7, fold.plot = F, fig.height = 5, fig.width = 7,}
+p6 <- p5 + facet_wrap(~CommunityType)
+
+p6  
+
+```
+
+<p class = 'code'>Full code with code to save figure</p>
+```{r gg8, fold.plot = F, fig.height = 5, fig.width = 7,}
+ggplot(data = pcov, aes(x = Year, y = median_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) +
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Median. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
         panel.grid.major = element_blank(), # turns of major grids
         panel.grid.minor = element_blank(), # turns off minor grids
-        panel.background = element_rect(fill = 'white', color = 'dimgrey'), # make panel white w/ grey border
-        plot.margin = margin(2, 3, 2, 3), # increase white margin around plot 
-        title = element_text(size = 10) # reduce title size 
-        )
-  
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+```{r ggs, eval = F}
+ggsave("SHIHAR_photoplot_cover.png", height = 8, width = 7)
 ```
 
-<div class="alert alert-info">
-<strong>CHALLENGE: Recreate the plot below (or customize your own plot). </strong>
-Note that the fill color is "#0080FF", and the shape is 21, and the theme is classic. The linewidth = 0.75, and linetype = 'dashed'. 
-
-```{r pq1, fold.plot = F, echo = F, fig.height = 3, fig.width = 5, fig.align = 'center'}
-pq <- 
-  ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
-    geom_line(linewidth = 0.75, linetype = 'dashed') + 
-    geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
-    labs(x = "Year", y = "Annual visits in 1,000s") +
-    scale_y_continuous(limits = c(2000, 4500),
-                       breaks = seq(2000, 4500, by = 500)) + 
-    scale_x_continuous(limits = c(1994, 2024),
-                       breaks = c(seq(1994, 2024, by = 5))) + 
-    theme_classic()
-pq
-```
-
-<details><summary class='code2'>Answer</summary>
-```{r pq1a, eval = F, results = 'hide'}
-ggplot(data = visits, aes(x = Year, y = Annual_Visits/1000)) +
-  geom_line(linewidth = 0.75, linetype = 'dashed') + 
-  geom_point(color = "black", fill = "#0080FF", size = 2.5, shape = 21) +
-  labs(x = "Year", y = "Annual visits in 1,000s") +
-  scale_y_continuous(limits = c(2000, 4500),
-                     breaks = seq(2000, 4500, by = 500)) + 
-  scale_x_continuous(limits = c(1994, 2024),
-                     breaks = c(seq(1994, 2024, by = 5))) + 
-  theme_classic()
-
-```
-</details>
-</div>
-</details>
-</br>
-
-<details open><summary class='drop'>Other geometries</summary>
-So far, the data we've plotted doesn't include any kind of variance. In many cases, we do want to show the distribution of data among years, parks or other categories. That's where plots like bar plots with error bars and boxplots can be handy. 
-
-First we'll look at how to make barplots with error bars. The visitation data doesn't have error bars, so we'll use a water chemistry dataset, and filter it to only include Jordan Pond and Dissolved Oxygen. 
-
-<details open><summary class = 'drop2'>Prep the data</summary>
-<p class = 'code'>Load the data and packages</p>
-```{r chemd2, eval = F}
-library(dplyr)
-library(ggplot2)
-chem <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_water_chemistry_data.csv")
-```
-```{r chemd22, echo = F}
-library(dplyr)
-chem <- read.csv("./data/NETN_water_chemistry_data.csv")
-```
-
-<p class = 'code'>Filter on Jordan Pond and Dissolved Oxygen and extract the month from the date in a VERY hacky way.</p>
-We'll learn about working with dates in a more formal way on Day 3.
-```{r chemd2_jord}
-jordDO <- chem |> 
-  filter(SiteCode == "ACJORD") |> 
-  filter(Parameter == "DO_mgL") |> 
-  mutate(month = as.numeric(gsub("/", "", substr(EventDate, 1, 2))))
-```
-```{r chemd2_check, eval = F}
-head(jordDO)
-unique(jordDO$SiteCode) # check filter worked
-unique(jordDO$Parameter) # check filter worked
-```
-
-Let's assume that calculating mean and standard error assuming the data were normally distributed is appropriate. The code below calculates mean and standard error by month, so we can plot error bars later.
-
-<p class = 'code'>Calculate standard error of DO by month </p>
-```{r chemd2_se}
-jordDO_sum <- jordDO |> group_by(month) |> 
-  summarize(mean_DO = mean(Value),
-            num_meas = n(),
-            se_DO = sd(Value)/sqrt(num_meas))
-jordDO_sum
-```
-</details>
-
-<details open><summary class='drop2'>Bar Plots</summary>
-Bar charts with error bars are a common way to show mean and variance. Bar charts y-axes should always start at 0, which doesn't necessarily allow you to see the patterns in the data all that well. Boxplots are often a better approach in that case, which we'll show next.
-
-A couple of notes on the code below:
-<ul>
-<li>For bar charts, if you want the value (mean_DO) to be the bar height, use `geom_col()`. If instead, you want the bar chart to be proportional to the number of cases in each group, use `geom_bar(stat = 'count')`. </li>
-<li>The `width = 0.75` makes the bar width narrower allowing some white space between the bars.</li>
-<li>Setting x to NULL in the `labs()` means the x axis won't include a label.</li>
-<li>This isn't the best use of bar plots, but you get the idea on how to use them.</li>
-</ul>
-<p class = 'code'>Bar plot of Jordan Pond average DO with 95% CI error bars</p>
-```{r barp, fold.plot = F}
-ggplot(data = jordDO_sum, aes(x = month, y = mean_DO)) +
-  geom_col(fill = "#74AAE3", color = "dimgrey", width = 0.75) +
-  geom_errorbar(aes(ymin = mean_DO - 1.96*se_DO, ymax = mean_DO + 1.96*se_DO), 
-                width = 0.75) +
-  theme_bw() +
-  labs(x = NULL, y = "Dissolved Oxygen mg/L") +
-  scale_x_continuous(limits = c(4, 11),
-                     breaks = c(seq(5, 10, by = 1)),
-                     labels = c("May", "Jun", "Jul", 
-                                "Aug", "Sep", "Oct"))
-
-```
-</details>
-<details open><summary class='drop2'>Boxplots</summary>
-Boxplots are another way to show variance in responses. In most cases, the middle line of a boxplot is the median. The lower and upper limits of the box represent the 25th and 75th percentiles. The lower and upper whiskers are 1.5 times the interquartile range (the 25th to 75th percentiles), or the min/max of the data, whichever is smaller. Points beyond the whiskers are considered outlying points. In this case, I turned off the outlying points, because I plotted the actual data behind the boxplots as slightly transparent. This is good practice to see how points are distributed.  
-
-<p class = 'code'>Boxplots of Jordan Pond DO</p>
-```{r boxp, fold.plot = F}
-ggplot(data = jordDO, aes(x = month, y = Value, group = month)) +
-  geom_boxplot(outliers = F) + 
-  geom_point(alpha = 0.2) +
-  theme_bw() +
-  labs(x = NULL, y = "Dissolved Oxygen mg/L") +
-  scale_x_continuous(limits = c(4, 11),
-                     breaks = c(seq(5, 10, by = 1)),
-                     labels = c("May", "Jun", "Jul", 
-                                "Aug", "Sep", "Oct"))
-
-```
-</details>
 </details>
 <br>
+
+#### Other geometries
+<details open><summary class = 'drop'>Variations on figures</summary>
+<p class = 'code'>Add line geometry to figure</p>
+```{r gg11, fold.plot = F}
+p6 + geom_line(linewidth = 0.8)
+```
+
+<p class = 'code'>Add smoother to figure</p>
+```{r gg12, fold.plot = F}
+p6 + geom_smooth(se = F, span = 0.75)
+```
+
+<p class = 'code'>Move legend to the bottom</p>
+```{r gg13, fold.plot = F}
+p6 + theme(legend.position = 'bottom')
+```
+
+<p class = 'code'>Stacked bars instead of points </p>
+```{r gg9, fold.plot = F}
+ggplot(data = pcov, aes(x = Year, y = median_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_bar(stat = 'identity', position = 'fill', color = 'dimgrey') +
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Median. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), # turns of major grids
+        panel.grid.minor = element_blank(), # turns off minor grids
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+
+
+
+```
+
+<p class = 'code'>Bars with error bars instead of points (note I filtered on Barnacle CommunityType) </p>
+```{r gg10, fold.plot = F}
+ggplot(data = pcov |> filter(CommunityType == "Barnacle"), # note filter 
+       aes(x = Year, y = median_cover, 
+           color = CoverCode, group = CoverCode,
+           fill = CoverCode, shape = CoverCode)) +
+  geom_bar(stat = 'identity', position = 'dodge', color = 'dimgrey') + # new line
+  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Median. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CoverCode) # Different facet
+
+
+```
+
+</details><br>
+
 
 

@@ -29,17 +29,17 @@ Knowing how to code is only part of being a good coder. Below are general best p
 library(dplyr) # for mutate and filter
 
 # parameters
-analysis_year <- 2017
+analysis_year <- 2023
 
-# data sets
-df <- read.csv("./data/ACAD_wetland_data_clean.csv")
+# import data set
+photo_dat <- read.csv("./data/SHIHAR_photoplot_cover.csv")
 
-# Filtering on RAM sites, create new site as a number column, and only include data from specified year
-df2 <- df |> filter(Site_Type == "RAM") |> 
-             filter(Year == analysis_year) |> 
-             mutate(site_num = as.numeric(substr(Site_Name, 5, 6)))
+# Filtering on Barnacle community type and analysis year
+photo_dat2 <- photo_dat |> filter(CommunityType == "Barnacle") |> 
+                           filter(Year == analysis_year) 
 ```
 </details>
+
 <details open><summary class = 'drop2'>Descriptive names and consistent case</summary>
 Object names must start with a letter and can only contain letters, numbers, underscore, and period. Spaces aren't allowed in object names, and are best avoided in column names of data frames too. Descriptive object names will help you digest code, and often you'll want more than one word in the name. There are multiple cases that people tend to use, the most common of which tends to be snake_case. Other examples are below.
 
@@ -53,16 +53,16 @@ whyWOULDyouDOthisTOsomeone # excess capitalization is a pain
 <details open><summary class = 'drop2'>Thoughtful word ordering</summary>
 Ordering words in names, so that objects that are similar or derived from each other sort together. This also makes coding easier, as like objects will sort together in the popups that you see as you code.
 
-```{r pops}
+```{r pops, eval = F}
 # good word order
-ACAD_wet <- data.frame(year = 2020:2025, plot = 1:6)
-ACAD_wet2 <- ACAD_wet |> filter(year > 2020)
-ACAD_wet3 <- ACAD_wet2 |> mutate(plot_type = "RAM")
+ACAD_rocky <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_rocky2 <- ACAD_rocky |> filter(year > 2020)
+ACAD_rocky3 <- ACAD_rocky2 |> mutate(plot_type = "vital signs")
 
 # bad word order
-wet_ACAD <- data.frame(year = 2020:2025, plot = 1:6)
-ACAD_after_2020 <- wet_ACAD |> filter(year > 2020)
-RAM_ACAD_2020 <- ACAD_after_2020 |> mutate(plot_type = "RAM")
+rocky_ACAD <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_after_2020 <- rocky_ACAD |> filter(year > 2020)
+vital_ACAD_2020 <- ACAD_after_2020 |> mutate(plot_type = "vital signs")
 
 ```
 </details>
@@ -71,12 +71,12 @@ It's helpful to balance descriptive names with length. The longer the object nam
 
 ```{r long_names, eval = F}
 # super long names
-ACAD_wetland_sampling_data <- data.frame(years_plots_were_sampled = c(2020:2025), wetland_plots_sampled = c(1:6))
-ACAD_wetland_sampling_data2 <- ACAD_wetland_sampling_data |> filter(years_plots_were_sampled > 2020)
+ACAD_rocky_intertidal_sampling_data <- data.frame(years_plots_were_sampled = c(2020:2025), wetland_plots_sampled = c(1:6))
+ACAD_rocky_intertidal_sampling_data2 <- rocky_intertidal_sampling_data |> filter(years_plots_were_sampled > 2020)
 
 # shorter still meaningful
-ACAD_wet <- data.frame(year = 2020:2025, plot = 1:6)
-ACAD_wet2 <- ACAD_wet |> filter(year > 2020)
+ACAD_rocky <- data.frame(year = 2020:2025, plot = 1:6)
+ACAD_rocky2 <- ACAD_rocky |> filter(year > 2020)
 ```
 </details>
 

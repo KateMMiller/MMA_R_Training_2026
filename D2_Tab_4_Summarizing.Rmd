@@ -56,9 +56,11 @@ head(pi_dat_mut)
 ```
 Note how `pi_dat_mut` has the same number of rows and all the original columns plus the two we calculated (site-level median, and average % frequency). More often we're interested in reducing the data to one row per grouping level. That's what `summarize()` is for.
 
-<p class = 'code'>Using `summarize()`, calculate the average percent frequency and median elevation by CoverType and Year.</p>
+<p class = 'code'>Using `summarize()`, calculate the average percent frequency, median elevation, min/max of frequency and elevation by CoverType and Year.</p>
 ```{r ttrsummut2, message = F, warning = F, eval = F}
-pi_dat_sum <- pi_dat |> summarize(med_elev_sl = median(med_elev), 
+pi_dat_sum <- pi_dat |> summarize(elev_sl_med = median(med_elev), 
+                                  elev_sl_min = min(med_elev),
+                                  elev_sl_max = max(med_elev),
                                   avg_pct_freq = mean(pct_freq), 
                                   .by = c(SiteCode, Year, CoverType, CoverCode))
 nrow(pi_dat) #314

@@ -108,9 +108,8 @@ if(nrow(inv) > 0){print(paste0("The following invasive species were detected in 
 <details open><summary class = "drop">Test your skills with conditionals</summary>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. <br>
-Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). </strong>
-<details><summary class='code2'>Answer</summary>
+<strong>CHALLENGE: Using the motinv data, create a new column called trophic that indicates whether the species is an herbivore or predator. <br></strong>
+Hint: predator site codes are c("CARMAE", "NUCLAP"), and herbivore site codes are c("LITLIT", "LITOBT", "LITSAX", "TECTES"). <details><summary class='code2'>Answer</summary>
 ```{r wetcond}
 pred <- c("CARMAE", "NUCLAP")
 

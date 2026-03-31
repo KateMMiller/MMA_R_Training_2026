@@ -136,7 +136,7 @@ pi_dat <- read.csv(
 ```{r ggplot, child = "D3_Tab_2_Intro_to_ggplot.Rmd", eval = T}
 ```
 
-```{r D3_ggplot, child = "D3_Tab_3_adv_ggplot.Rmd", eval = T}
+```{r D3_ggplot, child = "D3_Tab_3_adv_ggplot.Rmd", eval = F}
 ```
 
 ```{r D3_bestpr, child = "D3_Tab_4_coding_best_practices.Rmd", eval = T}
@@ -151,7 +151,7 @@ pi_dat <- read.csv(
 ```{r chall_d2, child = "D2_Tab_C1_Challenges.Rmd", eval = T}
 ```
 
-```{r chall_d3, child = "D3_Tab_C1_Challenges.Rmd", eval = T}
+```{r chall_d3, child = "D3_Tab_C1_Challenges.Rmd", eval = F}
 ```
 
 
