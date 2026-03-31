@@ -26,7 +26,7 @@ motinv <- read.csv(
   )
 
 # Motile invert site
-motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")\
+motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
 ```
 
 ```{r motinvd2c1, echo = F}
