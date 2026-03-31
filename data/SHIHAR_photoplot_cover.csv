@@ -1,0 +1,138 @@
+"SiteCode","Year","CommunityType","CoverType","CoverCode","avg_cover","median_cover","min_cover","max_cover","q25_cover","q75_cover"
+"SHIHAR",2022,"Ascophyllum","Barnacle","BARSPP",0.2,0,0,1,0,0
+"SHIHAR",2022,"Ascophyllum","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2022,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",82.4,88,57,96,79,92
+"SHIHAR",2022,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",8.2,1,0,38,0,2
+"SHIHAR",2022,"Barnacle","Barnacle","BARSPP",5,3,0,16,2,4
+"SHIHAR",2022,"Barnacle","Crustose non-coralline","NONCOR",2.4,2,0,7,0,3
+"SHIHAR",2022,"Barnacle","Red algae group","REDGRP",0.2,0,0,1,0,0
+"SHIHAR",2022,"Barnacle","A. nodosum (knotted wrack)","ASCNOD",1,1,0,3,0,1
+"SHIHAR",2022,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",78.8,84,66,85,75,84
+"SHIHAR",2022,"Fucus","Barnacle","BARSPP",2.6,2,0,6,1,4
+"SHIHAR",2022,"Fucus","Crustose non-coralline","NONCOR",0.8,1,0,2,0,1
+"SHIHAR",2022,"Fucus","Red algae group","REDGRP",3.2,1,0,8,1,6
+"SHIHAR",2022,"Fucus","Fucus spp. (Rockweed)","FUCSPP",70.6,71,65,75,69,73
+"SHIHAR",2022,"Red Algae","Red algae group","REDGRP",53.8,58,34,73,37,67
+"SHIHAR",2022,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",0.2,0,0,1,0,0
+"SHIHAR",2018,"Ascophyllum","Barnacle","BARSPP",0.4,0,0,2,0,0
+"SHIHAR",2018,"Ascophyllum","Crustose non-coralline","NONCOR",0.6,0,0,3,0,0
+"SHIHAR",2018,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",84,92,56,95,82,95
+"SHIHAR",2018,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",8.6,0,0,43,0,0
+"SHIHAR",2018,"Barnacle","Barnacle","BARSPP",13.8,14,7,25,9,14
+"SHIHAR",2018,"Barnacle","Crustose non-coralline","NONCOR",2.4,1,0,7,1,3
+"SHIHAR",2018,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",78.8,83,61,84,82,84
+"SHIHAR",2018,"Fucus","Barnacle","BARSPP",0.2,0,0,1,0,0
+"SHIHAR",2018,"Fucus","Crustose non-coralline","NONCOR",1.8,1,0,4,0,4
+"SHIHAR",2018,"Fucus","Fucus spp. (Rockweed)","FUCSPP",92.4,95,85,99,85,98
+"SHIHAR",2018,"Red Algae","Crustose non-coralline","NONCOR",0.6,0,0,3,0,0
+"SHIHAR",2018,"Red Algae","Red algae group","REDGRP",48.2,48,11,83,40,59
+"SHIHAR",2018,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",23.2,7,1,76,1,31
+"SHIHAR",2019,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",85.8,96,49,100,85,99
+"SHIHAR",2019,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",9.6,1,0,46,0,1
+"SHIHAR",2019,"Barnacle","Barnacle","BARSPP",12,8,0,29,4,19
+"SHIHAR",2019,"Barnacle","Crustose non-coralline","NONCOR",3.6,4,0,7,1,6
+"SHIHAR",2019,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",77.4,86,42,99,68,92
+"SHIHAR",2019,"Fucus","Barnacle","BARSPP",0.4,0,0,2,0,0
+"SHIHAR",2019,"Fucus","Crustose non-coralline","NONCOR",1,1,0,2,0,2
+"SHIHAR",2019,"Fucus","Red algae group","REDGRP",0.4,0,0,2,0,0
+"SHIHAR",2019,"Fucus","A. nodosum (knotted wrack)","ASCNOD",0.4,0,0,1,0,1
+"SHIHAR",2019,"Fucus","Fucus spp. (Rockweed)","FUCSPP",94.2,96,89,98,91,97
+"SHIHAR",2019,"Red Algae","Crustose non-coralline","NONCOR",0.4,0,0,2,0,0
+"SHIHAR",2019,"Red Algae","Red algae group","REDGRP",60.4,64,36,82,54,66
+"SHIHAR",2019,"Red Algae","A. nodosum (knotted wrack)","ASCNOD",0.2,0,0,1,0,0
+"SHIHAR",2019,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",14.2,5,1,34,4,27
+"SHIHAR",2015,"Ascophyllum","Barnacle","BARSPP",0.2,0,0,1,0,0
+"SHIHAR",2015,"Ascophyllum","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2015,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",90,94,73,96,93,94
+"SHIHAR",2015,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",0.6,0,0,2,0,1
+"SHIHAR",2015,"Barnacle","Barnacle","BARSPP",33,9,4,93,5,54
+"SHIHAR",2015,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",61.4,88,0,95,31,93
+"SHIHAR",2015,"Fucus","Barnacle","BARSPP",1,0,0,3,0,2
+"SHIHAR",2015,"Fucus","Fucus spp. (Rockweed)","FUCSPP",98.6,100,96,100,97,100
+"SHIHAR",2015,"Red Algae","Red algae group","REDGRP",64.4,62,58,78,58,66
+"SHIHAR",2015,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",5.2,0,0,18,0,8
+"SHIHAR",2023,"Ascophyllum","Barnacle","BARSPP",6.75,5.5,0,16,1.5,10.75
+"SHIHAR",2023,"Ascophyllum","Crustose non-coralline","NONCOR",1.5,1,0,4,0,2.5
+"SHIHAR",2023,"Ascophyllum","Red algae group","REDGRP",0.5,0,0,2,0,0.5
+"SHIHAR",2023,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",76.75,72.5,65,97,68,81.25
+"SHIHAR",2023,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",7.5,1,0,28,0.75,7.75
+"SHIHAR",2023,"Barnacle","Barnacle","BARSPP",4.2,5,1,7,2,6
+"SHIHAR",2023,"Barnacle","Crustose non-coralline","NONCOR",2.4,2,2,3,2,3
+"SHIHAR",2023,"Barnacle","Red algae group","REDGRP",0.6,0,0,3,0,0
+"SHIHAR",2023,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",78.6,86,39,93,84,91
+"SHIHAR",2023,"Fucus","Barnacle","BARSPP",1,0,0,4,0,1
+"SHIHAR",2023,"Fucus","Crustose non-coralline","NONCOR",2,2,0,4,2,2
+"SHIHAR",2023,"Fucus","Red algae group","REDGRP",0.8,0,0,3,0,1
+"SHIHAR",2023,"Fucus","Fucus spp. (Rockweed)","FUCSPP",87.6,88,84,91,86,89
+"SHIHAR",2023,"Red Algae","Crustose non-coralline","NONCOR",0.8,0,0,4,0,0
+"SHIHAR",2023,"Red Algae","Red algae group","REDGRP",44.2,37,30,64,31,59
+"SHIHAR",2023,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",12.2,0,0,47,0,14
+"SHIHAR",2014,"Ascophyllum","Barnacle","BARSPP",0.8,0,0,3,0,1
+"SHIHAR",2014,"Ascophyllum","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2014,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",72.2,78,42,89,73,79
+"SHIHAR",2014,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",5.2,5,0,13,0,8
+"SHIHAR",2014,"Barnacle","Barnacle","BARSPP",75.4,80,47,90,77,83
+"SHIHAR",2014,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",13,10,0,44,0,11
+"SHIHAR",2014,"Fucus","Barnacle","BARSPP",2.2,2,0,6,0,3
+"SHIHAR",2014,"Fucus","Crustose non-coralline","NONCOR",1.8,1,0,5,1,2
+"SHIHAR",2014,"Fucus","Red algae group","REDGRP",0.2,0,0,1,0,0
+"SHIHAR",2014,"Fucus","Fucus spp. (Rockweed)","FUCSPP",85.6,85,80,90,83,90
+"SHIHAR",2014,"Red Algae","Red algae group","REDGRP",73.4,79,51,82,76,79
+"SHIHAR",2014,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",1,0,0,5,0,0
+"SHIHAR",2013,"Ascophyllum","Barnacle","BARSPP",0.2,0,0,1,0,0
+"SHIHAR",2013,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",81.4,87,67,95,69,89
+"SHIHAR",2013,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",7.4,4,0,24,0,9
+"SHIHAR",2013,"Barnacle","Barnacle","BARSPP",86.4,84,83,93,83,89
+"SHIHAR",2013,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",0.6,0,0,3,0,0
+"SHIHAR",2013,"Fucus","Barnacle","BARSPP",0.8,0,0,3,0,1
+"SHIHAR",2013,"Fucus","Red algae group","REDGRP",0.4,0,0,2,0,0
+"SHIHAR",2013,"Fucus","Fucus spp. (Rockweed)","FUCSPP",91,91,84,97,90,93
+"SHIHAR",2013,"Red Algae","Red algae group","REDGRP",73.4,72,59,88,62,86
+"SHIHAR",2013,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",0.4,0,0,2,0,0
+"SHIHAR",2017,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",77.8,85,43,99,68,94
+"SHIHAR",2017,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",10.2,0,0,42,0,9
+"SHIHAR",2017,"Barnacle","Barnacle","BARSPP",10.4,4,1,27,2,18
+"SHIHAR",2017,"Barnacle","Crustose non-coralline","NONCOR",1.4,1,0,4,0,2
+"SHIHAR",2017,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",84.4,87,67,99,76,93
+"SHIHAR",2017,"Fucus","Barnacle","BARSPP",0.4,0,0,1,0,1
+"SHIHAR",2017,"Fucus","Crustose non-coralline","NONCOR",1,1,0,3,0,1
+"SHIHAR",2017,"Fucus","Red algae group","REDGRP",0.2,0,0,1,0,0
+"SHIHAR",2017,"Fucus","Fucus spp. (Rockweed)","FUCSPP",88.8,90,81,96,85,92
+"SHIHAR",2017,"Red Algae","Red algae group","REDGRP",38.6,37,30,58,31,37
+"SHIHAR",2017,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",4,1,0,18,0,1
+"SHIHAR",2016,"Ascophyllum","Red algae group","REDGRP",0.8,0,0,3,0,1
+"SHIHAR",2016,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",84.6,88,61,94,86,94
+"SHIHAR",2016,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",7.8,2,0,30,0,7
+"SHIHAR",2016,"Barnacle","Barnacle","BARSPP",36.6,42,11,59,13,58
+"SHIHAR",2016,"Barnacle","Crustose non-coralline","NONCOR",1.4,0,0,6,0,1
+"SHIHAR",2016,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",53.4,55,17,83,30,82
+"SHIHAR",2016,"Fucus","Fucus spp. (Rockweed)","FUCSPP",99.6,100,98,100,100,100
+"SHIHAR",2016,"Red Algae","Red algae group","REDGRP",76,79,61,86,69,85
+"SHIHAR",2016,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",4.4,3,0,11,0,8
+"SHIHAR",2024,"Ascophyllum","Barnacle","BARSPP",0.2,0,0,1,0,0
+"SHIHAR",2024,"Ascophyllum","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2024,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",76.6,89,51,97,53,93
+"SHIHAR",2024,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",18,2,0,47,1,40
+"SHIHAR",2024,"Barnacle","Barnacle","BARSPP",0.8,0,0,3,0,1
+"SHIHAR",2024,"Barnacle","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2024,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",94.6,94,92,99,92,96
+"SHIHAR",2024,"Fucus","Barnacle","BARSPP",0.6,0,0,2,0,1
+"SHIHAR",2024,"Fucus","Crustose non-coralline","NONCOR",0.8,1,0,1,1,1
+"SHIHAR",2024,"Fucus","Red algae group","REDGRP",0.8,1,0,2,0,1
+"SHIHAR",2024,"Fucus","Fucus spp. (Rockweed)","FUCSPP",87,88,81,92,85,89
+"SHIHAR",2024,"Red Algae","Red algae group","REDGRP",55.2,59,36,76,43,62
+"SHIHAR",2024,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",8.8,2,1,23,1,17
+"SHIHAR",2021,"Ascophyllum","Barnacle","BARSPP",0.4,0,0,2,0,0
+"SHIHAR",2021,"Ascophyllum","Crustose non-coralline","NONCOR",0.2,0,0,1,0,0
+"SHIHAR",2021,"Ascophyllum","A. nodosum (knotted wrack)","ASCNOD",86,95,47,98,93,97
+"SHIHAR",2021,"Ascophyllum","Fucus spp. (Rockweed)","FUCSPP",11.8,2,1,51,2,3
+"SHIHAR",2021,"Barnacle","Barnacle","BARSPP",1.8,1,0,4,1,3
+"SHIHAR",2021,"Barnacle","Crustose non-coralline","NONCOR",1,0,0,3,0,2
+"SHIHAR",2021,"Barnacle","Fucus spp. (Rockweed)","FUCSPP",95.6,95,92,100,93,98
+"SHIHAR",2021,"Fucus","Barnacle","BARSPP",0.8,0,0,3,0,1
+"SHIHAR",2021,"Fucus","Crustose non-coralline","NONCOR",0.4,0,0,1,0,1
+"SHIHAR",2021,"Fucus","Red algae group","REDGRP",0.8,0,0,3,0,1
+"SHIHAR",2021,"Fucus","A. nodosum (knotted wrack)","ASCNOD",0.8,1,0,2,0,1
+"SHIHAR",2021,"Fucus","Fucus spp. (Rockweed)","FUCSPP",93.6,93,88,98,92,97
+"SHIHAR",2021,"Red Algae","Red algae group","REDGRP",62.2,57,41,93,41,79
+"SHIHAR",2021,"Red Algae","Fucus spp. (Rockweed)","FUCSPP",9.2,0,0,38,0,8
