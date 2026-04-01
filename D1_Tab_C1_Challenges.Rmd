@@ -15,10 +15,6 @@ motinv <- read.csv(
   )
 ```
 
-<p class = 'code'>Read in example NETN tree data from url</p>
-```{r c1readtree, eval = F}
-trees <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_tree_data.csv")
-```
 </details><br>
 
 <details open><summary class = 'drop'>Data Structures</summary>
@@ -74,18 +70,18 @@ unique(motinv[motinv$QAQC == TRUE, "Year"])
 
 <details open><summary class = 'drop'>Data Exploration</summary>
 <div class="alert alert-info">
-<strong>CHALLENGE: Using motinv3, how many species are found in PlotName A1 in 2024?</strong>
+<strong>CHALLENGE: Using motinv, how many species are found in PlotName A1 in 2024?</strong>
 <details><summary class='drop2'>Answer</summary>
 Option 1. Use brackets, then calculate the number of rows.
 ```{r chal4c1}
 # with brackets
-A1_2024 <- motinv3[motinv3$PlotName == "A1" & motinv3$Year == 2024, ]
+A1_2024 <- motinv[motinv$PlotName == "A1" & motinv3$Year == 2024, ]
 nrow(A1_2024) # 3
 ```
 Option 2. Use base R subset, then view the data.frame to see.
 ```{r chal4bc1, eval = F}
 # with base R subset
-A1_2024b <- subset(motinv3, PlotName == "A1" & Year == 2024)
+A1_2024b <- subset(motinv, PlotName == "A1" & Year == 2024)
 View(A1_2024b) # 3
 ```
 </details>
@@ -98,14 +94,14 @@ View(A1_2024b) # 3
 Option 1. Subset the data with brackets and use the `sort(unique())` to give an easier to read output.
 ```{r chal5bc1, fold.output = F}
 # OPTION 2
-gcrab <- motinv3[motinv3$Species == "Carcinus maenas",]
+gcrab <- motinv[motinv$Species == "Carcinus maenas",]
 sort(unique(gcrab$Year)) #2019, 2021, 2022, 2023, 2024
 
 ```
 
 Option 2. Subset data then use `table()` to tally the years and number of rows green crabs were found.
 ```{r chal5c1, fold.output = F}
-gcrab2 <- subset(motinv3, Species == "Carcinus maenas")
+gcrab2 <- subset(motinv, Species == "Carcinus maenas")
 table(gcrab2$Year)
 ```
 
@@ -119,13 +115,13 @@ There are multiple ways to do this. Two examples are below.
 
 Option 1. View the data and sort by No.Damage.
 ```{r vmotc1, eval = F}
-View(motinv3)
+View(motinv)
 ```
 
 Option 2. Find the max No.Damage count and subset the data frame
 ```{r maxndc1, fold.output = F}
-max_nd <- max(motinv3$No.Damage, na.rm = TRUE)
-motinv3[motinv3$No.Damage == max_nd,]
+max_nd <- max(motinv$No.Damage, na.rm = TRUE)
+motinv3[motinv$No.Damage == max_nd,]
 ```
 </details>
 </div>
@@ -141,16 +137,16 @@ But first, it's good to create a new data frame when modifying the original data
 <p class = 'code'>Replace 1960 with 196</p>
 ```{r trfxc1, fold.output = F}
 # create copy of motinv data
-motinv_fix <- motinv3
+motinv_fix <- motinv
 
 # find the problematic value, and change it to 196
 motinv_fix$No.Damage[motinv_fix$Year == 2019 & 
-                       motinv_fix$PlotName == "R4" & 
-                       motinv_fix$No.Damage == 1960] <- 196
+                     motinv_fix$PlotName == "R4" & 
+                     motinv_fix$No.Damage == 1960] <- 196
 
 # check your work
-range(motinv3$No.Damage) #1960
-range(motinv_fix$No.Damage) # now 282
+range(motinv$No.Damage) # 0 1960
+range(motinv_fix$No.Damage) # 0 282
 
 ```
 </details>
@@ -159,11 +155,11 @@ range(motinv_fix$No.Damage) # now 282
 
 <details open><summary class = 'drop'>Basic Plotting</summary>
 <div class="alert alert-info">
-<strong>Plot a histogram of percent cover (`Ave_Cov`) in the `ACAD_wetland` </strong>
-
+<strong>CHALLENGE: Plot a histogram of `Damage` in the motinv data frame</strong>
+Hint: make the Damage column numeric first.
 <details><summary class='code2'>Answer</summary>
-```{r wethist2, eval = F}
-hist(ACAD_wetland$Ave_Cov)
+```{r wethistc1, fig.height = 4, fig.width = 6, fold.plot = F}
+hist(as.numeric(motinv$Damage))
 ```
 </details>
 </div>
