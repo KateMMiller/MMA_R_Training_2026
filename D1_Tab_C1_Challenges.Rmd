@@ -94,14 +94,14 @@ View(A1_2024b) # 3
 Option 1. Subset the data with brackets and use the `sort(unique())` to give an easier to read output.
 ```{r chal5bc1, fold.output = F}
 # OPTION 2
-gcrab <- motinv[motinv$Species == "Carcinus maenas",]
+gcrab <- motinv[motinv$ScientificName == "Carcinus maenas",]
 sort(unique(gcrab$Year)) #2019, 2021, 2022, 2023, 2024
 
 ```
 
 Option 2. Subset data then use `table()` to tally the years and number of rows green crabs were found.
 ```{r chal5c1, fold.output = F}
-gcrab2 <- subset(motinv, Species == "Carcinus maenas")
+gcrab2 <- subset(motinv, ScientificName == "Carcinus maenas")
 table(gcrab2$Year)
 ```
 

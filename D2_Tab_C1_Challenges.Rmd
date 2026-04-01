@@ -17,16 +17,15 @@ library(dplyr)
 ```{r readmotinv3bc1, eval = F}
 # Point intercept data
 pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
-)
-
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv")
 # Motile invert count
 motinv <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
-  )
-
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
 # Motile invert site
 motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
+# hobo temp data
+temp_data <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", skip = 1)[,1:3]
+colnames(temp_data) <- c("index", "date_time", "tempF")
 ```
 
 ```{r motinvd2c1, echo = F}
@@ -69,7 +68,7 @@ gcrab
 <details><summary class='drop2'>Answer</summary>
 ```{r maxnddpc1, fold.output = F}
 max_nd <- max(motinv$No.Damage, na.rm = TRUE)
-motinv3 |> filter(No.Damage == max_nd)
+motinv |> filter(No.Damage == max_nd)
 ```
 </details>
 </div>
@@ -310,6 +309,10 @@ anti_join(motspp, motinv, by = c("SpeciesCode", "ScientificName", "CommonName"))
 <details open><summary class='drop'>Dates and Times</summary>
 <div class="alert alert-info">
 <strong>CHALLENGE: How would you return date1 as YYYYMMDD (20260312)?</strong>
+```{r}
+# Create date1 if you don't have it already
+date1 <- as.Date("3/12/2026", format = "%m/%d/%Y")
+```
 <details><summary class='drop2'>Answer</summary>
 ```{r chald31dc1}
 format(date1, format = "%Y%m%d")

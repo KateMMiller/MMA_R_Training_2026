@@ -63,10 +63,9 @@ x_mean <- mean(x) # Corrected
 <li><p class = 'code'>Incorrect use of dimensions with brackets</p></li>
 ```{r brac, error = T}
 # Missing comma to indicate subsetting rows (records)
-ACAD_wetland2 <- ACAD_wetland[!is.na(ACAD_wetland$Site_Name)]
+motinv <- motinv[!is.na(motinv$SiteCode)]
 # Correct
-ACAD_wetland2 <- ACAD_wetland[!is.na(ACAD_wetland$Site_Name), ]
-
+motinv <- motinv[!is.na(motinv$SiteCode),]
 ```
 </ol>
 

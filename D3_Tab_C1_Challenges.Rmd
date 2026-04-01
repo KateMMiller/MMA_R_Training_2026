@@ -31,6 +31,7 @@ shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
 xrange <- range(pcov$Year)
 
 ```
+
 </details><br>
 
 <details open><summary class = 'drop'>Building a ggplot object</summary>
@@ -119,6 +120,31 @@ ggplot(data = pcov, aes(x = Year, y = avg_cover,
 <details open><summary class = 'drop'>Improve formatting</summary>
 <div class="alert alert-info">
 <strong>CHALLENGE: How would you change the smoother in the code below from LOESS to linear model and make the line dashed? Hint: method = 'lm'.</strong>
+<br>
+Code for p6 if you don't have it.
+```{r p6c1b}
+p6 <- ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) +
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Avg. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), # turns of major grids
+        panel.grid.minor = element_blank(), # turns off minor grids
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+
+```
+
+
 ```{r gg12c1, results = 'hide'}
 p6 + geom_smooth(se = F, span = 0.75)
 ```
@@ -143,7 +169,26 @@ p6 + theme(legend.title = element_text(size = 12, face = 'bold'),
 <details open><summary class = 'drop'>Palettes</summary>
 <div class="alert alert-info">
 <strong>CHALLENGE: How would you specify the 'RdYlBu' palette instead of the ones used above?</strong><br>
-Hint: Start with p_pal to save time coding.
+Hint: Start with p_pal to save time coding. Code below for p_pal if you don't have it.
+```{r paplc1}
+p_pal <- ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) + 
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = "Year", y = "Avg Percent Cover") + # changed this line
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+
 <details><summary class='drop2'>Answer</summary>
 ```{r challpalc1, fig.height = 4.5, fig.width = 7}
 p_pal +  scale_color_brewer(name = "Species Group", palette = "RdYlBu", 
@@ -154,7 +199,20 @@ p_pal +  scale_color_brewer(name = "Species Group", palette = "RdYlBu",
 
 <div class="alert alert-info">
 <strong>CHALLENGE: Create your own palette with at least three colors.</strong><br>
-Hint: Start with p_heat to save time coding.
+Hint: Start with p_heat to save time coding. Code below, if you don't have it.
+```{r pheatc1}
+# Create p_heat for 'palettes' section
+p_heat <- 
+ggplot(chem, aes(x = mon, y = year, color = Temp_F, fill = Temp_F)) + 
+  theme_bw() +
+  geom_tile() + 
+  labs(y = "Year", x = "Month") +
+  scale_x_continuous(breaks = c(5, 6, 7, 8, 9, 10),
+                     limits = c(4, 11), 
+                     labels = month.abb[5:10]) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
 <details><summary class='drop2'>Answer</summary>
 ```{r challpal2dc1, fig.height = 4.5, fig.width = 7}
 p_heat + scale_color_gradient2(low = "#3E693D", mid = "#FDFFC7", high = "#7A6646", 
