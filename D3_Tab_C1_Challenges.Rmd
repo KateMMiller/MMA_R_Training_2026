@@ -1,7 +1,5 @@
 #### Day 3 Questions
 <details open><summary class='drop'>Load Data and Packages</summary>
-<br>
-
 ```{r day3_ch, echo = F, include = F}
 #------------------------------------
 #       Day 3: Challenges Code 
@@ -9,120 +7,147 @@
 ```
 
 <p class = 'code'>Load packages and prep data for ggplot sections</p>
-```{r loadwdat}
-# Water chemistry data for ggplot section
+```{r loaddatc}
+# packages
 library(dplyr)
 library(ggplot2)
 library(patchwork) # for arranging ggplot objects
 library(RColorBrewer) # for palettes
 library(viridis) # for palettes
-chem <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/NETN_water_chemistry_data.csv")
 
-chem <- chem |> mutate(date = as.Date(EventDate, "%m/%d/%Y"),
-                       year = as.numeric(format(date, "%Y")),
-                       mon = as.numeric(format(date, "%m")),
-                       doy = as.numeric(format(date, "%j"))) 
+# load data
+pcov <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import data
 
-ACAD_lakes <- c("ACBUBL", "ACEAGL", "ACECHO", "ACJORD", 
-                "ACLONG", "ACSEAL", "ACUHAD", "ACWHOL")
+# define color and shape objects
+cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
+         "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
+         "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")
 
-lakes_temp <- chem |> filter(SiteCode %in% ACAD_lakes) |> 
-  filter(Parameter %in% "Temp_F") 
+shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
+          "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
+
+# Set x axis range
+xrange <- range(pcov$Year)
+
 ```
-</details>
 </details><br>
 
-<details open><summary class='drop'>Customizing ggplot</summary>
+<details open><summary class = 'drop'>Building a ggplot object</summary>
 <div class="alert alert-info">
-<strong>CHALLENGE: Review labels from Day 2. How would you change the X-axis label to "Year", and the Y-axis label to "Temp. (F)"?</strong>
+<strong>CHALLENGE: Using the full plot code above, make the point size 1.5.</strong>
 <details><summary class='drop2'>Answer</summary>
-```{r challd3labd3}
-ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
-                       fill = SiteCode, shape = SiteCode)) + 
-  theme_bw() +
-  geom_point(color = "dimgrey", size = 2) +
-  scale_color_manual(values = site_cols, name = "Lake") +
-  scale_fill_manual(values = site_cols, name = "Lake") +
-  scale_shape_manual(values = site_shps, name = "Lake") +
-  labs(x = "Year", y = "Temp. (F)") # answer
+```{r gga1c1}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 1.5) + # changed this line
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Avg. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the full plot code above, make the error bars wider.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga2c2}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 1.2) + # changed this line
+  geom_point(color = "dimgrey", size = 2.5) + 
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") + 
+  scale_shape_manual(values = shps, name = "Species Group") + 
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Avg. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the full plot code above, change the x axis label to "Year".</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga3c1}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) + 
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = "Year", y = "Avg Percent Cover") + # changed this line
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+
+</details>
+</div>
+</details><br>
+
+<details open><summary class = 'drop'>Improve formatting</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you change the smoother in the code below from LOESS to linear model and make the line dashed? Hint: method = 'lm'.</strong>
+```{r gg12c1, results = 'hide'}
+p6 + geom_smooth(se = F, span = 0.75)
+```
+<details><summary class='drop2'>Answer</summary>
+```{r gga4bc1}
+p6 + geom_smooth(method = 'lm', se = F, linetype = 'dashed')
 ```
 </details>
 </div>
 
 <div class="alert alert-info">
-<strong>CHALLENGE: How would you change the smooth from LOESS to linear?</strong>
+<strong>CHALLENGE: How would you make the legend title larger and bold, and legend text larger?</strong>
 <details><summary class='drop2'>Answer</summary>
-```{r challd3lmc1}
-ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
-                       fill = SiteCode, shape = SiteCode)) + 
-  theme_bw() +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
-  geom_point(color = "dimgrey", alpha = 0.5) +
-  scale_color_manual(values = site_cols, name = "Lake") +
-  scale_fill_manual(values = site_cols, name = "Lake") +
-  scale_shape_manual(values = site_shps, name = "Lake")  +
-  labs(x = "Year", y = "Temp. (F)") 
+```{r gga5bc1}
+p6 + theme(legend.title = element_text(size = 12, face = 'bold'),
+           legend.text = element_text(size = 11))
 ```
 </details>
 </div>
+</details><br>
 
-<div class="alert alert-info">
-<strong>CHALLENGE: Recreate the plot below</strong>
-Note that the symbol outline is black. The alpha level is 0.6.
-```{r challd3copyc1, echo = F, fold.plot = F, fig.height = 7, fig.width = 5, fig.align = 'center'}
-ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
-                       fill = SiteCode, shape = SiteCode)) + 
-  theme_bw() +
-  geom_smooth(se = F, span = 0.5) +
-  geom_point(color = "black", alpha = 0.6, size = 2) +
-  scale_color_manual(values = site_cols, name = "Lake") +
-  scale_fill_manual(values = site_cols, name = "Lake") +
-  scale_shape_manual(values = site_shps, name = "Lake") +
-  labs(y = "Temp. (F)", x = "Year") +
-  facet_wrap(~SiteCode, ncol = 2) +
-  theme(legend.position = 'bottom')
-```
-
-<details><summary class='drop2'>Answer</summary>
-```{r challd3copyac1, fig.height = 7, fig.width = 5, fig.align = 'center'}
-ggplot(lakes_temp, aes(x = date, y = Value, color = SiteCode, 
-                       fill = SiteCode, shape = SiteCode)) + 
-  theme_bw() +
-  geom_smooth(se = F, span = 0.5) +
-  geom_point(color = "black", alpha = 0.6, size = 2) +
-  scale_color_manual(values = site_cols, name = "Lake") +
-  scale_fill_manual(values = site_cols, name = "Lake") +
-  scale_shape_manual(values = site_shps, name = "Lake") +
-  labs(y = "Temp. (F)", x = "Year") +
-  facet_wrap(~SiteCode, ncol = 2) +
-  theme(legend.position = 'bottom')
-
-```
-</details>
-</div>
-
-<div class="alert alert-info">
-<strong>CHALLENGE: How would you change the plot called p_site2 so that x-axis labels were every 4 years, and angle is 45 degrees instead of 90?</strong><br>
-Hint: start with p_site, so you don't have to write that much code. You'll also need to tweak vjust and hjust to make the labels line up properly.
-<details><summary class='drop2'>Answer</summary>
-```{r challyearsc1, fig.height = 4.5, fig.width = 7}
-p_site + 
-  scale_x_date(date_labels = "%Y", date_breaks = "4 years") +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-```
-</details>
-</div>
-</details>
-<br>
-
-<details open><summary class = 'drop'>ggplot Palettes</summary>
+<details open><summary class = 'drop'>Palettes</summary>
 <div class="alert alert-info">
 <strong>CHALLENGE: How would you specify the 'RdYlBu' palette instead of the ones used above?</strong><br>
 Hint: Start with p_pal to save time coding.
 <details><summary class='drop2'>Answer</summary>
 ```{r challpalc1, fig.height = 4.5, fig.width = 7}
-p_pal +  scale_color_brewer(name = "Lake", palette = "RdYlBu", aesthetics = c("fill", "color"))  +
-         guides(fill = guide_legend(override.aes = list(alpha = 1))) # makes symbols not transparent in legend
+p_pal +  scale_color_brewer(name = "Species Group", palette = "RdYlBu", 
+                            aesthetics = c("fill", "color"))  
 ```
 </details>
 </div>
@@ -131,12 +156,13 @@ p_pal +  scale_color_brewer(name = "Lake", palette = "RdYlBu", aesthetics = c("f
 <strong>CHALLENGE: Create your own palette with at least three colors.</strong><br>
 Hint: Start with p_heat to save time coding.
 <details><summary class='drop2'>Answer</summary>
-```{r challpal2c, fig.height = 4.5, fig.width = 7}
+```{r challpal2dc1, fig.height = 4.5, fig.width = 7}
 p_heat + scale_color_gradient2(low = "#3E693D", mid = "#FDFFC7", high = "#7A6646", 
                                aesthetics = c("fill", 'color'),
-                               midpoint = mean(lakes_temp$Value), 
+                               midpoint = mean(chem$Temp_F), 
                                name = "Temp. (F)") 
 ```
 </details>
 </div>
 
+</details><br>

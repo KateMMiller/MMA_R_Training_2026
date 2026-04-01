@@ -42,6 +42,17 @@ library(writexl) # writing xlsx
 </details>
 <br>
 
+<details open><summary class = 'drop'><b style="color:red">Check you can download data from github</b></summary>
+We'll download these as we run through the code. The check is that your computer doesn't have security restrictions that prevent importing datasets from github into R. All datasets used in this training will also be available via a zip file. The github hosted datasets are just easier to make sure everyone downloads the same version and is grabbing them from the same place. 
+
+<p class = 'code'>Copy the code below into RStudio and run it. If you don't get an error message, you're good.</p>
+```{r datasets, eval = F}
+motinv <- read.csv(
+  "C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/MMA_R_Training_2026/data/BASHAR_motile_invert_counts.csv")
+```
+
+</details>
+
 <details open><summary class='drop'>Optional Reading</summary>
 This is completely optional, but if you have any time before training starts, I highly recommend reading <a href="https://stat545.com/r-basics.html">Chapter 2: R basics and workflows</a> in STAT545. This is an online book based on a graduate level statistics class that Dr. Jenny Bryan teaches and is turning into this book. She's a stats professor turned senior programmer at RStudio, and I really like how she approaches programming R in this book. 
 </details>

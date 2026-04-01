@@ -37,12 +37,14 @@ Important concepts with `ggplot2`:
 <br>
 
 #### Building a ggplot 
-<details open><summary class = "drop">Building up a ggplot</summary>
-We're going to use the summarized photo plot cover to create the plot below, and will work through the code one piece at a time. 
+<details open><summary class = "drop">Building a ggplot object </summary>
+We're going to use site-level photoplot % cover data from Ship Harbor to create the plot below, and will work through the code one piece at a time. 
 
-```{r echo = F, fig.height = 5, fig.width = 7, fold.plot = F}
+```{r echo = F, fig.height = 5, fig.width = 7, fold.plot = F, fig.cap = "Mean percent cover by community type (panels) in Ship Harbor. Error bars represent +/- 1 SE."}
 library(ggplot2) # load ggplot
-pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") # import data
+library(dplyr)
+pcov <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import data
 
 cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
          "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
@@ -53,19 +55,20 @@ shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
 
 xrange <- range(pcov$Year)
 
-ggplot(data = pcov, aes(x = Year, y = median_cover, 
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
                         color = CoverCode, group = CoverCode,
                         fill = CoverCode, shape = CoverCode)) +
   #geom_smooth(se = F, span = 0.75) +
   #geom_line(linewidth = 0.6) +
-  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
   geom_point(color = "dimgrey", size = 2.5) +
   scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
                     name = "Species Group") +
   scale_shape_manual(values = shps, name = "Species Group") +
   scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
                      breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
-  labs(x = NULL, y = "Median. Percent Cover") +
+  labs(x = NULL, y = "Avg. Percent Cover") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
         panel.grid.major = element_blank(), # turns of major grids
         panel.grid.minor = element_blank(), # turns off minor grids
@@ -73,45 +76,48 @@ ggplot(data = pcov, aes(x = Year, y = median_cover,
         legend.key = element_blank()) +
   facet_wrap(~CommunityType)
 ```
-
-
+<br>
 <p class = 'code'>Import photoplot cover data from Ship Harbor</p>
 ```{r gg1, eval = F}
-library(ggplot2) # load package
-
-pcov <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import the data set
-
-head(pcov) # check out data set
+# load package
+library(ggplot2) 
+# import data
+pcov <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") 
+# check out the data
+head(pcov) 
 ```
-
-<p class = 'code'>Create the ggplot template of median cover over time.</p>
-I'm going to assign this to an object named `p`. We're going to have unique colors and shapes for the CoverCode column in our data, so we need to indicate that in the `aes()` along with our x and y variables. If we didn't include color, fill, and shape in the `aes()`, the points would all be the same color (default = black) and shape (default is filled circle)
+<br>
+<p class = 'code'>Create the ggplot template of average cover over time.</p>
+I'm going to assign this to an object named `p`, so we can build it one layer at a time. We're going to have unique colors and shapes for each level of CoverCode in our data, so we need to indicate that in the `aes()` along with our x and y variables. If we don't include color, fill, and shape in the `aes()`, the points would all be the same color (default = black) and shape (default is filled circle).
 ```{r gg2, fold.plot = F}
-p <- ggplot(data = pcov, aes(x = Year, y = median_cover, 
+p <- ggplot(data = pcov, aes(x = Year, y = avg_cover, 
                              color = CoverCode, 
                              fill = CoverCode,
                              shape = CoverCode))
 
 p
 ```
+</details><br>
 
+<details open><summary class = "drop">Add point and error bars</summary>
 <p class = 'code'>Add point and errorbar geometry</p>
-The order of geoms is the order they're drawn. I generally prefer the look of the points after the error bars. 
+The order of geometries is the order they're drawn. I prefer the look of the points after the error bars. 
 ```{r gg3, fold.plot = F}
 p2 <- p + 
-  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover)) +
-  geom_point(color = 'dimgrey', size = 2.5) # setting point outline to dark grey (bear with me)
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover)) +
+  geom_point()
 
 p2
 ```
-
+<br>
+<p class = 'code'>Specify colors and shapes</p>
 The default colors and symbols in ggplot aren't great. We're going to start by specifying our own colors and shapes manually. Then we'll use color palettes from different packages. Specifying shapes in R requires knowing the shape's symbol code. To view that, run `?points`, or search "pch in R plot" and you'll get the info below. Note that 0-14 are just lines with no fill. To change their color, use the color aesthetic. Symbols 15-20 are solid, but also use color to change their aesthetic. Symbols 21-25 have both a color (outline) and fill (inside) aesthetic.
 
 <center><img src = "./images/r_pch_symbols.png" alt = 'R pch symbols' style = "width:250px;background:white;"><br>
 <p class = "cap">Figure of symbol codes in R.</p></center>
 <br>
 
-<p class = 'code'>Specify colors and shapes</p>
 ```{r gg4, fold.plot = F}
 p3 <- p2 + 
   scale_fill_manual(values = c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
@@ -125,7 +131,7 @@ p3 <- p2 +
 p3
 ```
 The code above was redundant and tedious to code. Changing colors means changing them in two places. Imagine you're making one of these plots for every rocky intertidal site in Acadia. It quickly becomes cumbersome. A more efficient way to code this is below. 
-
+<br>
 <p class = 'code'>Assign colors and shapes to variables </p>
 Adding the name to the scales renames the legend title. But to keep the shapes and colors in the same legend, you have to name all of them the same name.
 ```{r gg4b, fold.plot = F}
@@ -137,14 +143,17 @@ shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
           "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
 
 p3 <- p2 + 
+  geom_point(color = 'dimgrey', size = 2.5) + # setting point outline to dark grey 
   scale_fill_manual(values = cols, name = "Species Group") +
   scale_color_manual(values = cols, name = "Species Group") +
   scale_shape_manual(values = shps, name = "Species Group")
   
 p3
 ```
+</details><br>
 
-<p class = 'code'>Improve axes ticks and labels </p>
+<details open><summary class = 'drop'>Improve formatting</summary>
+<p class = 'code'>Improve axis ticks and labels</p>
 ```{r gg5, fold.plot = F}
 # Determine year range (so not hard coded/easily updated in future)
 xrange <- range(pcov$Year)
@@ -152,11 +161,11 @@ xrange <- range(pcov$Year)
 p4 <- p3 + 
   scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
                      breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
-  labs(x = NULL, y = "Median. Percent Cover") 
+  labs(x = NULL, y = "Avg. Percent Cover") 
   
 p4
 ```
-
+<br>
 <p class = 'code'>Improve theme components</p>
 ```{r gg6, fold.plot = F} 
 p5 <- p4 +
@@ -168,28 +177,29 @@ p5 <- p4 +
 
 p5
 ```
-
+<br>
 <p class = 'code'>Facet on CommunityType</p>
 ```{r gg7, fold.plot = F, fig.height = 5, fig.width = 7,}
 p6 <- p5 + facet_wrap(~CommunityType)
 
 p6  
-
 ```
+</details><br>
 
-<p class = 'code'>Full code with code to save figure</p>
-```{r gg8, fold.plot = F, fig.height = 5, fig.width = 7,}
-ggplot(data = pcov, aes(x = Year, y = median_cover, 
+<details open><summary class = 'drop'>Full code and save figure</summary>
+```{r gg8, fold.plot = F, fig.height = 5, fig.width = 7}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
                         color = CoverCode, group = CoverCode,
                         fill = CoverCode, shape = CoverCode)) +
-  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
   geom_point(color = "dimgrey", size = 2.5) +
   scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
                     name = "Species Group") +
   scale_shape_manual(values = shps, name = "Species Group") +
   scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
                      breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
-  labs(x = NULL, y = "Median. Percent Cover") +
+  labs(x = NULL, y = "Avg. Percent Cover") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
         panel.grid.major = element_blank(), # turns of major grids
         panel.grid.minor = element_blank(), # turns off minor grids
@@ -197,33 +207,165 @@ ggplot(data = pcov, aes(x = Year, y = median_cover,
         legend.key = element_blank()) +
   facet_wrap(~CommunityType)
 ```
+<br>
+<p class = 'code'>Save plot to disk</p>
+Copy and pasting figures from R into word documents or powerpoints usually results in a poor resolution figure. The better approach is to save figures to disk using `ggsave()`. The function saves the most recent figure that was generated in the Plots tab in the bottom right pane. You can also specify the ggplot object name, which would come before the file name. If you wanted a jpg or png instead of svg, just use that as the file extension type. The svg is a vectorize image, which for figures with lines, is usually the best quality image that won't become pixelated when zoomed. Only caveat is not all software supports svgs.
 ```{r ggs, eval = F}
-ggsave("SHIHAR_photoplot_cover.png", height = 8, width = 7)
+ggsave("SHIHAR_photoplot_cover.svg", height = 8, width = 7)
 ```
 
 </details>
 <br>
 
-#### Other geometries
-<details open><summary class = 'drop'>Variations on figures</summary>
-<p class = 'code'>Add line geometry to figure</p>
-```{r gg11, fold.plot = F}
-p6 + geom_line(linewidth = 0.8)
+<details open><summary class = 'drop'>Test your ggplot skills</summary>
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the full plot code above, make the point size 1.5.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga1}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 1.5) + # changed this line
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Avg. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the full plot code above, make the error bars wider.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga2}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 1.2) + # changed this line
+  geom_point(color = "dimgrey", size = 2.5) + 
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") + 
+  scale_shape_manual(values = shps, name = "Species Group") + 
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = NULL, y = "Avg. Percent Cover") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
 ```
 
+</details>
+</div>
+
+<div class="alert alert-info">
+<strong>CHALLENGE: Using the full plot code above, change the x axis label to "Year".</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga3}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
+                        color = CoverCode, group = CoverCode,
+                        fill = CoverCode, shape = CoverCode)) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), 
+                linewidth = 0.6) +
+  geom_point(color = "dimgrey", size = 2.5) + 
+  scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
+                    name = "Species Group") +
+  scale_shape_manual(values = shps, name = "Species Group") +
+  scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
+                     breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
+  labs(x = "Year", y = "Avg Percent Cover") + # changed this line
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_rect(fill = 'white', color = 'dimgrey'), 
+        legend.key = element_blank()) +
+  facet_wrap(~CommunityType)
+```
+
+</details>
+</div>
+</details><br>
+
+#### Other geometries
+<details open><summary class = 'drop'>Lines and smoothers</summary>
+<p class = 'code'>Add line geometry to figure</p>
+Note that for lines to plot properly in ggplot, you have to assign a grouping variable in the `aes()`. The fill, color, and shape aesthetics in the beginning already did that for us, but here's how it would look within `geom_line()` if you needed to do that. 
+```{r gg11, fig.height = 5, fig.width = 7, fold.plot = F}
+p6 + geom_line(linewidth = 0.8, aes(group = CoverCode))
+```
+<br>
 <p class = 'code'>Add smoother to figure</p>
-```{r gg12, fold.plot = F}
+The geom_smooth() plots a line assuming the y ~ x formula (unless you specify a different formula). By default the method is a LOESS smoother, but you can specify a range of methods, including linear regression by adding method = 'lm' to geom_smooth().
+
+Note that I turned off the standard error ribbon that plots by default using se = FALSE. It’s too busy for this plot. I also don’t use the SE unless I’ve fit an actual model and checked the diagnostics. The status under the hood of geom_smooth() are also pretty black boxy, and I don’t always know if I can trust its calculation of SE.
+```{r gg12, fig.height = 5, fig.width = 7, fold.plot = F}
 p6 + geom_smooth(se = F, span = 0.75)
 ```
+<br>
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you change the smoother in the code above from LOESS to linear model and make the line dashed? Hint: method = 'lm'.</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga3b}
+p6 + geom_smooth(method = 'lm', se = F, linetype = 'dashed')
+```
+</details>
+</div>
+<br>
 
+<p class = 'code'>Add horizontal dashed line called 50% line</p>
+```{r gg13, fig.height = 5, fig.width = 7, fold.plot = F}
+p6 + geom_hline(aes(yintercept = 50), linetype = "dashed") 
+```
+<br>
+<p class = 'code'>Add horizontal dashed line called 50% line and make it show in the legend</p>
+```{r gg14, fig.height = 5, fig.width = 7, fold.plot = F}
+p6 + geom_hline(aes(yintercept = 50, linetype = "50% line")) +
+     scale_linetype_manual(values = c("50% line" = "dashed"), 
+                           name = "Threshold")
+```
+</details><br>
+
+<details open><summary class = 'drop'>Theme changes</summary>
 <p class = 'code'>Move legend to the bottom</p>
-```{r gg13, fold.plot = F}
+```{r gg15, fig.height = 5, fig.width = 7, fold.plot = F}
 p6 + theme(legend.position = 'bottom')
 ```
 
+<div class="alert alert-info">
+<strong>CHALLENGE: How would you make the legend title larger and bold, and legend text larger?</strong>
+<details><summary class='drop2'>Answer</summary>
+```{r gga3bc}
+p6 + theme(legend.title = element_text(size = 12, face = 'bold'),
+           legend.text = element_text(size = 11))
+```
+</details>
+</div>
+<br>
+
+<p class = 'code'>Change facet strips fill, color, and font size</p>
+```{r gg16, fig.height = 5, fig.width = 7, fold.plot = F}
+p6 + theme(strip.background = element_rect(fill = "#F5F0DC", color = "black"),
+           strip.text = element_text(size = 10))
+```
+</details><br>
+
+<details open><summary class = 'drop'>Other geometries</summary>
 <p class = 'code'>Stacked bars instead of points </p>
-```{r gg9, fold.plot = F}
-ggplot(data = pcov, aes(x = Year, y = median_cover, 
+```{r gg17, fig.height = 5, fig.width = 7, fold.plot = F}
+ggplot(data = pcov, aes(x = Year, y = avg_cover, 
                         color = CoverCode, group = CoverCode,
                         fill = CoverCode, shape = CoverCode)) +
   geom_bar(stat = 'identity', position = 'fill', color = 'dimgrey') +
@@ -239,24 +381,22 @@ ggplot(data = pcov, aes(x = Year, y = median_cover,
         legend.key = element_blank()) +
   facet_wrap(~CommunityType)
 
-
-
 ```
 
-<p class = 'code'>Bars with error bars instead of points (note I filtered on Barnacle CommunityType) </p>
-```{r gg10, fold.plot = F}
+<p class = 'code'>Bars with error bars instead of points (note I filtered on Barnacle CommunityType)</p>
+```{r gg18, fig.height = 5, fig.width = 7, fold.plot = F}
 ggplot(data = pcov |> filter(CommunityType == "Barnacle"), # note filter 
-       aes(x = Year, y = median_cover, 
+       aes(x = Year, y = avg_cover, 
            color = CoverCode, group = CoverCode,
            fill = CoverCode, shape = CoverCode)) +
   geom_bar(stat = 'identity', position = 'dodge', color = 'dimgrey') + # new line
-  geom_errorbar(aes(ymin = q25_cover, ymax = q75_cover), linewidth = 0.6) +
+  geom_errorbar(aes(ymin = avg_cover - se_cover, ymax = avg_cover + se_cover), linewidth = 0.6) +
   scale_fill_manual(values = cols, aesthetics = c("fill", "color"), 
                     name = "Species Group") +
   scale_shape_manual(values = shps, name = "Species Group") +
   scale_x_continuous(limits = c(xrange[1] - 1, xrange[2] + 1),
                      breaks = c(seq(xrange[1] - 1, xrange[2] + 1, 2))) +
-  labs(x = NULL, y = "Median. Percent Cover") +
+  labs(x = NULL, y = "Avg. Percent Cover") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), 
@@ -266,8 +406,90 @@ ggplot(data = pcov |> filter(CommunityType == "Barnacle"), # note filter
 
 
 ```
+</details>
+<br>
 
-</details><br>
+#### Multipanels {.tabset}
+
+<details open><summary class = 'drop'>Multi-panel plots via patchwork</summary>
+Faceting is helpful when your observations are all within the same column. But say you have data in multiple columns and want to arrange those plots into a grid. Faceting won't help because the data to plot are in different columns. There are multiple packages that make it easy to arrange multiple plots into a grid to look similar to faceted plots. Packages include `grid` (and `gridExtra`), `cowplot`, `ggpubr`, and `patchwork`. We're going to use `patchwork`, a relative newcomer, and one of the easiest I've found to code and customize. Here we're going to plot pH, temperature, DO, and conductance for Jordan Pond in Acadia NP and arrange them using patchwork.
+
+The patchwork package has a lot of options to customize plot layouts. See the <a href="https://patchwork.data-imaginist.com/">patchwork</a> package website for more information.
+
+<p class = 'code'>Load patchwork and read in water chemistry data</p>
+```{r pw}
+# load packages
+library(ggplot2) 
+library(patchwork) # multipanel plots
+
+# load data
+chem <- read.csv(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/ACAD_Jordan_Pond_water_chem.csv")
+
+# make date field a date
+chem$date <- as.Date(chem$date, format = "%Y-%m-%d")
+```
+
+<p class = 'code'>Create a ggplot object for each parameter</p>
+```{r pw2}
+# pH plot
+p_pH <-
+  ggplot(chem, aes(x = date, y = pH)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "dimgrey", alpha = 0.5, size = 2) +
+  labs(y = "pH", x = "Year") +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+# temp plot
+p_temp <-
+  ggplot(chem, aes(x = date, y = Temp_F)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "dimgrey", alpha = 0.5, size = 2) +
+  labs(y = "Temp (F)", x = "Year") +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+ 
+# Diss. Oxygen plot
+p_do <-
+  ggplot(chem, aes(x = date, y = DO_mgL)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "dimgrey", alpha = 0.5, size = 2) +
+  labs(y = "DO (mg/L)", x = "Year") +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+# Conductance plot
+p_cond <-
+  ggplot(chem, aes(x = date, y = SpCond_uScm)) + 
+  theme_bw() +
+  geom_smooth(se = F, span = 0.5) +
+  geom_point(color = "dimgrey", alpha = 0.5, size = 2) +
+  labs(y = "Spec. Cond. (uScm)", x = "Year")+
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+<br>
+
+<p class='code'>Arrange plots using patchwork</p>
+This is almost too easy to be true, but it really is this easy with patchwork. The patchwork package includes a bunch of options to customize sizes, add annotation, sharing axes across plots. 
+```{r patch1, fold.plot = F, fig.height = 4, fig.width = 5}
+p_pH + p_temp + p_do + p_cond
+```
+
+<p class='code'>Arrange plots using patchwork in column of 4 and share x axis. </p>
+You can also collect the legend using a similar approach to collecting the axes.
+```{r patch2, fold.plot = F, fig.height = 6, fig.width = 3}
+library(patchwork)
+p_pH / p_temp / p_do / p_cond + plot_layout(axes = "collect_x")
+```
+
+</details>
+<br>
+
 
 
 

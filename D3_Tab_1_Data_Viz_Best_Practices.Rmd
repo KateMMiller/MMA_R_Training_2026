@@ -4,7 +4,7 @@ output:
     css: custom_styles.css
 ---
 
-#### Data Viz Best Practices
+#### Best Practices
 
 ```{r day2_dv, echo = F, include = F}
 #----------------------------------------------
