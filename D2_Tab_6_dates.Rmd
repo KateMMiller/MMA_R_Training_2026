@@ -136,6 +136,18 @@ unclass(as.POSIXct("2026-03-12 01:30:00", "%Y-%m-%d %H:%M:%S", tz = "America/New
 unclass(as.POSIXlt("2026-03-12 01:30:00", "%Y-%m-%d %H:%M:%S", tz = "America/New_York"))
 ```
 
+
+Note the use of timezone in the code above. Here I specified the eastern timezone. There are two handy ways to check timezones in R.
+<p class = 'code'>Check the timezone of your computer</p>
+```{r tz1, fold.output = F}
+Sys.timezone()
+```
+
+<p class = 'code'>Check the timezones built into base R</p>
+```{r tzon, fold.output = T}
+OlsonNames()
+```
+
 If you understand how to set up a Date type in R, setting up date-times aren't that different. It just takes a bit more attention to get the format right. To demonstrate, we'll read in HOBO temperature data and set the timestamp column as a POSIXct date-time. There's usually a bit of cleaning required of HOBO data beyond setting the timestamp as POSIXct date-time. I'll show the whole process below.
 
 <p class = 'code'>Read in temperature data and look at it</p>
