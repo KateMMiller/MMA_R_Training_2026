@@ -140,7 +140,9 @@ If you understand how to set up a Date type in R, setting up date-times aren't t
 
 <p class = 'code'>Read in temperature data and look at it</p>
 ```{r temp1, fold.output = T}
-temp_data1 <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv")
+temp_data1 <- read.csv("./data/HOBO_temp_example.csv")
+
+# check data
 head(temp_data1)
 ```
 
@@ -148,8 +150,9 @@ Note the extra row on top showing the file name. HOBO data often has some metada
 
 <p class = 'code'>Clean up non-date HOBO data</p>
 ```{r temp1b, fold.output = F}
-temp_data <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", skip = 1)[,1:3]
+temp_data <- read.csv("./data/HOBO_temp_example.csv", skip = 1)[,1:3]
 colnames(temp_data) <- c("index", "date_time", "tempF")
+
 ```
 ```{r tempv, eval = F}
 View(temp_data)

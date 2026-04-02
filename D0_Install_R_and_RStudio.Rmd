@@ -34,6 +34,12 @@ library(readxl) # reading xlsx
 library(writexl) # writing xlsx
 ```
 
+Note that when you turn on the tidyverse package via `library(tidyverse)`, you will get the following message in your console. This means the tidyverse successfully loaded on your machine and is not an error. 
+<center>
+<img src = "./images/tidyverse_not_error.png" alt = 'tidyverse message' style = "display:block;width:750px;">
+</center>
+<br>
+
 <details><summary class='drop2'>Running Code Screencast</summary>
 <video height = "650" controls>
 <source src="images/Installing_packages.mp4" type="video/mp4">
@@ -45,7 +51,7 @@ library(writexl) # writing xlsx
 <details open><summary class = 'drop'><b style="color:red">Check you can download data from github</b></summary>
 We'll download these as we run through the code. The check is that your computer doesn't have security restrictions that prevent importing datasets from github into R. All datasets used in this training will also be available via a zip file. The github hosted datasets are just easier to make sure everyone downloads the same version and is grabbing them from the same place. 
 
-<p class = 'code'>Copy the code below into RStudio and run it. If you don't get an error message, you're good.</p>
+<p class = 'code'>Copy the code below into RStudio and run it. If you don't get an error message, you're good.</p> If you do get an error message, you'll just need to import the datasets locally using the provided zip file. 
 ```{r datasets, eval = F}
 motinv <- read.csv(
   "C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/MMA_R_Training_2026/data/BASHAR_motile_invert_counts.csv")

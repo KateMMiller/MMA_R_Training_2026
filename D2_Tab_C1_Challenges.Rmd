@@ -14,24 +14,20 @@ library(dplyr)
 ```
 
 <p class = 'code'>Read in example motile invertebrate and point intercept data</p>
-```{r readmotinv3bc1, eval = F}
-# Point intercept data
-pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv")
-# Motile invert count
-motinv <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
-# Motile invert site
-motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
-# hobo temp data
-temp_data <- read.csv("https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", skip = 1)[,1:3]
-colnames(temp_data) <- c("index", "date_time", "tempF")
-```
-
-```{r motinvd2c1, echo = F}
-motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
+```{r readmotinv3bc1}
+#--- Point intercept data ---
 pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
+
+#--- Motile invert count ---
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
+
+#--- Motile invert site ---
 motspp <- read.csv("./data/motile_invert_species_table.csv")
+
+#--- hobo temp data ---
+temp_data <- read.csv("./data/HOBO_temp_example.csv", skip = 1)[,1:3]
+colnames(temp_data) <- c("index", "date_time", "tempF")
+
 ```
 
 </details>
@@ -271,11 +267,11 @@ motinv_long_yr <- pivot_longer(motinv_wide_yr,
 <p class = 'code'>Import motinv data frames</p>
 ```{r challtr1cc}
 # Read in motinv data if you haven't yet
-motinv <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 head(motinv)
 
 # Read in species table
-motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
+motspp <- read.csv("./data/motile_invert_species_table.csv")
 head(motspp)
 
 intersect(names(motinv), names(motspp)) # 3 columns in common

@@ -16,8 +16,7 @@ library(RColorBrewer) # for palettes
 library(viridis) # for palettes
 
 # load data
-pcov <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import data
+pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") # import data
 
 # define color and shape objects
 cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 

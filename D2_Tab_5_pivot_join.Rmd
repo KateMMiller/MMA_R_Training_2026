@@ -21,10 +21,9 @@ We’ll work with the point intercept data again to demonstrate pivoting, and wi
 library(dplyr)
 library(tidyr) # for pivot functions
 
-# import the raw point intercept data
-pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
-)
+#--- import the raw point intercept data
+pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
+
 
 # summarize data by site, year, and cover type
 pi_dat_sum <- pi_dat |> summarize(med_elev_sl = median(med_elev, na.rm = T), 
@@ -226,13 +225,12 @@ To demonstrate the different joins, we're going to use some fake bat capture dat
 #------------------------------------
 ```
 
-<p class='code'>Read in motile site data </p>
+<p class='code'>Read in fake bat site and capture data </p>
 ```{r batsite, fold.output = F, eval = T}
-# Import site data
-bat_sites <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/bat_site_info.csv")
-
-# Import bat capture data
-bat_cap <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/bat_captures.csv")
+#site data
+bat_sites <- read.csv("./data/bat_site_info.csv")
+# bat capture data
+bat_cap <- read.csv("./data/bat_captures.csv")
 
 # View sites listed in each
 sort(unique(bat_sites$Site)) # Sites 1, 2, 3, 4, 5
@@ -321,12 +319,12 @@ anti_join(bat_cap, bat_sites, by = "Site")
 
 <p class = 'code'>Import motinv data frames</p>
 ```{r challtr1}
-# Read in motinv data if you haven't yet
-motinv <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
-head(motinv)
+#--- Read in motinv data if you haven't yet
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 
-# Read in species table
-motspp <- read.csv("https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv")
+#--- Read in species table
+motspp <- read.csv("./data/motile_invert_species_table.csv")
+
 head(motspp)
 
 intersect(names(motinv), names(motspp)) # 3 columns in common

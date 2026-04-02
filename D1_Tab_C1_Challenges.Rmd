@@ -10,9 +10,7 @@ If you're starting a new R session to answer these questions, you'll need to rea
 
 <p class = 'code'>Read in example Bass Harbor motile invertebrate data from url</p>
 ```{r c1rdatc1, eval = T}
-motinv <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
-  )
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 ```
 
 </details><br>

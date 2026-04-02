@@ -43,8 +43,7 @@ We're going to use site-level photoplot % cover data from Ship Harbor to create 
 ```{r echo = F, fig.height = 5, fig.width = 7, fold.plot = F, fig.cap = "Mean percent cover by community type (panels) in Ship Harbor. Error bars represent +/- 1 SE."}
 library(ggplot2) # load ggplot
 library(dplyr)
-pcov <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") # import data
+pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") # import data
 
 cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
          "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
@@ -82,8 +81,7 @@ ggplot(data = pcov, aes(x = Year, y = avg_cover,
 # load package
 library(ggplot2) 
 # import data
-pcov <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv") 
+pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") 
 # check out the data
 head(pcov) 
 ```
@@ -423,8 +421,7 @@ library(ggplot2)
 library(patchwork) # multipanel plots
 
 # load data
-chem <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/ACAD_Jordan_Pond_water_chem.csv")
+chem <- read.csv("./data/ACAD_Jordan_Pond_water_chem.csv")
 
 # make date field a date
 chem$date <- as.Date(chem$date, format = "%Y-%m-%d")

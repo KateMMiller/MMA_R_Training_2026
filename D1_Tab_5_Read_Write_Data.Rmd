@@ -15,9 +15,7 @@ We use the `read.csv()` function to import CSVs in R. The `read.csv()` function 
 <p class = "code">Run the following line to import a teaching data set of motile invertebrates collected in the Bass Harbor rocky intertidal zone from the github repository for this training</p>
 ```{r read_csv}
 # read in the data from BASHAR_motile_invert_counts.csv and assign it as a dataframe to the variable "motinv"
-motinv <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
-  )
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
 ```
 
 <p class = "code">View the data in a separate window by running the `View()` function.</p>

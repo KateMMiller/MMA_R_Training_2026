@@ -34,15 +34,10 @@ To demonstrate summarize and mutate in dplyr, we're going to use the point inter
 #------------------------------------
 ```
 
-```{r pid2s, eval = F}
-pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
-)
-head(pi_dat)
-```
-
-```{r pid2sl, echo = F}
+```{r pid2s}
 pi_dat <- read.csv("./data/BASHAR_Point_Intercept_data.csv")
+
+head(pi_dat)
 ```
 
 <p class = 'code'>Using `mutate()`, calculate the average percent frequency and median elevation by CoverType and Year</p>

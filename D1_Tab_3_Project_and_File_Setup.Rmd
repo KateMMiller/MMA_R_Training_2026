@@ -30,7 +30,7 @@ Using relative paths is a helpful because the full path will be specific to your
 </details>
 <br>
 <details open><summary class = 'drop'>Start a new Project</summary>
-To demonstrate the value of a project, we'll create and use one for this class. Click <b>File > New Project</b>. In the window that appears, select <b>New Directory</b>, then select <b>New Project</b>. You will be prompted for a directory name. This is the name of your project folder. For this class, call it `imd_r_intro`. Next, you'll select what folder to keep your project folder in. `Documents/R` is a good place to store all of your R projects but it's up to you. When you are done, click on <b>Create Project</b>.  
+To demonstrate the value of a project, we'll create and use one for this class. Click <b>File > New Project</b>. In the window that appears, select <b>New Directory</b>, then select <b>New Project</b>. You will be prompted for a directory name. This is the name of your project folder. For this class, call it `mma_r_intro`. Next, you'll select what folder to keep your project folder in. `Documents/R` is a good place to store all of your R projects but it's up to you. When you are done, click on <b>Create Project</b>.  
 <br>
 <details open><summary class = 'drop2'>Step 1. Select New Directory</summary>
 <img src = "./images/new_project1.png" alt = 'New project step 1' style = "width:450px;">
@@ -40,22 +40,48 @@ To demonstrate the value of a project, we'll create and use one for this class. 
 <img src = "./images/new_project2.png" alt = 'New project step 2' style = "width:450px;">
 </details>
 <br>
-<details open><summary class = 'drop2'>Step 3. Name project imd_r_intro </summary>
+<details open><summary class = 'drop2'>Step 3. Name project mma_r_intro </summary>
 Save project to a place you can find it. Don't worry about whether the git repository box is checked or not. <br>
 <img src = "./images/new_project3.png" alt = 'New project step 3' style = "width:450px;">
 </details>
 <br>
-If you successfully started a project named `imd_r_intro`, you should see it listed at the very top right of your screen. As you start new projects, you'll want to check that you're working in the right one before you start coding. Take a look at the <b>Console</b> tab again. Notice that your current working directory is now your project folder. When you look in the <b>Files</b> tab of the bottom right pane, you'll see that it also defaults to the project folder.
+If you successfully started a project named `mma_r_intro`, you should see it listed at the very top right of your screen. As you start new projects, you'll want to check that you're working in the right one before you start coding. Take a look at the <b>Console</b> tab again. Notice that your current working directory is now your project folder. When you look in the <b>Files</b> tab of the bottom right pane, you'll see that it also defaults to the project folder.
 
 We also want to create a folder called "data", where we will store datasets we're using for this class. To do that, you can either go to Windows Explorer and add a new folder, or you run the code below. As long as you're working within your project (project name should be at the top right of window), a folder named data will appear within your project. You can check that it worked by using the `list.files()` function, which lists everything in the working directory of your project.
 </details>
 <br>
 
-<details open><summary class = 'drop'>Add Data Folder</summary>
+<details open><summary class = 'drop'>Add data folder and download data</summary>
+We're going to store all of our datasets for this training in a data folder. First, create the data folder in your project using the code below. 
+
 <p class = "code">Create data folder</p>
 ```{r addfold, eval = F}
 dir.create("data")
 list.files() # you should see a data folder listed 
 ```
 
+<p class = 'code'>Download files from github repo</p>
+We're going to try downloading all of the datasets you're going to use for the training into this data folder. Copy the code in the chunk below and paste it into a new script (File > New File > R Script). Then select and run the code. 
+```{r downloads, eval = F}
+file_list <- c(
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/ACAD_Jordan_Pond_water_chem.csv",
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv", 
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv", 
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/bat_site_info.csv", 
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/bat_captures.csv", 
+  "https://raw.githubusercontent.com/KateMMiller/IMD_R_Training_2026/refs/heads/main/data/HOBO_temp_example.csv", 
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/motile_invert_species_table.csv",
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/SHIHAR_photoplot_cover.csv")
+
+file_names <- sub(".*data/", "",  file_list)
+
+lapply(seq_along(file_list), function(x){
+    download.file(file_list[x], 
+                  destfile = paste0("./data/", file_names[x]))
+})
+
+```
+
+If you're not able to download, extract the MMI_R_training_data.zip file into this new data folder.
+ 
 </details>

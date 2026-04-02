@@ -62,12 +62,6 @@ library(tidyverse)
 #------------------------------------
 #        Day 0 - prep code 
 #------------------------------------
-motinv <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv"
-  )
-pi_dat <- read.csv(
-  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_Point_Intercept_data.csv"
-)
 ```
 
 ```{r Install_instructions, child = "D0_Install_R_and_RStudio.Rmd", eval = T}

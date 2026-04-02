@@ -1,7 +1,7 @@
 
 #### Start Coding 
 <details open><summary class='drop'>Start a new script</summary>
-First let's create a new R script file called `day_1_script.R`. Make sure you are working in the `imd_r_intro` project that you just created. Click on the <b>New File</b> icon <img src = "./images/NewFile.PNG" alt = "new script"> in the top left corner. In the dropdown, select <b>R Script</b>. The source pane will appear with an untitled empty script. Go ahead and save it by clicking the <b>Save</b> icon (and make sure the <b>Source on Save</b> checkbox is deselected). Call your new script `day_1_script.R`.
+First let's create a new R script file called `day_1_script.R`. Make sure you are working in the `mma_r_intro` project that you just created. Click on the <b>New File</b> icon <img src = "./images/NewFile.PNG" alt = "new script"> in the top left corner. In the dropdown, select <b>R Script</b>. The source pane will appear with an untitled empty script. Go ahead and save it by clicking the <b>Save</b> icon (and make sure the <b>Source on Save</b> checkbox is deselected). Call your new script `day_1_script.R`.
 </details>
 <br>
 <details open><summary class='drop'>Coding basics</summary>
