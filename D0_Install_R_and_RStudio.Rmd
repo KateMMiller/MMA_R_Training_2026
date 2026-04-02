@@ -54,7 +54,7 @@ We'll download these as we run through the code. The check is that your computer
 <p class = 'code'>Copy the code below into RStudio and run it. If you don't get an error message, you're good.</p> If you do get an error message, you'll just need to import the datasets locally using the provided zip file. 
 ```{r datasets, eval = F}
 motinv <- read.csv(
-  "C:/Users/KMMiller/OneDrive - DOI/NETN/R_Dev/MMA_R_Training_2026/data/BASHAR_motile_invert_counts.csv")
+  "https://raw.githubusercontent.com/KateMMiller/MMA_R_Training_2026/refs/heads/main/data/BASHAR_motile_invert_counts.csv")
 ```
 
 </details>
