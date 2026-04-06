@@ -84,12 +84,12 @@ write_xlsx(motinv, "./data/BASHAR_motile_invert_counts.xlsx")
 <li class = "code">Import spreadsheet. Note that the default settings import the first sheet, so I didn't really 
 need to specify the sheet below. I included the sheet argument to show how it's done.</li>
 ```{r, c19dd, echo=T}
-motivn_xls <- read_xlsx(path = "./data/BASHAR_motile_invert_counts.xlsx", sheet = "Sheet1") 
+motinv_xls <- read_xlsx(path = "./data/BASHAR_motile_invert_counts.xlsx", sheet = "Sheet1") 
 ```
 
 <li class = "code">View top 6 rows to check the data</li>
 ```{r, c19e, echo=T}
-head(motivn_xls)
+head(motinv_xls)
 ```
 </ol>
 </details>
