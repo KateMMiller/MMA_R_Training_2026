@@ -105,8 +105,14 @@ motinv3 <- select(motinv3a, -Damage)
 
 head(motinv3)
 ```
-</ol>
 Note that subsetting data frames in R, which refers to reducing rows, columns, or both, is split between 2 functions in `dplyr`. The `filter()` function reduces rows. The `select()` function reduces columns. 
+<li><p class = 'code'>Reclass No.Damage outlier</p></li>
+```{r recl, fold.output = T}
+motinv4 <-  mutate(motinv3, No.Damage = replace(No.Damage, No.Damage == 1960, 196))
+```
+
+
+</ol>
 </details>
 <br>
 
@@ -118,8 +124,9 @@ The pipe (`|>` or `%>%`) makes `dplyr` and other tidyverse packages even more po
 motinv_final <- motinv |> 
   mutate(Damage_num = as.numeric(replace(Damage, Damage == "PM", NA)), # Fix Damage PM
          SitePlot = paste(SiteCode, PlotName, sep = "-"), # create new SitePlot column
-         Date = as.Date(StartDate, format = "%m/%d/%Y")) |> # create new Date column
-  rename("Species" = "ScientificName") |> # change column name
+         Date = as.Date(StartDate, format = "%m/%d/%Y"), # create new Date column
+         No.Damage_fix = replace(No.Damage, No.Damage == 1960, 196)) |> # fix error in No.Damage
+  rename("Species" = "ScientificName") |> # change column name 
   filter(QAQC == FALSE) |> # drop QAQC visits
   select(-Damage) |> # drop original Damage column
   arrange(SitePlot, Year, Species) # optional sorting the data
