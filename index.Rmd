@@ -133,8 +133,12 @@ library(tidyverse)
 ```{r D3_ggplot, child = "D3_Tab_3_adv_ggplot.Rmd", eval = T}
 ```
 
-```{r D3_bestpr, child = "D3_Tab_4_coding_best_practices.Rmd", eval = T}
+```{r D3_stats, child = "D3_Tab_4_stats.Rmd", eval = T}
 ```
+
+```{r D3_bestpr, child = "D3_Tab_5_coding_best_practices.Rmd", eval = T}
+```
+
 
 ### Challenges {.tabset}
 

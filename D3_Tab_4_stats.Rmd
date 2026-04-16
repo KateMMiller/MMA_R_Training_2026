@@ -1,0 +1,184 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+---
+### Statistical Analysis
+R was designed to facilitate statistical analysis and data visualization, making tests like linear regression and Analysis of Variance relatively straightforward. Using the percent cover data by community type, I'll demonstrate how to set up the models, check diagnostics (at least how I do it), and summarize output. For the linear regression, we'll look at whether common periwinkle (SpeceisCode LITLIT) counts have changed over time in the Red Algae community plots (we'll ignore the lack of independence between years). For the ANOVA, we'll test whether common periwinkle counts differ between the community types.
+
+<details open><summary class = 'drop'>Import and prep data</summary>
+<p class = 'code'>Import data and load packages</p>
+```{r impstat}
+library(dplyr)
+library(ggplot2)
+# install.packages('car') # uncomment and run if you don't have this package installed
+library(car) # for levene's test
+
+# import data
+motinv <- read.csv("./data/BASHAR_motile_invert_counts.csv")
+head(motinv)
+```
+<p class = 'code'>Prep data for analysis</p>
+```{r pdmotinv}
+# prep data for analysis
+motinv_final <- motinv |> 
+  mutate(Damage = as.numeric(replace(Damage, Damage == "PM", NA)), # Fix Damage PM
+         SitePlot = paste(SiteCode, PlotName, sep = "-"), # create new SitePlot column
+         Date = as.Date(StartDate, format = "%m/%d/%Y"), # create new Date column
+         No.Damage_fix = replace(No.Damage, No.Damage == 1960, 196), 
+         total_count = Damage + No.Damage,
+         total_count_fix = Damage + No.Damage_fix, # fix error in No.Damage 
+         year_st = Year - 2012) |> # set start year to 1 instead of 2013 for better interpretation 
+  filter(QAQC == FALSE) |> # drop QAQC visits
+  arrange(SitePlot, Year, ScientificName) # optional sorting the data
+
+# summarize counts, so 1 count per year, species and community type
+motinv_sum <- motinv_final |> summarize(mean_count = mean(total_count, na.rm = TRUE),
+                                        mean_count_fix = mean(total_count_fix, na.rm = T),
+                                        .by = c(SiteCode, year_st, CommunityType, SpeciesCode))
+
+# prep for linear regression
+motinv_reg <- motinv_sum |> filter(SpeciesCode == "LITLIT" & CommunityType == "Red Algae") 
+head(motinv_reg)
+
+# prep for analysis of variance
+motinv_aov <- motinv_sum |> filter(SpeciesCode == "LITLIT") |> 
+  mutate(ComCode = toupper(substr(CommunityType, 1, 3))) # create community code for easier plotting
+head(motinv_aov)
+```
+</details><br>
+
+<details open><summary class = 'drop'>Linear Regression</summary>
+<p class = 'code'>Model formula</p>
+```{r lr, fold.output = F}
+lm_mod <- lm(mean_count ~ year_st, data = motinv_reg)
+```
+
+<p class = 'code'>Model diagnostic plots</p>
+```{r lrd, fold.plot = F, fig.height = 8, fig.width = 10} 
+par(mfrow = c(2,2)) # makes diagnostic plots 2 x 2 grid 
+plot(lm_mod)
+par(mfrow = c(1,1)) # resets to 1 plot 
+```
+
+```{r lrhist, fold.plot = F}
+hist(resid(lm_mod))
+```
+
+<p class = 'code'>Check outliers</p>
+```{r lrout, fold.plot = F}
+# detect outliers as > 2 SD of residuals
+outliers <- which(abs(resid(lm_mod)) > 2 * sd(resid(lm_mod)))
+
+# Highlight the outliers in a scatterplot
+plot(mean_count ~ year_st, data = motinv_reg)
+points(motinv_reg$year_st[outliers], motinv_reg$mean_count[outliers], col = "red", pch = 19)
+```
+
+Residual and QQ plots clearly shows an outlier. This is the error in No.Damage that has 1960 instead of 196 for a count. I'll show the diagnostics for the fixed data now.
+
+<p class = 'code'>Rerun model with fixed counts</p>
+```{r lrf, fold.output = F}
+lm_mod_fix <- lm(mean_count_fix ~ year_st, data = motinv_reg)
+```
+
+<p class = 'code'>Model diagnostic plots, take 2</p>
+```{r lrdf, fold.plot = F, fig.height = 8, fig.width = 10} 
+par(mfrow = c(2,2)) # makes diagnostic plots 2 x 2 grid 
+plot(lm_mod_fix)
+par(mfrow = c(1,1)) # resets to 1 plot 
+```
+
+```{r lrhist2, fold.plot = F}
+hist(resid(lm_mod_fix))
+```
+
+<p class ='code'>Summarize output</p>
+```{r lrsum, fold.output = F}
+summary(lm_mod_fix) 
+```
+
+Estimates are the betas, such that the Estimate for year_st is the slope. These results suggest that for every year, there's an average of 12 more common periwinkles found in Red Algae plots. Though note that in plotting the results of the linear regression (using the geom_smooth() with linear method), the trend does not look linear.
+
+<p class = 'code'>Plot model results</p>
+```{r lrptreg, fold.plot = F}
+ggplot(data = motinv_reg, aes(x = year_st, y = mean_count_fix)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  scale_x_continuous(breaks = seq(1, 13, 2),
+                     labels = seq(1, 13, 2) + 2012) +
+  labs(x = "Year", y = "Mean common periwinkle count") +
+  theme_bw()
+
+```
+
+</details>
+<br>
+
+<details open><summary class = 'drop'>Analysis of Variance</summary>
+<p class = 'code'>Model formula</p>
+```{r anv, fold.output = F}
+aov_mod <- aov(mean_count_fix ~ ComCode, data = motinv_aov)
+```
+
+<p class = 'code'>Model diagnostic plots</p>
+```{r aovp, fold.plot = F, fig.height = 8, fig.width = 10} 
+par(mfrow = c(2,2)) # makes diagnostic plots 2 x 2 grid 
+plot(aov_mod)
+par(mfrow = c(1,1)) # resets to 1 plot 
+```
+
+```{r aovhist, fold.plot = F}
+hist(resid(aov_mod))
+```
+We are going to say that we're okay with the model diagnostics.
+
+<p class = 'code'>Levene's test of equal variance</p>
+```{r lev, fold.output = F}
+library(car)
+leveneTest(aov_mod)
+```
+Significant p-value for Levene test indicates non-equal variance among groups (not surprisingly).
+
+
+<p class = 'code'>Shapiro-Wilk test of normality</p>
+A significant p-value rejects the null hypothesis of normal. The non-significant p-values suggests normality isn't a problem.
+```{r aovsw, fold.output = F}
+shapiro.test(rstandard(aov_mod)) 
+```
+
+<p class ='code'>Summarize output</p>
+```{r aovsum, fold.output = F}
+summary(aov_mod) 
+```
+Significant p-value indicates at least one community type has a different mean count of common periwinkle.
+
+<p class = 'code'>Tukey's pairwise comparisons</p>
+```{r aovtuk, fold.output = F}
+TukeyHSD(aov_mod, conf.level = 0.95)
+```
+
+<p class = 'code'>plot Tukey's pairwise comparisons</p>
+```{r aovtukp, fold.plot = F}
+plot(TukeyHSD(aov_mod, conf.level = 0.95), las = 2)
+```
+
+<p class = 'code'>Plot model results</p>
+```{r lrpt, fold.plot = F}
+# reorder community by elevation
+motinv_aov$ComCode_fac <- factor(motinv_aov$ComCode, levels = c("BAR", "ASC", "FUC", "RED"))
+
+ggplot(data = motinv_aov, aes(x = ComCode_fac, y = mean_count_fix)) +
+  stat_summary(geom = 'bar', fun.data = mean_se, fill = 'grey', color = 'dimgrey') +
+  stat_summary(geom = 'errorbar', fun.data = mean_se, color = 'dimgrey', width = 0.3) +
+  labs(x = "Community Type", y = "Mean common periwinkle count") +
+  geom_text(aes(x = 1, y = 30, label = "AB"), size = 5) +
+  geom_text(aes(x = 2, y = 70, label = "A"), size = 5) +
+  geom_text(aes(x = 3, y = 125, label = "B"), size = 5) +
+  geom_text(aes(x = 4, y = 118, label = "B"), size = 5) +
+  theme_bw()
+
+```
+
+</details>
+<br>
