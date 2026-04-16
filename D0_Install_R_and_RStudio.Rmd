@@ -21,7 +21,8 @@ A number of packages are required to follow along with data wrangling and visual
 ```{r reqpkg, echo = T, eval = F}
 packages <- c("tidyverse", # for Day 2 and 3 data wrangling
               "RColorBrewer", "viridis", "patchwork", # for Day 3 ggplot
-              "readxl", "writexl") # for day 1 importing from excel
+              "readxl", "writexl", # for day 1 importing from excel
+              "car") # for Levene's test - also a great stats R package
 
 install.packages(setdiff(packages, rownames(installed.packages())))  
 
