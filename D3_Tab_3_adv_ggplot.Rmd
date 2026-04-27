@@ -214,13 +214,13 @@ ggplot(ctd_mma, aes(x = `TEMP..degree_Celsius.`,
   labs(x = "Temp. (C)", y = "Pressure (dbars)") +
   scale_color_gradientn(colors = c("#805A91", "#406AC2", "#FBFFAD", "#FFA34A", "#AB1F1F"), 
                         aesthetics = c('color'),
-                        guide = "legend",
-                        breaks = 1:15, 
+                        guide = "legend", # makes legend distinct, rather than color band
+                        breaks = 1:15, # number of stations
                         name = "Station ID") +
-  scale_y_reverse() +
+  scale_y_reverse() + # flip y axis
   scale_x_continuous(limits = c(0, 30),
                      breaks = seq(0, 30, 5),
-                     position = 'top') +
+                     position = 'top') + # plot x-axis on top
   theme(legend.position = 'bottom')
 
 ```
