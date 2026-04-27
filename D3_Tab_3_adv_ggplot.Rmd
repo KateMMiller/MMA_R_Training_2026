@@ -193,3 +193,36 @@ p_heat + scale_color_gradient2(low = "#3E693D", mid = "#FDFFC7", high = "#7A6646
 </details>
 <br>
 
+#### CTD data
+<details open><summary class='drop'>Example code for plotting CTD data in ggplot. </summary>
+<p class = 'code'>Load libraries and import data </p>
+```{r ctd1}
+library(tidyverse)
+library(readxl)
+
+ctd_mma <- read_xlsx("./data/PR_PF_2903444 (2).xlsx") |> data.frame()
+```
+
+<p class = 'code'>Graph data with reversed Y axis and color coded by station</p>
+```{r fold.plot = F, fig.height= 8, fig.width = 6}
+ggplot(ctd_mma, aes(x = `TEMP..degree_Celsius.`, 
+                    y = `PRES..decibar.`,
+                    group = Station, 
+                    color = Station)) +
+  geom_line() + 
+  theme_bw() +
+  labs(x = "Temp. (C)", y = "Pressure (dbars)") +
+  scale_color_gradientn(colors = c("#805A91", "#406AC2", "#FBFFAD", "#FFA34A", "#AB1F1F"), 
+                        aesthetics = c('color'),
+                        guide = "legend",
+                        breaks = 1:15, 
+                        name = "Station ID") +
+  scale_y_reverse() +
+  scale_x_continuous(limits = c(0, 30),
+                     breaks = seq(0, 30, 5),
+                     position = 'top') +
+  theme(legend.position = 'bottom')
+
+```
+</details>
+<br>

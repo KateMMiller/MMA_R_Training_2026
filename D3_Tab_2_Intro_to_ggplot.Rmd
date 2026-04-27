@@ -45,9 +45,9 @@ library(ggplot2) # load ggplot
 library(dplyr)
 pcov <- read.csv("./data/SHIHAR_photoplot_cover.csv") # import data
 
-cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
-         "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
-         "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")
+cols <- c("ASCNOD" = "#bcb02f", "BARSPP" = "#CAC7B6", 
+          "NONCOR" = "#430816", "FUCSPP" = "#65651a",
+          "MUSSPP" = "#170461", "REDGRP" = "#9e224d")
 
 shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
           "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
@@ -118,12 +118,12 @@ The default colors and symbols in ggplot aren't great. We're going to start by s
 
 ```{r gg4, fold.plot = F}
 p3 <- p2 + 
-  scale_fill_manual(values = c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
-                               "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
-                               "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")) +
-  scale_color_manual(values = c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
-                               "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
-                               "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")) +
+  scale_fill_manual(values = c("ASCNOD" = "#bcb02f", "BARSPP" = "#CAC7B6", 
+                               "NONCOR" = "#420816", "FUCSPP" = "#646519",
+                               "MUSSPP" = "#170461", "REDGRP" = "#9e224d")) +
+  scale_color_manual(values = c("ASCNOD" = "#bcb02f", "BARSPP" = "#CAC7B6", 
+                                "NONCOR" = "#420816", "FUCSPP" = "#646519",
+                                "MUSSPP" = "#170461", "REDGRP" = "#9e224d")) +
   scale_shape_manual(values = c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
                                 "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25))
 p3
@@ -133,9 +133,9 @@ The code above was redundant and tedious to code. Changing colors means changing
 <p class = 'code'>Assign colors and shapes to variables </p>
 Adding the name to the scales renames the legend title. But to keep the shapes and colors in the same legend, you have to name all of them the same name.
 ```{r gg4b, fold.plot = F}
-cols <- c("ASCNOD" = "#C5B47B", "BARSPP" = "#A9A9A9", 
-         "NONCOR" = "#574F91", "FUCSPP" = "#FFD560",
-         "MUSSPP" = "#6F88BF", "REDGRP" = "#FF4C53")
+cols <- c("ASCNOD" = "#bcb02f", "BARSPP" = "#CAC7B6", 
+          "NONCOR" = "#420816", "FUCSPP" = "#646519",
+          "MUSSPP" = "#170461", "REDGRP" = "#9e224d")
 
 shps <- c("ASCNOD" = 23, "BARSPP" = 24, "NONCOR" = 23,
           "FUCSPP" = 25, "MUSSPP" = 23, "REDGRP" = 25)
